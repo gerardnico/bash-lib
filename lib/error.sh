@@ -1,8 +1,8 @@
 #!/bin/bash
 
-load echo.sh
-load stack.sh
-
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+source "$SCRIPT_DIR/echo.sh"
+source "$SCRIPT_DIR/stack.sh"
 
 # Define the error handling function
 error_handler() {
