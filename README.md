@@ -49,4 +49,10 @@ load echo.sh
 ```
 
 
+## Loader loading directories precedence order
 
+The [loader](lib/loader.sh) will look into the following directories by order of priorities:
+  * the calling script dir
+  * `BASH_LIB_DIR` if set
+  * `~/.local/lib`
+  * `/usr/local/lib`

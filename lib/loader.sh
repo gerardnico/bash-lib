@@ -14,9 +14,9 @@ load(){
   fi
 
   #SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+  USR_HOME_LOCAL_BASH_DIR="$HOME/.local/lib"
   SCRIPT_DIR="$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null
   USR_LOCAL_DIR="/usr/local/lib"
-  USR_HOME_LOCAL_BASH_DIR="$HOME/.local/lib"
   SOURCE_DIRS+=("$USR_HOME_LOCAL_BASH_DIR" "$SCRIPT_DIR" "$USR_LOCAL_DIR")
 
   for SOURCE_DIR in "${SOURCE_DIRS[@]}" ; do
