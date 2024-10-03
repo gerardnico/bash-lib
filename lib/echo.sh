@@ -1,11 +1,8 @@
 #!/bin/bash
 
-load color.sh
-load stack.sh
-
-
-
-
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}" )"
+source "$SCRIPT_DIR/color.sh"
+source "$SCRIPT_DIR/stack.sh"
 
 # Echo an info message
 function echo_info() {
@@ -13,7 +10,7 @@ function echo_info() {
   # We send all echo to the error stream
   # so that any redirection will not get them
   # this is the standard behaviour of git
-  echo -e "$(calling_script): ${1:-}" >&2
+  echo -e "$(stack_calling_script): ${1:-}" >&2
 
 }
 

@@ -2,7 +2,7 @@
 # that is the function call stack.
 
 
-function calling_script(){
+function stack_calling_script(){
 
   # caller return the LINE, the function and the script
   # example: 10 main /opt/dokuwiki-docker/bin/dokuwiki-docker-entrypoint
