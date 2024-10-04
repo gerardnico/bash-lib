@@ -14,7 +14,7 @@
 
 # Start the agent and store the env in a file passed as argument
 # normally it was `eval "$(ssh-agent -s)"`
-ssh_agent_start () {
+ssh::agent_start () {
 	local ENV="${1:-$SSH_ENV}"
 	local SOCK="${2:-$SSH_AUTH_SOCK}"
     echo Starting the ssh-agent with env at $ENV and sock at "$SSH_AUTH_SOCK"
@@ -23,7 +23,7 @@ ssh_agent_start () {
 }
 
 # Load the env
-ssh_agent_load_env () {
+ssh::agent_load_env () {
 	local env="${1:-$SSH_ENV}"
 	test -f "$env" && . "$env" >| /dev/null ; 
 }
@@ -33,7 +33,7 @@ ssh_agent_load_env () {
 #  * non-protected keys and 
 #  * protected keys if we find the passphrase in env variables that starts with a special prefix
 #
-ssh_add_keys(){
+ssh::add_keys(){
 
    # add default non-protected keys from ~/.ssh
    ssh-add
@@ -81,7 +81,7 @@ ssh_add_keys(){
 # * 0=agent running with key; 
 # * 1=agent without key; 
 # * 2=agent not running
-ssh_agent_state(){
+ssh::agent_state(){
 
   ssh-add -l >| /dev/null 2>&1;
   echo $?;
@@ -89,7 +89,7 @@ ssh_agent_state(){
 }
 
 # Kill a running agent
-ssh_agent_kill(){
+ssh::agent_kill(){
   ssh-agent -k
 }
 
@@ -99,7 +99,7 @@ ssh_agent_kill(){
 # This function creates the known hosts file with the github fingerprint.
 #
 # It is called by the dokuwiki-docker-entrypoint
-ssh_known_hosts_update() {
+ssh::known_hosts_update() {
 
   SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
   mkdir -p "$(dirname "$SSH_KNOWN_HOSTS_FILE")"
@@ -107,6 +107,6 @@ ssh_known_hosts_update() {
   curl --silent https://api.github.com/meta \
     | jq --raw-output '"github.com "+.ssh_keys[]' >> "$SSH_KNOWN_HOSTS_FILE"
 
-  echo_info "Known Hosts file created"
+  echo::info "Known Hosts file created"
 
 }

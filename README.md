@@ -48,3 +48,8 @@ The [libpath](bin/libpath) will look into the following directories by order of 
   * `BASH_LIB_DIR` if set
   * `~/.local/lib`
   * `/usr/local/lib`
+
+
+## Naming Conventions
+
+https://google.github.io/styleguide/shellguide.html

@@ -1,6 +1,6 @@
 
 
 # Print the function definition
-func_def(){
+func::def(){
   type "$1"
 }

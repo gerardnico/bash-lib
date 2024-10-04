@@ -2,7 +2,7 @@
 # that is the function call stack.
 
 
-function stack_calling_script(){
+function stack::calling_script(){
 
   # caller return the LINE, the function and the script
   # example: 10 main /opt/dokuwiki-docker/bin/dokuwiki-docker-entrypoint
@@ -30,7 +30,7 @@ function stack_calling_script(){
 
 }
 
-print_stack(){
+stack::print(){
   # CallStack with FUNCNAME
   # The FUNCNAME variable exists only when a shell function is executing.
   # The last element is `main` with the current script being 0
@@ -48,8 +48,8 @@ print_stack(){
   if [ ${#FUNCNAME[@]} = 1 ]; then
       return;
   fi
-  echo_err "Call Stack:"
+  echo::err "Call Stack:"
   for ((i=0; i < ${#FUNCNAME[@]}; i++)) do
-      echo_err "  $i: ${BASH_SOURCE[$i]}#${FUNCNAME[$i]}:${BASH_LINENO[$i]}"
+      echo::err "  $i: ${BASH_SOURCE[$i]}#${FUNCNAME[$i]}:${BASH_LINENO[$i]}"
   done
 }
