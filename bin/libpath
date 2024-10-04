@@ -1,6 +1,8 @@
 #!/bin/bash
 # return the path of a library if found
 
+set -Eeuo pipefail
+
 if [ -z "$1" ]; then
     echo "Usage: $0 <script name>"
     exit 1

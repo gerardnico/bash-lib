@@ -1,16 +1,44 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+#############################
+# Sourced only once
+#############################
+
+SCRIPT_PATH=$(realpath "${BASH_SOURCE[0]}")
+#if test "${BASH_LIB_SOURCED[$SCRIPT_PATH]+_}"; then
+#    return 0
+#else
+#    if test ${#BASH_LIB_SOURCED[@]} == 0; then
+#        declare -A BASH_LIB_SOURCED
+#    fi
+#    BASH_LIB_SOURCED[$SCRIPT_PATH]="latest"
+#fi
+
+############################
+# Start
+############################
+
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 source "$SCRIPT_DIR/color.sh"
-source "$SCRIPT_DIR/stack.sh"
 
 # Echo an info message
 function echo::info() {
 
+  # The caller function displays:
+  # * the line number,
+  # * subroutine name,
+  # * and source file corresponding
+  #
+  # `caller 0` returns the actual calling executing function
+  #
+  # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
+  read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$(caller 0)"
+  CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+
   # We send all echo to the error stream
   # so that any redirection will not get them
   # this is the standard behaviour of git
-  echo -e "$(stack::calling_script): ${1:-}" >&2
+  echo -e "$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${1:-}" >&2
 
 }
 

@@ -2,54 +2,79 @@
 # that is the function call stack.
 
 
-function stack::calling_script(){
-
-  # caller return the LINE, the function and the script
-  # example: 10 main /opt/dokuwiki-docker/bin/dokuwiki-docker-entrypoint
-  # Syntax: caller EXPR
-  # EXPR indicates how many call frames to go back before the current one
-  # Caller returns 0 unless:
-  #   * the shell is not executing a shell function
-  #   * or EXPR is invalid:
-  CLI_NAME=""
-  if read -r LINE CALLING_FUNCTION CALLING_SCRIPT < "$(caller 1 > /dev/null)"; then
-    # Name of the calling script
-    CLI_NAME=$(basename "$CALLING_SCRIPT")
-  fi
-  echo "$LINE $CALLING_FUNCTION $CALLING_SCRIPT"
-  if [ "$CLI_NAME" == "echo.sh" ] || [ "$CLI_NAME" == "" ]; then
-    if read -r _ _ CALLING_SCRIPT < "$(caller 0)"; then
-      CLI_NAME=$(basename "$CALLING_SCRIPT")
-    fi
-  fi
-
-  if [ "$CLI_NAME" == "echo.sh" ] || [ "$CLI_NAME" == "" ]; then
-    echo "main"
-  fi
-  echo "$CLI_NAME"
-
-}
-
+# Prints the stack
+# Start indice as args
 stack::print(){
   # CallStack with FUNCNAME
   # The FUNCNAME variable exists only when a shell function is executing.
   # The last element is `main` with the current script being 0
-
-  # For enhancement the caller function can be used
-  # caller displays the line number, subroutine name, and source file corresponding to that position in the current execution call stack
-  # caller 0 will return the actual executing function
-  # caller 1 will return the actual caller
-  # It returns the function and the script
-  # example: main /opt/dokuwiki-docker/bin/dokuwiki-docker-entrypoint
-  # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
-
+  START_INDEX=${1:-0}
   # If FUNCNAME has only one element, it's the main script
   # No stack print needed
   if [ ${#FUNCNAME[@]} = 1 ]; then
       return;
   fi
-  echo::err "Call Stack:"
-  for ((i=0; i < ${#FUNCNAME[@]}; i++)) do
-      echo::err "  $i: ${BASH_SOURCE[$i]}#${FUNCNAME[$i]}:${BASH_LINENO[$i]}"
+  for ((i=START_INDEX; i < ${#FUNCNAME[@]}; i++)) do
+      # On error, the index should be -1 to get the line
+      indexLineNo=$((i -1))
+      echo -e "   $i: ${BASH_SOURCE[$i]}#${FUNCNAME[$i]}:${BASH_LINENO[$indexLineNo]}"
   done
+}
+
+# Print the bash source array
+# The bash source array contains the script called by frames
+# We use it to print the stack
+#
+# Example: Below:
+#   * the script error_test (2)
+#   * called a function in error_test (1)
+#   * that called a function in stack.sh (0)
+#
+# BASH_SOURCE
+# [0]: /home/admin/code/bash-lib/lib/stack.sh
+# [1]: ./error_test
+# [2]: ./error_test
+stack::print_bash_source(){
+
+  if [ "${#BASH_SOURCE[@]}" -gt 0 ]; then
+      echo "BASH_SOURCE elements:"
+      for i in "${!BASH_SOURCE[@]}"; do
+          echo -e "  * [$i]: ${BASH_SOURCE[$i]}"
+      done
+  else
+      echo "BASH_SOURCE is not set or empty."
+  fi
+
+}
+
+
+#
+# Callstack With Caller
+# Arg: number
+#
+function stack::print_callers
+{
+    local _start_from_=0
+
+    local params=( "$@" )
+    if (( "${#params[@]}" >= "1" ))
+        then
+            _start_from_="$1"
+    fi
+
+    local i=0
+    local first=false
+    while caller $i > /dev/null
+    do
+        if test -n "$_start_from_" && (( "$i" + 1   >= "$_start_from_" ))
+            then
+                if test "$first" == false
+                    then
+                        echo "BACKTRACE IS:"
+                        first=true
+                fi
+                caller $i
+        fi
+        i=$((i+1))
+    done
 }

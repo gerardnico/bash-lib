@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# ERR Trap commands are:
+#   * executed each time a simple command exits with a non-zero status.
+#   * not executed when :
+#      * the non-zero exit status comes from part of an if statement, or from a while or until loop.
+#      * a logical AND (&&) or OR (||) result in a non-zero exit code,
+#      * a command's return status is inverted using the ! operator.
+#
+# The return status of the trap command itself is zero unless an invalid signal specification is encountered.
+#
+# TRAP are scoped
+# You can have a trap in the global scope and in a script, leading to multiple executions.
+# Trap in the global scope will not see
+
+# Trap works for functions
+set -E
+# Exit immediately
+# The error code is the error code of the last error, not from the script
+set -e
+
+# Trace Lineno in debug statement
+#declare -t LINENO
+#trap 'echo LINENO $LINENO is being used here.' DEBUG
+
+# shellcheck disable=SC1090
+source "$(libpath error.sh)"
+
+# The original trap function to debug
+# Uncomment if you want to overwrite the trap defined in handler
+#trap 'echo -e "\
+#  * ErrorNumber: $?\n\
+#  * Command: $BASH_COMMAND\n\
+#  * Line: $LINENO\n\
+#  * BASH_LINENO: ${BASH_LINENO[*]}\n\
+#  * Caller 0:  $(caller 0)\n\
+#  * Caller 1:  $(caller 1)\n\
+#  * Bash Source: ${BASH_SOURCE[*]}\n\
+#  * Function: ${FUNCNAME[*]}\
+#"' ERR
+
+
+
+function my_error(){
+
+  cd DoesNotExist
+  # An error
+  return 32;
+
+}
+
+
+my_error
+exit 33

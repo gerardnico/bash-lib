@@ -18,9 +18,9 @@ And a [libpath script](bin/libpath) - a loader helper for library script
 Use [libpath](bin/libpath) in your scripts to load the libraries:
 
 ```bash
-source $(libpath lib.sh)
+source "$(libpath lib.sh)"
 # to load the echo library
-source $(libpath echo.sh)
+source "$(libpath echo.sh)"
 ```
 
 ## How to install

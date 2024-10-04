@@ -110,3 +110,37 @@ ssh::known_hosts_update() {
   echo::info "Known Hosts file created"
 
 }
+
+# Start an agent and add key if available
+# This is used in your `.bashrc`
+# This 2 env variables are needed
+# The location of the env file
+# export SSH_ENV="$HOME"/.ssh/ssh-agent.env
+# The location of agent socket
+# export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
+ssh::init(){
+
+  # Load the env if available
+  ssh::agent_load_env "$SSH_ENV"
+
+  # Get the state
+  local SSH_AGENT_RUN_STATE=$(ssh::agent_state)
+  if [ ! "$SSH_AUTH_SOCK" ] || [ "$SSH_AGENT_RUN_STATE" = 2 ]; then
+  	echo "Agent not started"
+  	# The sock may be a symlink, so -e check that
+  	# -f check only if it's a regular file
+  	if [ -e "$SSH_AUTH_SOCK" ]; then
+  	  echo "Deleting Sock file $SSH_AUTH_SOCK"
+  	  rm "$SSH_AUTH_SOCK"
+  	fi
+  	echo "Starting Agent"
+    ssh::agent_start "$SSH_ENV" "$SSH_AUTH_SOCK"
+  	ssh::add_keys
+  elif [ "$SSH_AUTH_SOCK" ] && [ "$SSH_AGENT_RUN_STATE" = 1 ]; then
+  	echo Agent not started but empty
+    ssh::add_keys
+  fi
+
+  unset SSH_ENV
+
+}
