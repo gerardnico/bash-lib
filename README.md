@@ -26,7 +26,7 @@ source bashlib-echo.sh
 
 * Install the libraries into
 ```bash
-brew install gerardnico/tap/bashlib
+brew install --HEAD gerardnico/tap/bashlib
 ```
 
 ### With a `Git Clone`
