@@ -22,21 +22,22 @@ source bashlib-echo.sh
 
 ## How to install
 
+
 ### With Homebrew
 
-* Install the libraries into
 ```bash
 brew install --HEAD gerardnico/tap/bashlib
+# Add the libraries directory into your path in your `.bashrc` file
+export PATH=$(brew --prefix bashlib)/lib:$PATH
 ```
 
-### With a `Git Clone`
+### With Git
 
 ```bash
 git clone https://github.com/gerardnico/bash-lib
-# Add the libraries directory into your path
+# Add the libraries directory into your path in your `.bashrc` file
 export PATH=$PWD/bash-lib/lib:$PATH
 ```
-  
 
 
 ## How to contribute? Dev Documentation
