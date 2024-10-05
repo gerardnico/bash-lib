@@ -10,6 +10,7 @@ A collection of bash libraries:
 * [ssh](lib/bashlib-ssh.sh) - SSH functions
 * [stack](lib/bashlib-stack.sh) - CallStack/Frame functions
 * [script](lib/bashlib-script.sh) - Script functions
+* [git](lib/bashlib-git.sh) - Git functions
 
 
 ## How to load a library
