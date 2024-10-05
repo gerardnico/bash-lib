@@ -28,7 +28,7 @@ PATH=$LIB_PATH:$PATH
 #trap 'echo LINENO $LINENO is being used here.' DEBUG
 
 # shellcheck disable=SC1090
-source error.sh
+source bashlib-error.sh
 
 # The original trap function to debug
 # Uncomment if you want to overwrite the trap defined in handler

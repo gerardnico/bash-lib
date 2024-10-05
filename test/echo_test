@@ -2,11 +2,14 @@
 
 
 # shellcheck disable=SC1090
-source "$(libpath echo.sh)"
+# Add lib path to the path
+LIB_PATH=$(dirname "${BASH_SOURCE[0]}" | realpath "$(</dev/stdin)/../lib")
+PATH=$LIB_PATH:$PATH
+source bashlib-echo.sh
 
 
 OUTPUT=$(echo::info "Hello World" 2>&1)
-OUTPUT_EXPECTATION="echo_test::main#8: Hello World"
+OUTPUT_EXPECTATION="echo_test::main#11: Hello World"
 if [ "$OUTPUT" != "$OUTPUT_EXPECTATION" ]; then
   echo "Error"
   echo "<<<<<<<<<<<<<<<<<<<<"
@@ -17,5 +20,3 @@ if [ "$OUTPUT" != "$OUTPUT_EXPECTATION" ]; then
 else
   echo "Success"
 fi
-
-grep echo_test yolo

@@ -4,20 +4,20 @@
 ## About
 
 A collection of bash libraries:
-* [color.sh](lib/color.sh) - Color Codes
-* [echo.sh](lib/echo.sh) - Echo functions
-* [error.sh](lib/error.sh) - Error handling
-* [ssh.sh](lib/ssh.sh) - SSH functions
-* [stack.sh](lib/stack.sh) - CallStack/Frame functions
-* [script.sh](lib/script.sh) - Script functions
+* [color](lib/bashlib-color.sh) - Color Codes
+* [echo](lib/bashlib-echo.sh) - Echo functions
+* [error](lib/bashlib-error.sh) - Error handling
+* [ssh](lib/bashlib-ssh.sh) - SSH functions
+* [stack](lib/bashlib-stack.sh) - CallStack/Frame functions
+* [script](lib/bashlib-script.sh) - Script functions
 
 
 ## How to load a library
 
 ```bash
-source lib.sh
+source bashlib-[name].sh
 # to load the echo library
-source echo.sh
+source bashlib-echo.sh
 ```
 
 ## How to install
@@ -41,5 +41,6 @@ export PATH=$PWD/bash-lib/lib:$PATH
 
 ## Naming Conventions
 
-We follow the [Google Shell Naming Convention](https://google.github.io/styleguide/shellguide.html).
+* We follow the [Google Shell Naming Convention](https://google.github.io/styleguide/shellguide.html).
+* The library script have the `bashlib` prefix to mirror the commonly used of `lib` in library. Example `libatomic.so.1`
 

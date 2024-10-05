@@ -1,25 +1,7 @@
 #!/bin/bash
 
-#############################
-# Sourced only once
-#############################
 
-SCRIPT_PATH=$(realpath "${BASH_SOURCE[0]}")
-#if test "${BASH_LIB_SOURCED[$SCRIPT_PATH]+_}"; then
-#    return 0
-#else
-#    if test ${#BASH_LIB_SOURCED[@]} == 0; then
-#        declare -A BASH_LIB_SOURCED
-#    fi
-#    BASH_LIB_SOURCED[$SCRIPT_PATH]="latest"
-#fi
-
-############################
-# Start
-############################
-
-SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
-source "$SCRIPT_DIR/color.sh"
+source bashlib-color.sh
 
 # Echo an info message
 function echo::info() {
