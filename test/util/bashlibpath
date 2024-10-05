@@ -1,5 +1,8 @@
 #!/bin/bash
-# return the path of a library if found
+# Old utility that would return the path of a library if found
+# and used in source as
+# source $(bashlibpath filename)
+# before reading the doc and seeing that it searches PATH
 
 set -Eeuo pipefail
 

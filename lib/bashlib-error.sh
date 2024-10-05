@@ -1,4 +1,3 @@
-#!/bin/bash
 # Library to handle error in bash
 # How to use:
 #

@@ -1,5 +1,10 @@
 #!/bin/bash
 # A library of ssh function
+#
+# The library entry is `ssh::agent_init` that start an ssh agent
+# And add keys
+#
+
 
 
 # The functions may have the env file as argument

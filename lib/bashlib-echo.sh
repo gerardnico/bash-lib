@@ -1,7 +1,10 @@
-#!/bin/bash
 
 
-source bashlib-color.sh
+# ANSI color codes
+RED=${RED:-'\033[0;31m'}
+GREEN=${GREEN:-'\033[0;32m'}
+YELLOW=${YELLOW:-'\033[0;33m'}
+NC='\033[0m' # No Color
 
 # Echo an info message
 function echo::info() {

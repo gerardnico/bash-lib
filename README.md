@@ -39,8 +39,8 @@ export PATH=$PWD/bash-lib/lib:$PATH
   
 
 
-## Naming Conventions
+## How to contribute? Dev Documentation
 
-* We follow the [Google Shell Naming Convention](https://google.github.io/styleguide/shellguide.html).
-* The library script have the `bashlib` prefix to mirror the commonly used of `lib` in library. Example `libatomic.so.1`
+See [dev](test/dev.md)
+
 
