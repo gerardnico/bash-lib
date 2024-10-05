@@ -19,12 +19,16 @@ set -E
 # The error code is the error code of the last error, not from the script
 set -e
 
+# Add lib path to the path
+LIB_PATH=$(dirname "${BASH_SOURCE[0]}" | realpath "$(</dev/stdin)/../lib")
+PATH=$LIB_PATH:$PATH
+
 # Trace Lineno in debug statement
 #declare -t LINENO
 #trap 'echo LINENO $LINENO is being used here.' DEBUG
 
 # shellcheck disable=SC1090
-source "$(libpath error.sh)"
+source error.sh
 
 # The original trap function to debug
 # Uncomment if you want to overwrite the trap defined in handler

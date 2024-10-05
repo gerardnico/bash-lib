@@ -11,22 +11,20 @@ A collection of bash libraries:
 * [stack.sh](lib/stack.sh) - CallStack/Frame functions
 * [script.sh](lib/script.sh) - Script functions
 
-And a [libpath script](bin/libpath) - a loader helper for library script
 
 ## How to load a library
 
-Use [libpath](bin/libpath) in your scripts to load the libraries:
-
 ```bash
-source "$(libpath lib.sh)"
+source lib.sh
 # to load the echo library
-source "$(libpath echo.sh)"
+source echo.sh
 ```
 
 ## How to install
 
 ### With Homebrew
 
+* Install the libraries into
 ```bash
 brew install gerardnico/tap/bashlib
 ```
@@ -35,21 +33,13 @@ brew install gerardnico/tap/bashlib
 
 ```bash
 git clone https://github.com/gerardnico/bash-lib
-export BASH_LIB_DIR=$PWD/bash-lib/lib
-export PATH=$PWD/bash-lib/bin:$PATH
+# Add the libraries directory into your path
+export PATH=$PWD/bash-lib/lib:$PATH
 ```
-
-
-
-## libpath directories precedence order
-
-The [libpath](bin/libpath) will look into the following directories by order of priorities:
-  * the calling script dir
-  * `BASH_LIB_DIR` if set
-  * `~/.local/lib`
-  * `/usr/local/lib`
+  
 
 
 ## Naming Conventions
 
-https://google.github.io/styleguide/shellguide.html
+We follow the [Google Shell Naming Convention](https://google.github.io/styleguide/shellguide.html).
+

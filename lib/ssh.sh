@@ -1,7 +1,6 @@
 #!/bin/bash
+# A library of ssh function
 
-# A library of ssh_agent function
-# based on https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows
 
 # The functions may have the env file as argument
 # The env file contains the SSH_AUTH_SOCK and SSH_AGENT_PID env values
@@ -112,13 +111,18 @@ ssh::known_hosts_update() {
 }
 
 # Start an agent and add key if available
-# This is used in your `.bashrc`
-# This 2 env variables are needed
+# This is used in your `.bashrc` or env loading script
+#
+# 2 env variables are needed.
+#
 # The location of the env file
-# export SSH_ENV="$HOME"/.ssh/ssh-agent.env
+#    export SSH_ENV="$HOME"/.ssh/ssh-agent.env
+#
 # The location of agent socket
-# export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
-ssh::init(){
+#    export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
+#
+# Idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
+ssh::agent_init(){
 
   # Load the env if available
   ssh::agent_load_env "$SSH_ENV"
