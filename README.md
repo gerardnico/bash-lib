@@ -3,13 +3,14 @@
 
 ## About
 
-A collection of bash libraries:
-* [echo](docs/echo.md) - Echo functions
-* [error](docs/error.md) - Error handling
-* [ssh](docs/ssh.md) - .md functions
-* [stack](docs/stack.md) - CallStack/Frame functions
-* [script](docs/script.md) - Script functions
-* [git](docs/git.md) - Git functions
+A collection of bash libraries.
+
+## Example
+
+```bash
+source bashlib-echo.sh
+echo::err "Oups"
+```
 
 
 ## How to load a library
@@ -19,6 +20,18 @@ source bashlib-[name].sh
 # to load the echo library
 source bashlib-echo.sh
 ```
+
+## How to use a library
+
+See each library documentation page for usage.
+
+The bash-lib package contains the following libraries:
+
+* [bashlib-echo.sh](docs/echo.md) - Echo functions
+* [bashlib-ssh.sh](docs/ssh.md) - Ssh functions
+* [bashlib-stack.sh](docs/stack.md) - CallStack/Frame functions
+* [bashlib-script.sh](docs/script.md) - Script functions
+* [bashlib-git.sh](docs/git.md) - Git functions
 
 ## How to install
 
