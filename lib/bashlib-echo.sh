@@ -1,4 +1,9 @@
-
+# @name bashlib-echo documentation
+# @brief A echo library to log info, error and warning message
+# @description
+#     With this library, you will be able to log info, error and warning message.
+#
+# @see [bashlib](https://github.com/gerardnico/bash-lib)
 
 # ANSI color codes
 RED=${RED:-'\033[0;31m'}
@@ -6,7 +11,21 @@ GREEN=${GREEN:-'\033[0;32m'}
 YELLOW=${YELLOW:-'\033[0;33m'}
 NC='\033[0m' # No Color
 
-# Echo an info message
+
+# Message color
+BASHLIB_ERROR_COLOR=${BASHLIB_ERROR_COLOR:-$RED}
+BASHLIB_SUCCESS_COLOR=${BASHLIB_SUCCESS_COLOR:-$GREEN}
+BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$YELLOW}
+
+
+# @description Echo an info message
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    # Default terminal color
+#    echo::info "My Info"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::info() {
 
   # The caller function displays:
@@ -27,18 +46,52 @@ function echo::info() {
 
 }
 
-# Print the error message $1
+#
+# @description
+#     Echo an error message in red by default.
+#
+#     You can choose the color by setting the `BASHLIB_ERROR_COLOR` env variable.
+#
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    export BASHLIB_ERROR_COLOR='\033[0;31m' # Optional in Bashrc
+#    echo::err "My Error"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::err() {
-  echo::info "${RED}Error: $1${NC}"
+  echo::info "${BASHLIB_ERROR_COLOR}Error: $1${NC}"
 }
 
-# Function to echo text in green (for success messages)
+# @description
+#     Echo an success message in green
+#
+#     You can choose the color by setting the `BASHLIB_SUCCESS_COLOR` env variable.
+#
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    export BASHLIB_SUCCESS_COLOR='\033[0;32m' # Optional in bashrc
+#    echo::success "My Info"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::success() {
-    echo::info -e "${GREEN}Success: $1${NC}"
+    echo::info -e "${BASHLIB_SUCCESS_COLOR}Success: $1${NC}"
 }
 
-# Function to echo text in yellow (for warnings)
+# @description
+#     Function to echo text in yellow (for warnings)
+#
+#     You can choose the color by setting the `BASHLIB_WARNING_COLOR` env variable.
+#
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    export BASHLIB_WARNING_COLOR='\033[0;33m' # Optional in bashrc
+#    echo::warn "My Warning"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
-    echo::info -e "${YELLOW}Warning: $1${NC}"
+    echo::info -e "${BASHLIB_WARNING_COLOR}Warning: $1${NC}"
 }
 

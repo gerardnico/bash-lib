@@ -4,13 +4,12 @@
 ## About
 
 A collection of bash libraries:
-* [color](lib/bashlib-color.sh) - Color Codes
-* [echo](lib/bashlib-echo.sh) - Echo functions
-* [error](lib/bashlib-error.sh) - Error handling
-* [ssh](lib/bashlib-ssh.sh) - SSH functions
-* [stack](lib/bashlib-stack.sh) - CallStack/Frame functions
-* [script](lib/bashlib-script.sh) - Script functions
-* [git](lib/bashlib-git.sh) - Git functions
+* [echo](docs/echo.md) - Echo functions
+* [error](docs/error.md) - Error handling
+* [ssh](docs/ssh.md) - .md functions
+* [stack](docs/stack.md) - CallStack/Frame functions
+* [script](docs/script.md) - Script functions
+* [git](docs/git.md) - Git functions
 
 
 ## How to load a library
@@ -43,6 +42,6 @@ export PATH=$PWD/bash-lib/lib:$PATH
 
 ## How to contribute? Dev Documentation
 
-See [dev](test/dev.md)
+See [dev](dev/docs/dev.md)
 
 

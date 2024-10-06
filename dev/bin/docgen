@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+#Write a bash function that will lookup a directory
+#go over every file called `FILE` that starts with the prefix `bashlib-` and ends with the suffix `.sh`
+#extract the name called `NAME` by deleting the prefix and suffix
+#execute this command: `shdoc < $FILE > ../docs/$NAME.md`
+
+set -Eeuo pipefail
+
+LIB_DIR=${1:-lib}
+DOC_DIR=${2:-docs}
+
+
+if [ ! -d "$LIB_DIR" ]; then
+    echo "Error: '$LIB_DIR' is not a valid directory." >&2
+    return 1
+fi
+
+for FILE in "$LIB_DIR"/bashlib-*.sh; do
+    if [ -f "$FILE" ]; then
+        NAME=$(basename "$FILE" | sed 's/^bashlib-//; s/\.sh$//')
+
+        if ! command -v shdoc &> /dev/null; then
+            echo "Error: 'shdoc' command not found. Please install it first." >&2
+            return 1
+        fi
+
+        shdoc < "$FILE" > "$DOC_DIR/$NAME.md"
+        echo "Processed $FILE -> $DOC_DIR/$NAME.md"
+    fi
+done
+
