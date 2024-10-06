@@ -12,15 +12,6 @@ source bashlib-echo.sh
 echo::err "Oups"
 ```
 
-
-## How to load a library
-
-```bash
-source bashlib-[name].sh
-# to load the echo library
-source bashlib-echo.sh
-```
-
 ## How to use a library
 
 See each library documentation page for usage.
@@ -32,6 +23,16 @@ The bash-lib package contains the following libraries:
 * [bashlib-stack.sh](docs/stack.md) - CallStack/Frame functions
 * [bashlib-script.sh](docs/script.md) - Script functions
 * [bashlib-git.sh](docs/git.md) - Git functions
+
+
+## How to load a library
+
+```bash
+source bashlib-[name].sh
+# to load the echo library
+source bashlib-echo.sh
+```
+
 
 ## How to install
 
