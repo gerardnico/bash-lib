@@ -1,6 +1,8 @@
+# @name bashlib-function documentation
+# @brief Library for function over function
 
 
-# Print the function definition
+# @description Print the function definition
 func::def(){
   type "$1"
 }

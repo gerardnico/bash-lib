@@ -1,22 +1,28 @@
-# A library of ssh function
+# @name bashlib-ssh documentation
+# @brief A library of ssh function
+# @description
+#     The library entry is [ssh::agent_init](#sshagent_init) that start an ssh agent
+#     and add keys
+
+
+
+# @description
+#    Start an agent and store the env in a file passed as argument
+#    When starting an agent, this function will create an ENV file
+#    The env file contains:
+#    * the SSH_AUTH_SOCK
+#    * and SSH_AGENT_PID env values
+#    It's a wrapper around `eval "$(ssh-agent -s)"`
 #
-# The library entry is `ssh::agent_init` that start an ssh agent
-# And add keys
+# @arg $1 - The env file path (default to `$SSH_ENV`)
+# @arg $2 - The socket file path (default to `$SSH_AUTH_SOCK`)
+# @example
+#   ssh::agent_start
+#   # after the agent start, you would get
+#   SSH_AUTH_SOCK=/tmp/ssh-XXXXXXVv4IgB/agent.17882; export SSH_AUTH_SOCK;
+#   SSH_AGENT_PID=17883; export SSH_AGENT_PID;
+#   echo Agent pid 17883;
 #
-
-
-
-# The functions may have the env file as argument
-# The env file contains the SSH_AUTH_SOCK and SSH_AGENT_PID env values
-# and is created when the agent start
-#
-# Example:
-# SSH_AUTH_SOCK=/tmp/ssh-XXXXXXVv4IgB/agent.17882; export SSH_AUTH_SOCK;
-# SSH_AGENT_PID=17883; export SSH_AGENT_PID;
-# echo Agent pid 17883;
-
-# Start the agent and store the env in a file passed as argument
-# normally it was `eval "$(ssh-agent -s)"`
 ssh::agent_start () {
 	local ENV="${1:-$SSH_ENV}"
 	local SOCK="${2:-$SSH_AUTH_SOCK}"
@@ -25,21 +31,29 @@ ssh::agent_start () {
     . "$ENV" >| /dev/null ; 
 }
 
-# Load the env
+# @description Load the env
 ssh::agent_load_env () {
 	local env="${1:-$SSH_ENV}"
 	test -f "$env" && . "$env" >| /dev/null ; 
 }
 
-# Agent load keys
-# Add:
-#  * non-protected keys and 
-#  * protected keys if we find the passphrase in env variables that starts with a special prefix
+# @description
+#   This function will load keys that are:
+#   * non-protected
+#   * protected where the passphrase is defined by env variables
+#
+#   **How it works?**
+#
+#   The function will loop through the environment variables with the `SSH_KEY_PASSPHRASE` prefix.
+#
+#   When it finds an env such as `SSH_KEY_PASSPHRASE_MY_KEY`, the function will:
+#	    * try to find a file at `~/.ssh/my_key`
+#	    * add it with the value of `ANSIBLE_SSH_KEY_PASSPHRASE_MY_KEY` as passphrase
 #
 ssh::add_keys(){
 
-   # add default non-protected keys from ~/.ssh
-   ssh-add
+  # add default non-protected keys from ~/.ssh
+  ssh-add
 	
 	# Loop through the ANSIBLE_SSH_KEY_PASSPHRASE environment variables
 	# and add the key to the agent
@@ -80,10 +94,12 @@ ssh::add_keys(){
 
 }
 
-# Agent_run_state: 
-# * 0=agent running with key; 
-# * 1=agent without key; 
-# * 2=agent not running
+# @description returns the Agent_run_state
+# @stdout the agent state
+#    * 0 : agent running with key,
+#    * 1 : agent without key
+#    * 2 : agent not running
+#
 ssh::agent_state(){
 
   ssh-add -l >| /dev/null 2>&1;
@@ -91,17 +107,15 @@ ssh::agent_state(){
   
 }
 
-# Kill a running agent
+# @description Kill a running agent
 ssh::agent_kill(){
   ssh-agent -k
 }
 
 
-# ssh_known_hosts_update
+# @description Creates the known hosts file with the github fingerprint.
 #
-# This function creates the known hosts file with the github fingerprint.
 #
-# It is called by the dokuwiki-docker-entrypoint
 ssh::known_hosts_update() {
 
   SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
@@ -114,18 +128,24 @@ ssh::known_hosts_update() {
 
 }
 
-# Start an agent and add key if available
-# This is used in your `.bashrc` or env loading script
+# @description
+#    Start an agent and add keys if available
 #
-# 2 env variables are needed.
+#    This is used in your `.bashrc` or env loading script
 #
-# The location of the env file
+#    2 env variables are needed.
+#    * The location of the env file
+#    * The location of the agent socket file
+#
+#    For the key usage, see the [add_keys function](#sshadd_keys)
+#
+# @example
 #    export SSH_ENV="$HOME"/.ssh/ssh-agent.env
-#
-# The location of agent socket
 #    export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
+#    SSH_KEY_PASSPHRASE_MY_KEY=secret
+#    ssh::agent_init
 #
-# Idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
+# @see idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
 ssh::agent_init(){
 
   # Load the env if available

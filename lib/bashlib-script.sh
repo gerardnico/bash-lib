@@ -1,6 +1,8 @@
+# @name bashlib-script documentation
+# @brief Library of Script functions
+# @description Library of Script functions
 
-
-# check to see if this file is being run or sourced from another script
+# @description check to see if this file is being run or sourced from another script
 script::is_sourced() {
 	# https://unix.stackexchange.com/a/215279
 	[ "${#FUNCNAME[@]}" -ge 2 ] \

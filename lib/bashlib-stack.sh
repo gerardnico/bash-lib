@@ -1,9 +1,15 @@
-# Function around the Bash-maintained FUNCNAME array
-# that is the function call stack.
+# @name bashlib-stack documentation
+# @brief Call stack function
+# @description
+#     Functions around the Bash-maintained FUNCNAME, BASH_SOURCE and BASH_LINENO arrays
+#
 
-
-# Prints the stack
-# Start indice as args
+# @description Prints the stack
+# @arg $1 - the start indice as args
+# @example
+#   # if you don't want to print the function itself `stack::print` starts at 1
+#   stack::print 1
+#
 stack::print(){
   # CallStack with FUNCNAME
   # The FUNCNAME variable exists only when a shell function is executing.
@@ -21,19 +27,23 @@ stack::print(){
   done
 }
 
-# Print the bash source array
-# The bash source array contains the script called by frames
-# We use it to print the stack
+# @description
+#     Print the bash source array
 #
-# Example: Below:
-#   * the script error_test (2)
-#   * called a function in error_test (1)
-#   * that called a function in stack.sh (0)
+#     The bash source array contains the script called by frames.
 #
-# BASH_SOURCE
-# [0]: /home/admin/code/bash-lib/lib/stack.sh
-# [1]: ./error_test
-# [2]: ./error_test
+#     We use it to print the stack
+#
+#     In the example, below
+#     * the script error_test (2)
+#     * called a function in error_test (1)
+#     * that called a function in stack.sh (0)
+#
+# @example
+#    BASH_SOURCE
+#    [0]: /home/admin/code/bash-lib/lib/stack.sh
+#    [1]: ./error_test
+#    [2]: ./error_test
 stack::print_bash_source(){
 
   if [ "${#BASH_SOURCE[@]}" -gt 0 ]; then
@@ -45,36 +55,4 @@ stack::print_bash_source(){
       echo "BASH_SOURCE is not set or empty."
   fi
 
-}
-
-
-#
-# Callstack With Caller
-# Arg: number
-#
-function stack::print_callers
-{
-    local _start_from_=0
-
-    local params=( "$@" )
-    if (( "${#params[@]}" >= "1" ))
-        then
-            _start_from_="$1"
-    fi
-
-    local i=0
-    local first=false
-    while caller $i > /dev/null
-    do
-        if test -n "$_start_from_" && (( "$i" + 1   >= "$_start_from_" ))
-            then
-                if test "$first" == false
-                    then
-                        echo "BACKTRACE IS:"
-                        first=true
-                fi
-                caller $i
-        fi
-        i=$((i+1))
-    done
 }

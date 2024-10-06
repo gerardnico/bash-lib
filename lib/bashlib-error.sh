@@ -2,7 +2,7 @@
 # @brief Library to handle error in bash
 # @description
 #     With this library, you will be able to add an error handler
-#     See the function [set_trap](#set_trap) for a usage example
+#     See the function [set_trap](#errorset_trap) for a usage example
 #
 #
 #

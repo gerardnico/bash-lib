@@ -14,11 +14,11 @@ Depends on stack to print the callstack
 ## Index
 
 * [error::handler](#errorhandler)
-* [error::set_trap](#errorsettrap)
+* [error::set_trap](#errorset_trap)
 
 ### error::handler
 
-An error handling function that will prints:
+An error handling function that will print:
 * The command in error
 * The exit status
 * And error location information
@@ -39,7 +39,7 @@ error::handler "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" $LINENO
 * **$1** (-): the error code
 * **$2** (-): the file source
 * **$3** (-): the function name
-* **$4** (-): the line no
+* **$4** (-): the line number
 
 #### Exit codes
 
