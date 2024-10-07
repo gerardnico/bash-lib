@@ -14,8 +14,10 @@ Install:
 ```bash
 brew install gerardnico/tap/shdoc
 ```
-Use:
+Use with [docgen](../bin/docgen)
 ```bash
+docgen
+# or for one
 shdoc < ./bashlib-echo.sh > ../docs/echo.md
 ```
 
