@@ -4,7 +4,18 @@ A echo library to log info, error and warning message
 
 ## Overview
 
-With this library, you will be able to log info, error and warning message.
+With this library, you will be able to log info, error, debug and warning message.
+
+All messages are printed to stderr to not polute any pipe redirection.
+
+You can also define the message printed by setting the level via the `BASHLIB_LEVEL` environment
+Setting it to:
+* 0: disable all messages
+* 1: print error messages
+* 2: print also warning messages
+* 3: print also info and success messages
+* 4: print also debug messages
+By default, the library has the level 3 (info messages and up)
 
 ## Index
 
@@ -12,6 +23,8 @@ With this library, you will be able to log info, error and warning message.
 * [echo::err](#echoerr)
 * [echo::success](#echosuccess)
 * [echo::warn](#echowarn)
+* [echo::debug](#echodebug)
+* [echo::conf](#echoconf)
 
 ### echo::info
 
@@ -110,4 +123,30 @@ echo::warn "My Warning"
 #### Output on stderr
 
 * The output is always in stderr to avoid polluting stdout with log message (git ways)
+
+### echo::debug
+
+Function to echo debug text
+
+#### Example
+
+```bash
+echo::debug "My Debug statement"
+```
+
+#### Arguments
+
+* **$1** (string): The value to print, by default an empty line
+
+#### Exit codes
+
+* **0**: Always
+
+#### Output on stderr
+
+* The output is always in stderr to avoid polluting stdout with log message (git ways)
+
+### echo::conf
+
+Function that will output the environment configuration
 

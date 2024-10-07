@@ -3,21 +3,16 @@
 # @brief A script that will generate documentation
 # @description
 #     With this script, you can generate bash documentation for a library or for a script
-#     Check the usage with
+#     Check the usage with the option `-h`
 #
 #
-
-# Generated with this prompt
-# Write a bash function that will lookup a directory
-# Go over every file called `FILE` that starts with the prefix `bashlib-` and ends with the suffix `.sh`
-# Extract the name called `NAME` by deleting the prefix and suffix
-# Execute this command: `shdoc < $FILE > ../docs/$NAME.md`
 
 set -Eeuo pipefail
 source bashlib-echo.sh
 source bashlib-error.sh
 error::set_trap
-
+source bashlib-script.sh
+source bashlib-path.sh
 
 
 
@@ -33,6 +28,31 @@ function print_usage(){
   echo "     * -h      - shows this help"
   echo "     * bashDir - a library or bin directory with bash script or library (default to lib)"
   echo ""
+}
+
+function process_bash_file(){
+
+  EXTENSION=$(path::get_extension "$FILE")
+        case "$EXTENSION" in
+          "sh")
+            TYPE="library"
+          ;;
+          "")
+            if ! script::has_shebang "$FILE"; then
+              echo::info "Skipped file $FILE"
+              return
+            fi
+            TYPE="script"
+          ;;
+          *)
+            echo::info "Skipped file $FILE"
+            return
+        esac
+  # Delete the extension if any
+  NAME=$(basename "$FILE" | sed 's/\.sh$//')
+  shdoc < "$FILE" > "$DOC_DIR/$NAME.md"
+  echo::success "Processed Bash $TYPE $FILE -> $DOC_DIR/$NAME.md"
+
 }
 
 
@@ -78,15 +98,8 @@ if [ ! -d "$DOC_DIR" ]; then
 fi
 
 
-
 for FILE in "$BASH_DIR"/*; do
   if [ -f "$FILE" ]; then
-
-      # Delete the extension
-      NAME=$(basename "$FILE" | sed 's/\.sh$//')
-
-      shdoc < "$FILE" > "$DOC_DIR/$NAME.md"
-      echo "Processed $FILE -> $DOC_DIR/$NAME.md"
-
+      process_bash_file "$FILE"
   fi
 done
