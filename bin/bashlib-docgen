@@ -1,0 +1,92 @@
+#!/bin/bash
+# @name docgen documentation
+# @brief A script that will generate documentation
+# @description
+#     With this script, you can generate bash documentation for a library or for a script
+#     Check the usage with
+#
+#
+
+# Generated with this prompt
+# Write a bash function that will lookup a directory
+# Go over every file called `FILE` that starts with the prefix `bashlib-` and ends with the suffix `.sh`
+# Extract the name called `NAME` by deleting the prefix and suffix
+# Execute this command: `shdoc < $FILE > ../docs/$NAME.md`
+
+set -Eeuo pipefail
+source bashlib-echo.sh
+source bashlib-error.sh
+error::set_trap
+
+
+
+
+function print_usage(){
+  CLI_NAME=$(basename "$0") # Name of the cli
+  echo ""
+  echo "Usage of the cli ${CLI_NAME}"
+  echo ""
+  echo "   ${CLI_NAME} [-o outputDir] bashDir..."
+  echo ""
+  echo "where:"
+  echo "     * -o      - is the output directory (default to docs)"
+  echo "     * -h      - shows this help"
+  echo "     * bashDir - a library or bin directory with bash script or library (default to lib)"
+  echo ""
+}
+
+
+
+if ! command -v shdoc &> /dev/null; then
+  echo:err "'shdoc' command not found. Please install it first."
+  echo:err ""
+  echo:err "    brew install gerardnico/tap/shdoc"
+  return 1
+fi
+
+DOC_DIR=${2:-docs}
+BASH_DIR=${1:-lib}
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -o|--output)
+    shift
+    DOC_DIR="$1"
+    ;;
+  -h|--help)
+    print_usage
+    return
+    ;;
+  *)
+    # Command or arg
+    BASH_DIR="$1"
+    shift
+    ;;
+  esac
+done
+
+
+if [ ! -d "$BASH_DIR" ]; then
+    print_usage
+    echo::err "Error: '$BASH_DIR' is not a valid directory."
+    return 1
+fi
+
+if [ ! -d "$DOC_DIR" ]; then
+    print_usage
+    echo::err "Error: '$DOC_DIR' is not a valid directory."
+    return 1
+fi
+
+
+
+for FILE in "$BASH_DIR"/*; do
+  if [ -f "$FILE" ]; then
+
+      # Delete the extension
+      NAME=$(basename "$FILE" | sed 's/\.sh$//')
+
+      shdoc < "$FILE" > "$DOC_DIR/$NAME.md"
+      echo "Processed $FILE -> $DOC_DIR/$NAME.md"
+
+  fi
+done

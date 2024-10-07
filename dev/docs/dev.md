@@ -14,7 +14,7 @@ Install:
 ```bash
 brew install gerardnico/tap/shdoc
 ```
-Use with [docgen](../bin/docgen)
+Use with [docgen](../../bin/bashlib-docgen)
 ```bash
 docgen
 # or for one

@@ -18,13 +18,13 @@ See each library documentation page for usage.
 
 The `bash-lib` package contains the following libraries:
 
-* [bashlib-echo.sh](docs/echo.md) - Echo functions
-* [bashlib-error.sh](docs/error.md) - Error handler functions
-* [bashlib-function.sh](docs/function.md) - Function functions
-* [bashlib-git.sh](docs/git.md) - Git functions
-* [bashlib-script.sh](docs/script.md) - Script functions (ie source)
-* [bashlib-ssh.sh](docs/ssh.md) - Ssh functions
-* [bashlib-stack.sh](docs/stack.md) - CallStack/Frame functions
+* [bashlib-echo.sh](docs/bashlib-echo) - Echo functions
+* [bashlib-error.sh](docs/bashlib-error) - Error handler functions
+* [bashlib-function.sh](docs/bashlib-function) - Function functions
+* [bashlib-git.sh](docs/bashlib-git) - Git functions
+* [bashlib-script.sh](docs/bashlib-script) - Script functions (ie source)
+* [bashlib-ssh.sh](docs/bashlib-ssh) - Ssh functions
+* [bashlib-stack.sh](docs/bashlib-stack) - CallStack/Frame functions
 
 
 ## How to load a library
