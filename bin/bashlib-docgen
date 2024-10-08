@@ -1,10 +1,11 @@
 #!/bin/bash
 # @name docgen documentation
-# @brief A script that will generate documentation
+# @brief A script that will generate documentation from a bash library or script
 # @description
 #     With this script, you can generate bash documentation for a library or for a script
-#     Check the usage with the option `-h`
-#
+#     Check the usage:
+#     * in the [help](#help) section
+#     * or with its option `-h`
 #
 
 set -Eeuo pipefail
@@ -21,51 +22,92 @@ function print_usage(){
   echo ""
   echo "Usage of the cli ${CLI_NAME}"
   echo ""
-  echo "   ${CLI_NAME} [-o outputDir] bashDir..."
+  echo "Generate markdown documentation from bash script or libraries"
+  echo ""
+  echo '```bash'
+  echo "${CLI_NAME} [-o outputDir] bashDir..."
+  echo '```'
   echo ""
   echo "where:"
-  echo "     * -o      - is the output directory (default to docs)"
-  echo "     * -h      - shows this help"
-  echo "     * bashDir - a library or bin directory with bash script or library (default to lib)"
+  echo "* \`-o\`      - is the output directory (default to docs)"
+  echo "* \`-h\`      - shows this help"
+  echo "* \`bashDir\` - one or more directories with bash scripts or libraries (default to lib and bin)"
   echo ""
+  echo "A library:"
+  echo "* has no bash shebang"
+  echo "* is not executable"
+  echo "* has the extension \`sh\`"
+  echo ""
+  echo "A script file:"
+  echo "* has a bash shebang"
+  echo "* is executable"
+  echo "* has a help option (\`-h\`) or command (\`help\`)"
+  echo ""
+  echo "The output of the help is added to the documentation in a h2 section called \`Help\`"
+  echo ""
+
 }
 
-function process_bash_file(){
+# @internal
+# @description Check if the file is a bash script or library and generate the documentation or skip it
+# @arg $1 the file
+function process_file(){
 
   EXTENSION=$(path::get_extension "$FILE")
-        case "$EXTENSION" in
-          "sh")
-            TYPE="library"
-          ;;
-          "")
-            if ! script::has_shebang "$FILE"; then
-              echo::info "Skipped file $FILE"
-              return
-            fi
-            TYPE="script"
-          ;;
-          *)
-            echo::info "Skipped file $FILE"
-            return
-        esac
+  case "$EXTENSION" in
+    "sh")
+      TYPE="library"
+    ;;
+    "")
+      if ! script::has_shebang "$FILE"; then
+        echo::info "Skipped file $FILE"
+        return
+      fi
+      TYPE="script"
+    ;;
+    *)
+      echo::info "Skipped file $FILE"
+      return
+  esac
+  echo::info "Processing Bash $TYPE $FILE"
   # Delete the extension if any
   NAME=$(basename "$FILE" | sed 's/\.sh$//')
-  shdoc < "$FILE" > "$DOC_DIR/$NAME.md"
-  echo::success "Processed Bash $TYPE $FILE -> $DOC_DIR/$NAME.md"
+  # Generate the doc
+  OUTPUT_FILE=$DOC_DIR/$NAME.md
+  shdoc < "$FILE" > "$OUTPUT_FILE"
+  # Add a help section from script usage
+  if [ $TYPE == "script" ]; then
+    if [[ ! -x "$FILE" ]]; then
+      echo::err "The script file ($FILE) is not executable"
+      exit 1
+    fi
+    if ! HELP=$(eval "$FILE -h"); then
+      if ! HELP=$(eval "$FILE help"); then
+        echo::err "The script file ($FILE) has not a help option (-h) or a command (help)"
+        exit 1
+      fi
+    fi
+    {
+      echo ""
+      echo "## Help"
+      echo ""
+      echo "$HELP"
+    } >> "$OUTPUT_FILE"
+  fi
+  echo::success "Processed Bash $TYPE to $DOC_DIR/$NAME.md"
 
 }
-
 
 
 if ! command -v shdoc &> /dev/null; then
   echo:err "'shdoc' command not found. Please install it first."
   echo:err ""
   echo:err "    brew install gerardnico/tap/shdoc"
-  return 1
+  exit 1
 fi
 
-DOC_DIR=${2:-docs}
-BASH_DIR=${1:-lib}
+DOC_DIR="docs"
+declare -a BASH_DIRS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
   -o|--output)
@@ -74,32 +116,52 @@ while [[ $# -gt 0 ]]; do
     ;;
   -h|--help)
     print_usage
-    return
+    exit
     ;;
   *)
     # Command or arg
-    BASH_DIR="$1"
+    BASH_DIRS+=("$1")
     shift
     ;;
   esac
 done
 
-
-if [ ! -d "$BASH_DIR" ]; then
+# Default bash dir values
+if [ ${#BASH_DIRS[@]} -eq 0 ]; then
+  if [ -d "lib" ]; then
+    BASH_DIRS+=("lib");
+  fi
+  if [ -d "bin" ]; then
+    BASH_DIRS+=("bin");
+  fi
+  if [ ${#BASH_DIRS[@]} -eq 0 ]; then
     print_usage
-    echo::err "Error: '$BASH_DIR' is not a valid directory."
-    return 1
+    echo::err "No lib or bin directories found, set the bash directories to process as argument or change of directory"
+    exit 1
+  fi
 fi
 
+# Check bash dir directories
+for BASH_DIR in "${BASH_DIRS[@]}" ; do
+  if [ ! -d "$BASH_DIR" ]; then
+      print_usage
+      echo::err "Error: Bash dir '$BASH_DIR' is not a valid directory."
+      exit 1
+  fi
+done
+
+# Check doc dir directory
 if [ ! -d "$DOC_DIR" ]; then
     print_usage
     echo::err "Error: '$DOC_DIR' is not a valid directory."
-    return 1
+    exit 1
 fi
 
-
-for FILE in "$BASH_DIR"/*; do
-  if [ -f "$FILE" ]; then
-      process_bash_file "$FILE"
-  fi
+# Processing
+for BASH_DIR in "${BASH_DIRS[@]}" ; do
+  for FILE in "$BASH_DIR"/*; do
+    if [ -f "$FILE" ]; then
+        process_file "$FILE"
+    fi
+  done
 done
