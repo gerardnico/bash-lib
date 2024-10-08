@@ -10,6 +10,7 @@ Library of functions over the shell
 
 * [shell::is_interactive](#shellis_interactive)
 * [shell::is_login](#shellis_login)
+* [shell::conf](#shellconf)
 
 ### shell::is_interactive
 
@@ -28,4 +29,10 @@ Check if the shell is a login shell
 
 * **0**: If the shell is a login shell
 * **1**: If the shell is non-login shell
+
+### shell::conf
+
+Print the state/conf of the shell
+* Is it an interactive shell or not
+* Is it a login shell or not
 

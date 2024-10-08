@@ -27,3 +27,16 @@ function shell::is_login(){
   echo::debug "The shell is not a login shell."
   return 1
 }
+
+# @description
+#    Print the state/conf of the shell
+#    * Is it an interactive shell or not
+#    * Is it a login shell or not
+#
+function shell::conf(){
+
+  echo "Interactive : $(if shell::is_interactive; then echo "Yes"; else echo "No"; fi)"
+  echo "Login       : $(if shell::is_login; then echo "Yes"; else echo "No"; fi)"
+  echo "BASH_ENV    : $BASH_ENV"
+
+}
