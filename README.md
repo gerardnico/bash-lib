@@ -27,10 +27,10 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-function.sh](docs/bashlib-function.md) - Function functions
 * [bashlib-git.sh](docs/bashlib-git.md) - Git functions
 * [bashlib-path.sh](docs/bashlib-path.md) - File System Path functions
+* [bashlib-shell.sh](docs/bashlib-shell.md) - Shell functions
 * [bashlib-script.sh](docs/bashlib-script.md) - Script functions (ie source)
 * [bashlib-ssh.sh](docs/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](docs/bashlib-stack.md) - CallStack/Frame functions
-
 
 
 
@@ -51,8 +51,8 @@ source bashlib-echo.sh
 ```bash
 brew install --HEAD gerardnico/tap/bashlib
 # Add the libraries and script directory into your path in your `.bashrc` file
-export PATH=$(brew --prefix bashlib)/bin:$PATH
 export PATH=$(brew --prefix bashlib)/lib:$PATH
+export PATH=$(brew --prefix bashlib)/bin:$PATH
 ```
 
 ### With Git
