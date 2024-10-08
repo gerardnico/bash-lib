@@ -3,14 +3,18 @@
 
 ## About
 
-A collection of bash libraries.
+A collection of:
+* [bash libraries](#where-is-the-library-documentation) 
+* and [utility scripts](#where-is-the-script-documentation)
 
 ## Example
 
+After [installation](#how-to-install), you would use the [bashlib-echo.sh library](docs/bashlib-echo.md) and output an error:
 ```bash
 source bashlib-echo.sh
 echo::err "Oups"
 ```
+
 
 ## Where is the library documentation
 
@@ -61,7 +65,7 @@ export PATH=$PWD/bash-lib/lib:$PATH
 ## Where is the Script documentation?
 
 This package get also the following scripts:
-* [bashlib-docgen](docs/bashlib-docgen.md) - Generate the documentation of a bash script or library
+* [bashlib-docgen](docs/bashlib-docgen.md) - Generate the documentation of bash scripts and libraries
 
 ## How to contribute? Dev Documentation
 
