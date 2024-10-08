@@ -1,7 +1,7 @@
 # @name bashlib-stack documentation
 # @brief Call stack function
 # @description
-#     Functions around the Bash-maintained FUNCNAME, BASH_SOURCE and BASH_LINENO arrays
+#     Functions around the Bash-maintained `FUNCNAME`, `BASH_SOURCE` and `BASH_LINENO` arrays
 #
 
 # @description Prints the stack

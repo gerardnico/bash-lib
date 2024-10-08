@@ -1,18 +1,18 @@
 # @name bashlib-echo documentation
-# @brief A echo library to log info, error and warning message
+# @brief A echo library to log info, error and warning messages
 # @description
-#     With this library, you will be able to log info, error, debug and warning message.
+#     With this library, you will be able to log info, error, debug and warning messages.
 #
-#     All messages are printed to stderr to not polute any pipe redirection.
+#     All messages are printed to `stderr` to not pollute any pipe redirection.
 #
 #     You can also define the message printed by setting the level via the `BASHLIB_LEVEL` environment
 #     Setting it to:
-#     * 0: disable all messages
-#     * 1: print error messages
-#     * 2: print also warning messages
-#     * 3: print also info and success messages
-#     * 4: print also debug messages
-#     By default, the library has the level 3 (info messages and up)
+#     * `0`: disable all messages
+#     * `1`: print error messages
+#     * `2`: print also warning messages
+#     * `3`: print also info and success messages
+#     * `4`: print also debug messages
+#     By default, the library has the level `3` (info messages and up)
 #
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 

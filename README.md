@@ -26,7 +26,7 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-error.sh](docs/bashlib-error.md) - Error handler functions
 * [bashlib-function.sh](docs/bashlib-function.md) - Function functions
 * [bashlib-git.sh](docs/bashlib-git.md) - Git functions
-* [bashlib-git.sh](docs/bashlib-path.md) - File System Path functions
+* [bashlib-path.sh](docs/bashlib-path.md) - File System Path functions
 * [bashlib-script.sh](docs/bashlib-script.md) - Script functions (ie source)
 * [bashlib-ssh.sh](docs/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](docs/bashlib-stack.md) - CallStack/Frame functions
