@@ -50,7 +50,8 @@ source bashlib-echo.sh
 
 ```bash
 brew install --HEAD gerardnico/tap/bashlib
-# Add the libraries directory into your path in your `.bashrc` file
+# Add the libraries and script directory into your path in your `.bashrc` file
+export PATH=$(brew --prefix bashlib)/bin:$PATH
 export PATH=$(brew --prefix bashlib)/lib:$PATH
 ```
 
@@ -58,8 +59,9 @@ export PATH=$(brew --prefix bashlib)/lib:$PATH
 
 ```bash
 git clone https://github.com/gerardnico/bash-lib
-# Add the libraries directory into your path in your `.bashrc` file
+# Add the libraries and script directory into your path in your `.bashrc` file
 export PATH=$PWD/bash-lib/lib:$PATH
+export PATH=$PWD/bash-lib/bin:$PATH
 ```
 
 ## Where is the Script documentation?
