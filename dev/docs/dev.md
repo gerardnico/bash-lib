@@ -8,17 +8,18 @@
 
 ## Docs
 
-The doc is generated with [shdoc](https://github.com/reconquest/shdoc)
+The doc is generated with our own utility [bashlib-docgen](../../docs/bashlib-docgen.md) 
 
-Install:
+It's a wrapper around [shdoc](https://github.com/reconquest/shdoc)
+* Install:
 ```bash
 brew install gerardnico/tap/shdoc
 ```
-Use with [docgen](../../bin/bashlib-docgen)
+Use with [bashlib-docgen](../../bin/bashlib-docgen)
 ```bash
 bashlib-docgen
-# or for one
-shdoc < ./bashlib-echo.sh > ../docs/echo.md
+# or only shdoc for one
+shdoc < lib/bashlib-echo.sh > docs/echo.md
 ```
 
 ## Support
