@@ -103,7 +103,7 @@ echo::success() {
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
   if [ "$BASHLIB_LEVEL" -ge "$BASHLIB_WARNING_LEVEL" ]; then
-    echo::base -e "${BASHLIB_WARNING_COLOR}Warning: $1${NC}"
+    echo::base "${BASHLIB_WARNING_COLOR}Warning: $1${NC}"
   fi
 }
 
