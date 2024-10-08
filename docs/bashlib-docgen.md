@@ -30,11 +30,11 @@ where:
 A library:
 * has no bash shebang
 * is not executable
-* has the extension 'sh'
+* has the extension `sh`
 
 A script file:
 * has a bash shebang
 * is executable
-* has a help option (-h) or command (help)
+* has a help option (`-h`) or command (`help`)
 
-The output of the help is added to the documentation in a help h2 section
+The output of the help is added to the documentation in a h2 section called `Help`

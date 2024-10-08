@@ -4,7 +4,7 @@ Call stack function
 
 ## Overview
 
-Functions around the Bash-maintained FUNCNAME, BASH_SOURCE and BASH_LINENO arrays
+Functions around the Bash-maintained `FUNCNAME`, `BASH_SOURCE` and `BASH_LINENO` arrays
 
 ## Index
 
