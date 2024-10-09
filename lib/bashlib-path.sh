@@ -8,12 +8,16 @@ source bashlib-echo.sh
 
 # @description returns the file extension (ie the string after the first dot)
 # @arg $1 the file path
+# @arg $2 define the point position to determine the extension:
+#          * first for the first point
+#          * last for the last point
 # @stdout the file extension without the dot (ie sql.gz, sh, doc, txt, ...) or the empty string
 # @exitcode 0 If a file was provided
 # @exitcode 1 If a file was not provided
 path::get_extension(){
 
   local FILE_NAME="$1"
+  local POINT_POSITION=${2:-'first'}
 
   # Check if the file name is provided
   if [ -z "$FILE_NAME" ]; then
@@ -21,17 +25,31 @@ path::get_extension(){
       return 1
   fi
 
-  # Extract everything after the first dot
-  local EXTENSION="${FILE_NAME#*.}"
+  if [ "$POINT_POSITION" = "first" ]; then
 
-  # Check if there was a dot in the FILE_NAME
-  if [ "$EXTENSION" = "$FILE_NAME" ]; then
-      # No dot found, return empty string
-      echo ""
-      return
+    # Extract everything after the first dot
+    local EXTENSION="${FILE_NAME#*.}"
+
+    # Check if there was a dot in the FILE_NAME
+    if [ "$EXTENSION" = "$FILE_NAME" ]; then
+        # No dot found, return empty string
+        echo ""
+        return
+    fi
+    echo "$EXTENSION"
+    return
+
   fi
 
-  echo "$EXTENSION"
+  # Extract characters after the last '.'
+  local EXTENSION="${FILE_NAME##*.}"
+
+  # Check if there was a '.' in the string
+  if [[ "$EXTENSION" != "$FILE_NAME" ]]; then
+      echo "$EXTENSION"
+      return
+  fi
+  echo ""
 
 }
 
@@ -39,4 +57,15 @@ path::get_extension(){
 # @arg $1 the start directory
 path::list_recursively(){
   find "$1"
+}
+
+# @description Tell if a path is absolute
+# @arg $1 the path
+# @exitcode 0 if the path is absolute
+# @exitcode 1 if the path is not absolute
+path::is_absolute(){
+  if [[ "$1" == /* ]]; then
+    return 0;
+  fi
+  return 1;
 }
