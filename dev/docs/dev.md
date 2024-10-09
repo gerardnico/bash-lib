@@ -22,6 +22,11 @@ bashlib-docgen
 shdoc < lib/bashlib-echo.sh > docs/echo.md
 ```
 
+## Online commit
+
+```bash
+bin/bashlib-docgen && ga "commit message"
+```
 ## Support
 
 ### Why my Library is installed as executable in Homebrew

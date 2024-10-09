@@ -9,15 +9,16 @@ source bashlib-echo.sh
 # @description returns the file extension (ie the string after the first dot)
 # @arg $1 the file path
 # @arg $2 define the point position to determine the extension:
-#          * first for the first point
-#          * last for the last point
+#          * all from the first point to the end of the string
+#          * first for the first part
+#          * last for the last part (default)
 # @stdout the file extension without the dot (ie sql.gz, sh, doc, txt, ...) or the empty string
 # @exitcode 0 If a file was provided
 # @exitcode 1 If a file was not provided
 path::get_extension(){
 
   local FILE_NAME="$1"
-  local POINT_POSITION=${2:-'first'}
+  local POINT_POSITION=${2:-'last'}
 
   # Check if the file name is provided
   if [ -z "$FILE_NAME" ]; then
@@ -68,4 +69,10 @@ path::is_absolute(){
     return 0;
   fi
   return 1;
+}
+
+# @description Return the file name (known as the base name)
+# @arg $1 the path
+path::get_file_name(){
+  basename "$1"
 }
