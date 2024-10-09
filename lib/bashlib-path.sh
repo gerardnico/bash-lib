@@ -34,3 +34,9 @@ path::get_extension(){
   echo "$EXTENSION"
 
 }
+
+# @description List file recursively from a directory
+# @arg $1 the start directory
+path::list_recursively(){
+  find "$1"
+}
