@@ -29,6 +29,7 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-path.sh](docs/bashlib-path.md) - File System Path functions
 * [bashlib-shell.sh](docs/bashlib-shell.md) - Shell functions
 * [bashlib-script.sh](docs/bashlib-script.md) - Script functions (ie source)
+* [bashlib-string.sh](docs/bashlib-string.md) - String functions
 * [bashlib-ssh.sh](docs/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](docs/bashlib-stack.md) - CallStack/Frame functions
 

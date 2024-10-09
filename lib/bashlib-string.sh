@@ -4,7 +4,9 @@
 
 
 
-# @description returns the elements separated by the standard IFS
+# @description
+#    returns the elements separated by the standard IFS
+#    This is for demonstration purpose as bash functions can not return an array
 # @arg $1 the string
 # @arg $2 the separator
 # @stdout the elements separated by the standard IFS

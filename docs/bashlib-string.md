@@ -13,6 +13,7 @@ Library of string manipulation functions
 ### string::split
 
 returns the elements separated by the standard IFS
+This is for demonstration purpose as bash functions can not return an array
 
 #### Arguments
 
