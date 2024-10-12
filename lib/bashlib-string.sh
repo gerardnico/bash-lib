@@ -17,3 +17,12 @@ string::split(){
   echo "${ARRAY[@]}"
 
 }
+
+# @description trim the first argument
+# @arg $1 the string to trim
+string::trim(){
+  # Works because bash automatically trims by assigning to variables and by
+  # passing arguments
+  echo "$1";
+}
+

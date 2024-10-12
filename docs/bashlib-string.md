@@ -9,6 +9,7 @@ Library of string manipulation functions
 ## Index
 
 * [string::split](#stringsplit)
+* [string::trim](#stringtrim)
 
 ### string::split
 
@@ -23,4 +24,12 @@ This is for demonstration purpose as bash functions can not return an array
 #### Output on stdout
 
 * the elements separated by the standard IFS
+
+### string::trim
+
+trim the first argument
+
+#### Arguments
+
+* **$1** (the): string to trim
 
