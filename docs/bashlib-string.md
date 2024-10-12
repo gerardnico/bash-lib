@@ -16,6 +16,12 @@ Library of string manipulation functions
 returns the elements separated by the standard IFS
 This is for demonstration purpose as bash functions can not return an array
 
+#### Example
+
+```bash
+IFS="$SEP" read -ra ARRAY <<< "$1"
+```
+
 #### Arguments
 
 * **$1** (the): string

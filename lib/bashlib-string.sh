@@ -10,6 +10,11 @@
 # @arg $1 the string
 # @arg $2 the separator
 # @stdout the elements separated by the standard IFS
+# @example
+#    # string::split implementation is:
+#    local SEP=${2}
+#    IFS="$SEP" read -ra ARRAY <<< "$1"
+#    echo "${ARRAY[@]}"
 string::split(){
 
   local SEP=${2}
