@@ -19,7 +19,10 @@ This is for demonstration purpose as bash functions can not return an array
 #### Example
 
 ```bash
+# string::split implementation is:
+local SEP=${2}
 IFS="$SEP" read -ra ARRAY <<< "$1"
+echo "${ARRAY[@]}"
 ```
 
 #### Arguments

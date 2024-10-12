@@ -7,7 +7,7 @@
 source bashlib-echo.sh
 
 # @description Extract a public or private key from a pem file into a base 64 string without any line break
-# @arg $1 - the path to a pem file
+# @arg $1 path - the path to a pem file
 # @exitcode 1 - if no argument was passed
 # @exitcode 2 - if the file does not exist
 # @exitcode 3 - if the file does not have any private or public key
@@ -44,5 +44,31 @@ key::pem_to_base64() {
   # already in base64
   # Add a newline at the end for better readability
   echo
+
+}
+
+
+# @description - Generate a random secret key
+# @arg $1 number the number of bits (32 by default)
+# @arg $2 string the output format:
+#    * `base64` (default)
+#    * or `hex`
+# @exitcode 1 if the format is unknown
+key::generate_random_secret(){
+
+  BIT_NUMBER=${1:-32}
+  OUTPUT_FORMAT=${1:-'base64'}
+
+  case $OUTPUT_FORMAT in
+    'base64')
+      openssl rand -base64 "$BIT_NUMBER" # base b64 transform
+      ;;
+    'hex')
+      openssl rand -hex "$BIT_NUMBER" # hexa transform
+      ;;
+    *)
+      echo::err "The output format ($OUTPUT_FORMAT) is unknown"
+      return 1
+  esac
 
 }
