@@ -45,6 +45,10 @@ source bashlib-[name].sh
 source bashlib-echo.sh
 ```
 
+## Cli using these libraries
+
+* [kube](https://github.com/gerardnico/kube) - A collection of Kubernetes Utilities
+* [direnv-ext](https://github.com/gerardnico/direnv-ext) - A direnv extension to get secret from vault
 
 ## How to install
 
