@@ -18,3 +18,12 @@ gs(){
 ga(){
   git add . && git commit -m "$1" && git push
 }
+
+# @description Normalize all file to a new line ending
+# @example
+#   git-normalize-text
+#   gs # to see the change file
+#   ga "New line ending"
+git-eol(){
+  git add --renormalize .
+}

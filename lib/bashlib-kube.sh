@@ -32,7 +32,7 @@ kube::get_resources_by_app_name() {
   local APP_NAME=$1
   local RESOURCE_TYPE=$1
 
-  APP_LABEL=$(kube::get_app_label $APP_NAME)
+  APP_LABEL=$(kube::get_app_label "$APP_NAME")
   #
   # With customs columns, it works also. Example:
   #     kubectl get pod -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace --no-headers -l "$APP_LABEL" -A
