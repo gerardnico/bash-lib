@@ -3,6 +3,7 @@
 # @description
 #     You would insert them in your `.bashrc` with `source bashlib-git.sh`
 #
+#     See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 
 # @description An alias function for `git status`
 # @example

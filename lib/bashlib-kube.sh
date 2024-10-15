@@ -5,6 +5,8 @@
 #
 #
 
+source bashlib-echo.sh
+
 # @description
 #     Return the app label used to locate resources
 #     It will return the label `app.kubernetes.io/name=<app name>`
@@ -30,14 +32,16 @@ kube::get_app_label(){
 # @stdout The resources name and namespace (one resource by line) or an empty string
 kube::get_resources_by_app_name() {
   local APP_NAME=$1
-  local RESOURCE_TYPE=$1
+  local RESOURCE_TYPE=$2
 
   APP_LABEL=$(kube::get_app_label "$APP_NAME")
   #
   # With customs columns, it works also. Example:
   #     kubectl get pod -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace --no-headers -l "$APP_LABEL" -A
   #
-  kubectl get "$RESOURCE_TYPE" --all-namespaces -l "$APP_LABEL" -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.metadata.namespace}{"\n"}{end}' 2>/dev/null
+  COMMAND="kubectl get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o jsonpath='{range .items[*]}{.metadata.name}{\" \"}{.metadata.namespace}{\"\n\"}{end}' 2>/dev/null"
+  echo::info "Executing: $COMMAND"
+  eval "$COMMAND"
 
 }
 

@@ -6,6 +6,8 @@ Library of Git wrapper functions
 
 You would insert them in your `.bashrc` with `source bashlib-git.sh`
 
+See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
+
 ## Index
 
 * [gs](#gs)
