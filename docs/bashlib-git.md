@@ -12,6 +12,7 @@ See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 
 * [gs](#gs)
 * [ga](#ga)
+* [gdiff](#gdiff)
 
 ### gs
 
@@ -31,5 +32,15 @@ An alias function for `Git Add Commit and Push`
 
 ```bash
 ga "My Commit Message"
+```
+
+### gdiff
+
+Diff with the head
+
+#### Example
+
+```bash
+gdiff README.md
 ```
 

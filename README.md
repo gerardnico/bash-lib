@@ -24,7 +24,7 @@ The `bash-lib` package contains the following libraries:
 
 * [bashlib-echo.sh](docs/bashlib-echo.md) - Echo functions
 * [bashlib-error.sh](docs/bashlib-error.md) - Error handler functions
-* [bashlib-eval.sh](docs/bashlib-eval.md) - A eval command that prints the commands executed
+* [bashlib-eval.sh](docs/bashlib-eval.md) - A eval function that prints its commands
 * [bashlib-function.sh](docs/bashlib-function.md) - Function functions
 * [bashlib-git.sh](docs/bashlib-git.md) - Git functions
 * [bashlib-key.sh](docs/bashlib-key.md) - Cryptographic Key functions

@@ -17,7 +17,19 @@ gs(){
 # @example
 #   ga "My Commit Message"
 ga(){
+
   # `--renormalize` to correct the EOL in the working tree
-  git add --renormalize . && git commit -m "$1" && git push
+  # renormalize does not add any file into the index
+  # we need to add it twice
+  git add --renormalize . && git add . && git commit -m "$1" && git push
+
+}
+
+# @description Diff with the head
+# @args $1 - the file to diff
+# @example
+#   gdiff README.md
+gdiff(){
+  git diff HEAD $1
 }
 
