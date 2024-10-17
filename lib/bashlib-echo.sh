@@ -128,6 +128,18 @@ echo::conf(){
   echo::info "BASHLIB_LEVEL (Message Level): $BASHLIB_LEVEL"
 }
 
+# @description
+#     Function to echo without prefix to stderr
+#
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    echo::blank "My Debug statement"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
+function echo::echo(){
+  echo -e "${1:-}" >&2
+}
 
 # @internal
 # The base function that do the work
@@ -152,4 +164,3 @@ function echo::base(){
   echo -e "$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${1:-}" >&2
 
 }
-

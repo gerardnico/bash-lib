@@ -25,6 +25,7 @@ By default, the library has the level `3` (info messages and up)
 * [echo::warn](#echowarn)
 * [echo::debug](#echodebug)
 * [echo::conf](#echoconf)
+* [echo::echo](#echoecho)
 
 ### echo::info
 
@@ -149,4 +150,26 @@ echo::debug "My Debug statement"
 ### echo::conf
 
 Function that will output the environment configuration
+
+### echo::echo
+
+Function to echo without prefix to stderr
+
+#### Example
+
+```bash
+echo::blank "My Debug statement"
+```
+
+#### Arguments
+
+* **$1** (string): The value to print, by default an empty line
+
+#### Exit codes
+
+* **0**: Always
+
+#### Output on stderr
+
+* The output is always in stderr to avoid polluting stdout with log message (git ways)
 

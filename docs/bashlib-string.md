@@ -16,6 +16,14 @@ Library of string manipulation functions
 returns the elements separated by the standard IFS
 This is for demonstration purpose as bash functions can not return an array
 
+Note if you want to split over multiple lines and for more than 1 character delimiter
+you can use:
+* [csplit](https://www.gnu.org/software/coreutils/manual/html_node/csplit-invocation.html#csplit-invocation)
+It will create files. You can then iterate over them.
+Example: [kube-cert](https://github.com/gerardnico/kube/bin/kube-cert) that splits a string into 2 PEM certificates.
+* a full gawk script with RS (Record separator)
+Why? because even if you succeed to split it, bash will always split by single character.
+
 #### Example
 
 ```bash

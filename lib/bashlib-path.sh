@@ -92,4 +92,17 @@ path::get_absolute_path(){
   realpath "$1"
 }
 
+# @description Return the current directory name
+path::get_current_directory_name(){
+  basename "$(pwd)"
+}
+
+# @description
+#    Create a temporary directory
+#    with [mktemp](http://www.mktemp.org/)
+# @arg $1 string - a prefix (temp by default)
+path::create_temp_directory(){
+  PREFIX=${1:-"temp"}
+  mktemp --directory --suffix="$PREFIX"
+}
 

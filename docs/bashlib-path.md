@@ -14,6 +14,8 @@ Library of file system path functions
 * [path::get_file_name](#pathget_file_name)
 * [path::get_file_name](#pathget_file_name)
 * [path::get_absolute_path](#pathget_absolute_path)
+* [path::get_current_directory_name](#pathget_current_directory_name)
+* [path::create_temp_directory](#pathcreate_temp_directory)
 
 ### path::get_extension
 
@@ -77,4 +79,17 @@ Return the absolute path (known as the realpath)
 #### Arguments
 
 * **$1** (the): path
+
+### path::get_current_directory_name
+
+Return the current directory name
+
+### path::create_temp_directory
+
+Create a temporary directory
+with [mktemp](http://www.mktemp.org/)
+
+#### Arguments
+
+* **$1** (string): - a prefix (temp by default)
 
