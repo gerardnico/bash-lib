@@ -33,3 +33,18 @@ gdiff(){
   git diff HEAD $1
 }
 
+
+# alias in the wild
+# gst - for `git status`
+# gc — for `git commit`
+# co — for `git checkout`
+# gaa — for `git add -A`
+# gd — for `git diff`
+# gdc — for `git diff —cached`
+# 
+# check change would be
+# gst gd gaa gst gdc gc 
+# 
+# alias: https://github.com/mrnugget/dotfiles/blob/c4624ed521d539856bcf764f04a295bb19093566/gitconfig
+
+# https://github.com/mrnugget/dotfiles/blob/c4624ed521d539856bcf764f04a295bb19093566/githelpers#L11-L15
