@@ -23,12 +23,12 @@ See each library documentation page for usage.
 The `bash-lib` package contains the following libraries:
 
 * [bashlib-cd.sh](docs/bashlib-echo.md) - Cd functions
+* [bashlib-crypto.sh](docs/bashlib-crypto.md) - Cryptographic functions (Key, Cert, ...)
 * [bashlib-echo.sh](docs/bashlib-echo.md) - Echo functions
 * [bashlib-error.sh](docs/bashlib-error.md) - Error handler functions
 * [bashlib-eval.sh](docs/bashlib-eval.md) - A eval function that prints its commands
 * [bashlib-function.sh](docs/bashlib-function.md) - Function functions
 * [bashlib-git.sh](docs/bashlib-git.md) - Git functions
-* [bashlib-key.sh](docs/bashlib-key.md) - Cryptographic Key functions
 * [bashlib-kube.sh](docs/bashlib-kube.md) - Kubernetes functions
 * [bashlib-path.sh](docs/bashlib-path.md) - File System Path functions
 * [bashlib-shell.sh](docs/bashlib-shell.md) - Shell functions
