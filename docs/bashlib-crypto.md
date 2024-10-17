@@ -10,8 +10,9 @@ Library over cryptographic function (key, certificate, ...)
 
 * [crypto::pem_to_base64](#cryptopem_to_base64)
 * [crypto::generate_random_secret](#cryptogenerate_random_secret)
-* [crypto::certificate_to_text](#cryptocertificate_to_text)
+* [crypto::cert_print](#cryptocert_print)
 * [crypto::print_bundled_certificate_old](#cryptoprint_bundled_certificate_old)
+* [crypto::certs_expiration](#cryptocerts_expiration)
 
 ### crypto::pem_to_base64
 
@@ -40,9 +41,26 @@ Extract a public or private key from a pem file into a base 64 string without an
 
 * **1**: if the format is unknown
 
-### crypto::certificate_to_text
+### crypto::cert_print
 
-- Print certificate even if they are bundled
+Print a single pem file in human text with one or more certificates
+
+This function is capable to print all certificate
+from bundled file such as:
+```
+-----BEGIN CERTIFICATE-----
+xxxxxxxxxxxxxxxxxxxxxx
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+xxxxxxxxxxxxxxxxxxxxxx
+-----END CERTIFICATE-----
+```
+
+#### Example
+
+```bash
+crypto:cert_print /path/to/my/pem/file
+```
 
 #### Arguments
 
@@ -56,4 +74,12 @@ deprecated for openssl storeutl
 #### Arguments
 
 * **$1** (string): the certificate in pem format (ie -----BEGIN CERTIFICATE-----, -----END CERTIFICATE-----)
+
+### crypto::certs_expiration
+
+Print the expiration from certs in a directory in ascendant order
+
+#### Arguments
+
+* **$1** (string): - the directory (current if not specified)
 

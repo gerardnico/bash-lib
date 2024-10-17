@@ -73,17 +73,27 @@ crypto::generate_random_secret(){
 
 }
 
-# @description - Print certificate even if they are bundled
+# @description
+#    Print a single pem file in human text with one or more certificates
+#
+#    This function is capable to print all certificate
+#    from bundled file such as:
+#    ```
+#    -----BEGIN CERTIFICATE-----
+#    xxxxxxxxxxxxxxxxxxxxxx
+#    -----END CERTIFICATE-----
+#    -----BEGIN CERTIFICATE-----
+#    xxxxxxxxxxxxxxxxxxxxxx
+#    -----END CERTIFICATE-----
+#    ```
 # @arg $1 string one or more URI (ie a path)
-crypto::certificate_to_text(){
+# @example
+#    crypto:cert_print /path/to/my/pem/file
+#
+crypto::cert_print(){
 
   # A file in a chain (ie bundle of certificate) such as
-  # -----BEGIN CERTIFICATE-----
-  # xxxxxxxxxxxxxxxxxxxxxx
-  # -----END CERTIFICATE-----
-  # -----BEGIN CERTIFICATE-----
-  # xxxxxxxxxxxxxxxxxxxxxx
-  # -----END CERTIFICATE-----
+
   CRT_FILE=$1
   # https://serverfault.com/questions/590870/how-to-view-all-ssl-certificates-in-a-bundle
   # https://www.openssl.org/docs/man1.1.1/man1/openssl-storeutl.html
@@ -134,4 +144,14 @@ crypto::print_bundled_certificate_old(){
 
     # Clean things up
     rm -rf "$TEMP_DIR"
+}
+
+# @description
+#     Print the expiration from certs in a directory in ascendant order
+# @arg $1 string - the directory (current if not specified)
+crypto::certs_expiration(){
+    CERT_DIR=${1:-'.'}
+    for crt in "$CERT_DIR"/*.crt; do
+      printf '%s: %s\n'    "$(date --date="$(openssl x509 -enddate -noout -in "$crt"|cut -d= -f 2)" --iso-8601)" "$crt";
+    done | sort
 }
