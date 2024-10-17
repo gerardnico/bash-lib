@@ -36,7 +36,7 @@ error::handler() {
     local ERROR_CODE=${1:-Unknown}
     local ERROR_COMMAND=${2:-Unknown}
     local ERROR_SOURCE=${3:-Unknown}
-    local ERROR_FUNCTION=${4:-Unknown}
+    local ERROR_FUNCTION=${4:-'Not in a function'}
     local ERROR_LINE=${5:-Unknown}
 
     # Error in red
@@ -74,5 +74,6 @@ error::handler() {
 # @noarg
 # @set trap for error
 error::set_trap() {
-  trap 'error::handler "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "${FUNCNAME[0]}" $LINENO' ERR
+  # Note: function may be null
+  trap 'error::handler "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "${FUNCNAME[0]:-}" $LINENO' ERR
 }
