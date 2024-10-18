@@ -138,6 +138,8 @@ ssh::known_hosts_update() {
 #    * The location of the agent socket file
 #
 #    For the key usage, see the [add_keys function](#sshadd_keys)
+# 
+#    See also [keychain](https://github.com/funtoo/keychain)
 #
 # @example
 #    export SSH_ENV="$HOME"/.ssh/ssh-agent.env
