@@ -9,6 +9,11 @@
 #
 #     You only need to enter a passphrase once every time your machine is rebooted.
 #
+#     Note: ssh-agent enhances security by allowing you to use passphrase-protected SSH keys without
+#     entering the passphrase every time. 
+#     However, anyone with access to the agent’s socket and your user permissions can use the keys 
+#     managed by the agent.
+#
 
 
 
