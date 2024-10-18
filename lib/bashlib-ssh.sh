@@ -3,6 +3,12 @@
 # @description
 #     The library entry is [ssh::agent_init](#sshagent_init) that start an ssh agent
 #     and add keys
+#
+#     It creates only one ssh-agent process per system, 
+#     rather than the norm of one ssh-agent per login session.
+#
+#     You only need to enter a passphrase once every time your machine is rebooted.
+#
 
 
 
