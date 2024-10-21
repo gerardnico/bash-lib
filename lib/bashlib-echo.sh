@@ -18,17 +18,14 @@
 #
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 
-# ANSI color codes
-RED=${RED:-'\033[0;31m'}
-GREEN=${GREEN:-'\033[0;32m'}
-YELLOW=${YELLOW:-'\033[0;33m'}
-NC='\033[0m' # No Color
+# for the color
+source bashlib-string.sh
 
 
 # Message color
-BASHLIB_ERROR_COLOR=${BASHLIB_ERROR_COLOR:-$RED}
-BASHLIB_SUCCESS_COLOR=${BASHLIB_SUCCESS_COLOR:-$GREEN}
-BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$YELLOW}
+BASHLIB_ERROR_COLOR=${BASHLIB_ERROR_COLOR:-$BASHLIB_RED_COLOR}
+BASHLIB_SUCCESS_COLOR=${BASHLIB_SUCCESS_COLOR:-$BASHLIB_GREEN_COLOR}
+BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$BASHLIB_YELLOW_COLOR}
 
 # Message level
 BASHLIB_ERROR_LEVEL=1
@@ -179,7 +176,7 @@ function echo::base(){
   done
 
   # Level
-  if [ "$BASHLIB_LEVEL" -le "$LOG_LEVEL" ]; then
+  if [ "$BASHLIB_LEVEL" -lt "$LOG_LEVEL" ]; then
     return
   fi
 
