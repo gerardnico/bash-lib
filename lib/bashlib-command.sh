@@ -29,7 +29,17 @@ command::echo_eval(){
 # @example
 #    command::fzf
 #
-# @stderr The command`
+# @stderr The command
 command::fzf(){
   history | cut -c 8- | fzf
+}
+
+# @description
+#     Escape an argument
+#     To avoid `syntax error near unexpected token `('`
+#     when building command line syntax for eval
+#
+# @stderr The arg escaped
+command::escape_arg(){
+  echo "$(printf '%q' "${1}")"
 }
