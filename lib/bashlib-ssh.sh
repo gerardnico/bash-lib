@@ -3,6 +3,17 @@
 # @description
 #     The library entry is [ssh::agent_init](#sshagent_init) that start an ssh agent
 #     and add keys
+#
+#     It creates only one ssh-agent process per system, 
+#     rather than the norm of one ssh-agent per login session.
+#
+#     You only need to enter a passphrase once every time your machine is rebooted.
+#
+#     Note: ssh-agent enhances security by allowing you to use passphrase-protected SSH keys without
+#     entering the passphrase every time. 
+#     However, anyone with access to the agent’s socket and your user permissions can use the keys 
+#     managed by the agent.
+#
 
 
 
@@ -138,6 +149,8 @@ ssh::known_hosts_update() {
 #    * The location of the agent socket file
 #
 #    For the key usage, see the [add_keys function](#sshadd_keys)
+# 
+#    See also [keychain](https://github.com/funtoo/keychain)
 #
 # @example
 #    export SSH_ENV="$HOME"/.ssh/ssh-agent.env
