@@ -60,7 +60,7 @@ function process_file(){
     ;;
     "")
       if ! script::has_shebang "$FILE"; then
-        echo::info "Skipped file $FILE"
+        echo::info "No Shebang found. Skipped file $FILE"
         return
       fi
       TYPE="script"

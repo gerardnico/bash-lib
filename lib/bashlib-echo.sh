@@ -14,6 +14,8 @@
 #     * `4`: print also debug messages
 #     By default, the library has the level `3` (info messages and up)
 #
+#     They all accept the flag `--silent` or `-s` to no echo anything
+#
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 
 # ANSI color codes
@@ -34,9 +36,15 @@ BASHLIB_WARNING_LEVEL=2
 BASHLIB_INFO_LEVEL=3
 BASHLIB_DEBUG_LEVEL=4
 
+# Formatting (Color, Prefix, ...)
+BASHLIB_WARNING_TYPE="warning"
+BASHLIB_SUCCESS_TYPE="success"
+BASHLIB_ERROR_TYPE="error"
+BASHLIB_DEBUG_TYPE="debug"
+BASHLIB_ECHO_TYPE="echo"
+
 # The actual level
 BASHLIB_LEVEL=${BASHLIB_LEVEL:-$BASHLIB_INFO_LEVEL}
-
 
 # @description Echo an info message
 # @arg $1 string The value to print, by default an empty line
@@ -47,10 +55,8 @@ BASHLIB_LEVEL=${BASHLIB_LEVEL:-$BASHLIB_INFO_LEVEL}
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::info() {
-  echo::base "$1"
+  echo::base --log-level "$BASHLIB_INFO_LEVEL" "${*}"
 }
-
-
 
 
 # @description
@@ -66,9 +72,7 @@ function echo::info() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::err() {
-  if [ "$BASHLIB_LEVEL" -ge "$BASHLIB_ERROR_LEVEL"  ]; then
-    echo::base "${BASHLIB_ERROR_COLOR}Error: $1${NC}"
-  fi
+  echo::base --type "$BASHLIB_ERROR_TYPE" --log-level "$BASHLIB_ERROR_LEVEL" "${*}"
 }
 
 # @description
@@ -84,9 +88,7 @@ echo::err() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::success() {
-  if [ "$BASHLIB_LEVEL" -ge "$BASHLIB_INFO_LEVEL" ]; then
-      echo::base "${BASHLIB_SUCCESS_COLOR}Success: $1${NC}"
-  fi
+  echo::base --type "$BASHLIB_SUCCESS_TYPE" --log-level $BASHLIB_INFO_LEVEL "${*}"
 }
 
 # @description
@@ -102,9 +104,7 @@ echo::success() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
-  if [ "$BASHLIB_LEVEL" -ge "$BASHLIB_WARNING_LEVEL" ]; then
-    echo::base "${BASHLIB_WARNING_COLOR}Warning: $1${NC}"
-  fi
+  echo::base --type "$BASHLIB_WARNING_TYPE" --log-level "$BASHLIB_WARNING_LEVEL" "${*}"
 }
 
 # @description
@@ -117,9 +117,7 @@ echo::warn() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::debug() {
-    if [ "$BASHLIB_LEVEL" -ge "$BASHLIB_DEBUG_LEVEL" ]; then
-      echo::base "Debug: $1"
-    fi
+  echo::base --log-level "$BASHLIB_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE"  "${*}"
 }
 
 # @description
@@ -134,33 +132,112 @@ echo::conf(){
 # @arg $1 string The value to print, by default an empty line
 # @exitcode 0 Always
 # @example
-#    echo::blank "My Debug statement"
+#    echo::echo "My Debug statement"
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::echo(){
-  echo -e "${1:-}" >&2
+  echo::base --log-level "$BASHLIB_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
 }
 
 # @internal
-# The base function that do the work
-# Should be at the end for the documentation generation
+# @description
+#    The base function that do the work
+#    Should be at the end for the documentation generation
+#    Accept as first argument a flag --silent or -s to no echo anything
+# @arg $1 --silent -s - no echo
 function echo::base(){
 
-  # The caller function displays:
-  # * the line number,
-  # * subroutine name,
-  # * and source file corresponding
-  #
-  # `caller 0` returns the actual calling executing function
-  # Because this is a base function that call all echo function we want the `caller 1`
-  #
-  # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
-  read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$(caller 1)"
-  CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+  local MESSAGE=""
+  local TYPE_MESSAGE=""
+  local LOG_LEVEL="$BASHLIB_INFO_LEVEL"
+  while [[ $# -gt 0 ]]
+  do
+     case "$1" in
+         "--silent"|"-s")
+            return
+           ;;
+         "--type")
+            shift
+            TYPE_MESSAGE=$1
+            shift
+           ;;
+         "--log-level")
+             shift
+             LOG_LEVEL=$1
+             shift
+            ;;
+         "")
+             # empty arg
+             # It's the case if the silent flag is passed programmatically
+             # ie echo::info $SILENT "Message"
+             shift
+            ;;
+         *)
+           MESSAGE=$1
+           shift
+     esac
+  done
 
-  # We send all echo to the error stream
-  # so that any redirection will not get them
-  # this is the standard behaviour of git
-  echo -e "$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${1:-}" >&2
+  # Level
+  if [ "$BASHLIB_LEVEL" -le "$LOG_LEVEL" ]; then
+    return
+  fi
+
+  # Type Prefix
+  case $TYPE_MESSAGE in
+    "$BASHLIB_SUCCESS_TYPE")
+      MESSAGE="Success: $MESSAGE"
+      ;;
+    "$BASHLIB_ERROR_TYPE")
+      MESSAGE="Error: $MESSAGE"
+      ;;
+    "$BASHLIB_WARNING_TYPE")
+      MESSAGE="Warning: $MESSAGE"
+      ;;
+    "$BASHLIB_DEBUG_TYPE")
+      MESSAGE="Debug: $MESSAGE"
+      ;;
+  esac
+
+  # Color
+  case $TYPE_MESSAGE in
+    "$BASHLIB_SUCCESS_TYPE")
+      MESSAGE="${BASHLIB_SUCCESS_COLOR}${MESSAGE}${NC}"
+      ;;
+    "$BASHLIB_ERROR_TYPE")
+      MESSAGE="${BASHLIB_ERROR_COLOR}${MESSAGE}${NC}"
+      ;;
+    "$BASHLIB_WARNING_TYPE")
+      MESSAGE="${BASHLIB_WARNING_COLOR}${MESSAGE}${NC}"
+    ;;
+  esac
+
+  # Location Information
+  case $TYPE_MESSAGE in
+    "$BASHLIB_ECHO_TYPE")
+      # echo does not have location information
+      ;;
+    *)
+      # The caller function displays:
+      # * the line number,
+      # * subroutine name,
+      # * and source file corresponding
+      #
+      # `caller 0` returns the actual calling executing function
+      # Because this is a base function that call all echo function we want the `caller 1`
+      #
+      # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
+      read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$(caller 1)"
+      CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+
+      # We send all echo to the error stream
+      # so that any redirection will not get them
+      # this is the standard behaviour of git
+      MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
+      ;;
+  esac
+
+  # To stderr
+  echo -e "${MESSAGE}" >&2
 
 }

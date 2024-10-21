@@ -17,6 +17,8 @@ Setting it to:
 * `4`: print also debug messages
 By default, the library has the level `3` (info messages and up)
 
+They all accept the flag `--silent` or `-s` to no echo anything
+
 ## Index
 
 * [echo::info](#echoinfo)
@@ -158,7 +160,7 @@ Function to echo without prefix to stderr
 #### Example
 
 ```bash
-echo::blank "My Debug statement"
+echo::echo "My Debug statement"
 ```
 
 #### Arguments

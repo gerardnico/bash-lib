@@ -31,7 +31,7 @@ script::has_shebang() {
     read -r FIRST_LINE < "$FILE"
 
     # Check if the first line is a bash or sh shebang
-    if [[ "$FIRST_LINE" == "#!/bin/bash"* || "$FIRST_LINE" == "#!/bin/sh"* ]]; then
+    if [[ "$FIRST_LINE" == "#!"* ]]; then
         echo::debug "The file ($FILE) has a bash or sh shebang."
         return 0
     fi

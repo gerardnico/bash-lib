@@ -50,7 +50,7 @@ error::handler() {
     #  * the actual call to our own function handler::error
     #  * the actual call to the stack:print function
     echo "Error Call Stack:" >&2
-    stack::print 2 >&2
+    stack::print 3 >&2
 
     # Rest color
     echo -e "${NC:-'\033[0m'}" >&2
