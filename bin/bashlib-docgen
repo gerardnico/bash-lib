@@ -94,7 +94,8 @@ function bash_to_markdown(){
 #      echo "$HELP"
 #    } >> "$OUTPUT_FILE"
 #  fi
-  echo::success "Processed Bash $TYPE to $DOC_DIR/$NAME.md"
+  echo::success "Processed Bash $TYPE to $OUTPUT_FILE"
+  echo $OUTPUT_FILE
 
 }
 
@@ -165,7 +166,19 @@ rm -r "$DOC_DIR"/*.md
 for BASH_DIR in "${BASH_DIRS[@]}" ; do
   for FILE in "$BASH_DIR"/*; do
     if [ -f "$FILE" ]; then
-        bash_to_markdown "$FILE"
+        OUTPUT_FILE=$(bash_to_markdown "$FILE")
+        # Generate a pandoc ready file
+        NAME=$(path::get_file_name_without_extension $OUTPUT_FILE)
+        # Example Markdown Pandoc
+        # https://eddieantonio.ca/blog/2015/12/18/authoring-manpages-in-markdown-with-pandoc/
+        # https://raw.githubusercontent.com/eddieantonio/imgcat/refs/heads/master/docs/imgcat.1.md
+        # Pandoc Metadata starts with %
+        # https://pandoc.org/MANUAL.html#metadata-blocks
+        TITLE=$NAME
+        sed -i \
+          -e 's/^## Overview$/## DESCRIPTION/' \
+          -e "1i\% $NAME(1) Version Latest | $TITLE" \
+          $OUTPUT_FILE
     fi
   done
 done
@@ -174,10 +187,15 @@ done
 for DOC_FILE in "$DOC_DIR"/*.md; do
 
   echo::info "Processing man page for $DOC_FILE"
-  MAN_FILE="man/$(path::get_file_name_without_extension $DOC_FILE).1"
+  NAME=$(path::get_file_name_without_extension $DOC_FILE)
+  MAN_FILE="man/$NAME.1"
+
   pandoc $DOC_FILE -s -t man > "$MAN_FILE"
   sudo install -m 0644 "$MAN_FILE" /usr/share/man/man1
   echo::success "Man page $MAN_FILE created and installed"
 
 done
-sudo mandb > /dev/null
+echo::info "Updating the man db index"
+sudo mandb > /dev/null 2>&1
+echo::success "Man db index updated"
+
