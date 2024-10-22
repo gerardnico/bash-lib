@@ -83,3 +83,19 @@ git::get_eval_string(){
   done
   echo "${ARGS[@]}"
 }
+
+# @description create a commit message automatically based on the changed files
+git::get_auto_commit_message(){
+
+  local FILES=()
+  for path in $(git diff-index --name-only HEAD); do
+    FILES+=(" ${path##*/}")
+  done
+  FILE_LIST=$(
+    IFS=$', '
+    echo "${FILES[*]}"
+  )
+  message="Update$FILE_LIST"
+  echo "$message"
+
+}
