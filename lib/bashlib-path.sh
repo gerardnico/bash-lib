@@ -82,7 +82,7 @@ path::get_file_name(){
 
 # @description Return the directory path (known as the dirname)
 # @arg $1 the path
-path::get_file_name(){
+path::get_directory_path(){
   dirname "$1"
 }
 
@@ -106,3 +106,15 @@ path::create_temp_directory(){
   mktemp --directory --suffix="$PREFIX"
 }
 
+# @description
+#    Get the file name up until the first point
+# @arg $1 string - a path
+# @example
+#    # The below would return foo-bar
+#    path::get_file_name_without_extension foo/bar/foo-bar.md
+
+path::get_file_name_without_extension(){
+  # The %% operator removes the longest matching pattern from the end of the string, while .* matches a dot and anything after it.
+  FILE_NAME=$(basename $1)
+  echo "${FILE_NAME%%.*}"
+}

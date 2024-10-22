@@ -51,7 +51,7 @@ function print_usage(){
 # @internal
 # @description Check if the file is a bash script or library and generate the documentation or skip it
 # @arg $1 the file
-function process_file(){
+function bash_to_markdown(){
 
   EXTENSION=$(path::get_extension "$FILE")
   case "$EXTENSION" in
@@ -76,24 +76,24 @@ function process_file(){
   OUTPUT_FILE=$DOC_DIR/$NAME.md
   shdoc < "$FILE" > "$OUTPUT_FILE"
   # Add a help section from script usage
-  if [ $TYPE == "script" ]; then
-    if [[ ! -x "$FILE" ]]; then
-      echo::err "The script file ($FILE) is not executable"
-      exit 1
-    fi
-    if ! HELP=$(eval "$FILE -h"); then
-      if ! HELP=$(eval "$FILE help"); then
-        echo::err "The script file ($FILE) has not a help option (-h) or a command (help)"
-        exit 1
-      fi
-    fi
-    {
-      echo ""
-      echo "## Help"
-      echo ""
-      echo "$HELP"
-    } >> "$OUTPUT_FILE"
-  fi
+#  if [ $TYPE == "script" ]; then
+#    if [[ ! -x "$FILE" ]]; then
+#      echo::err "The script file ($FILE) is not executable"
+#      exit 1
+#    fi
+#    if ! HELP=$(eval "$FILE -h"); then
+#      if ! HELP=$(eval "$FILE help"); then
+#        echo::err "The script file ($FILE) has not a help option (-h) or a command (help)"
+#        exit 1
+#      fi
+#    fi
+#    {
+#      echo ""
+#      echo "## Help"
+#      echo ""
+#      echo "$HELP"
+#    } >> "$OUTPUT_FILE"
+#  fi
   echo::success "Processed Bash $TYPE to $DOC_DIR/$NAME.md"
 
 }
@@ -105,6 +105,7 @@ if ! command -v shdoc &> /dev/null; then
   echo:err "    brew install gerardnico/tap/shdoc"
   exit 1
 fi
+
 
 DOC_DIR="docs"
 declare -a BASH_DIRS=()
@@ -156,12 +157,27 @@ if [ ! -d "$DOC_DIR" ]; then
     echo::err "Error: '$DOC_DIR' is not a valid directory."
     exit 1
 fi
+# Delete all docs
+# If a bin or lib was deleted, the doc should also be deleted
+rm -r "$DOC_DIR"/*.md
 
 # Processing
 for BASH_DIR in "${BASH_DIRS[@]}" ; do
   for FILE in "$BASH_DIR"/*; do
     if [ -f "$FILE" ]; then
-        process_file "$FILE"
+        bash_to_markdown "$FILE"
     fi
   done
 done
+
+# To man page
+for DOC_FILE in "$DOC_DIR"/*.md; do
+
+  echo::info "Processing man page for $DOC_FILE"
+  MAN_FILE="man/$(path::get_file_name_without_extension $DOC_FILE).1"
+  pandoc $DOC_FILE -s -t man > "$MAN_FILE"
+  sudo install -m 0644 "$MAN_FILE" /usr/share/man/man1
+  echo::success "Man page $MAN_FILE created and installed"
+
+done
+sudo mandb > /dev/null
