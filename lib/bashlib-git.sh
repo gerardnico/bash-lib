@@ -5,6 +5,7 @@
 #     See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 
 source bashlib-echo.sh
+source bashlib-command.sh
 
 # @description Get the default branch
 git::get_default_branch(){
@@ -48,4 +49,37 @@ function git::branch_delete() {
 #   gdiff README.md
 git::diff(){
   git diff HEAD "$1" | $EDITOR
+}
+
+# @description Check if there is some modified or delete files not commited
+# @exitcode 1 if the repo is dirty
+git::is_dirty(){
+   ! git diff-index --quiet HEAD --
+}
+
+# @description Create a full git string command
+git::get_eval_string(){
+  local ARGS=()
+  ARGS+=("git")
+  # extract the command
+  GIT_COMMAND=$1
+  shift
+
+  # Config Color output ?
+  if [[ "$GIT_COMMAND" != "wanabi" ]]; then
+    # https://git-scm.com/book/sv/v2/Customizing-Git-Git-Configuration#_colors_in_git
+    ARGS+=("-c")
+    ARGS+=("color.ui=always")
+  fi
+
+  # Command after config
+  ARGS+=("$GIT_COMMAND")
+
+  # Escape to avoid error such as
+  local ESCAPED_ARG
+  for ARG in "${@}"; do
+    ESCAPED_ARG="$(command::escape "$ARG")"
+    ARGS+=("$ESCAPED_ARG")
+  done
+  echo "${ARGS[@]}"
 }

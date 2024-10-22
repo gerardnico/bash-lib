@@ -40,6 +40,6 @@ command::fzf(){
 #     when building command line syntax for eval
 #
 # @stderr The arg escaped
-command::escape_arg(){
+command::escape(){
   echo "$(printf '%q' "${1}")"
 }
