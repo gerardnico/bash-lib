@@ -21,7 +21,7 @@
 #    Start an agent and store the env in a file passed as argument
 #    When starting an agent, this function will create an ENV file
 #    The env file contains:
-#    * the SSH_AUTH_SOCK
+#    * the [SSH_AUTH_SOCK](https://man.archlinux.org/man/ssh.1.en#SSH_AUTH_SOCK)
 #    * and SSH_AGENT_PID env values
 #    It's a wrapper around `eval "$(ssh-agent -s)"`
 #
