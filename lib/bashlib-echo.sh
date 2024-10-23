@@ -26,6 +26,7 @@ source bashlib-string.sh
 BASHLIB_ERROR_COLOR=${BASHLIB_ERROR_COLOR:-$BASHLIB_RED_COLOR}
 BASHLIB_SUCCESS_COLOR=${BASHLIB_SUCCESS_COLOR:-$BASHLIB_GREEN_COLOR}
 BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$BASHLIB_YELLOW_COLOR}
+BASHLIB_TIP_COLOR=${BASHLIB_TIP_COLOR:-$BASHLIB_YELLOW_COLOR}
 
 # Message level
 BASHLIB_ERROR_LEVEL=1
@@ -39,6 +40,7 @@ BASHLIB_SUCCESS_TYPE="success"
 BASHLIB_ERROR_TYPE="error"
 BASHLIB_DEBUG_TYPE="debug"
 BASHLIB_ECHO_TYPE="echo"
+BASHLIB_TIP_TYPE="tip"
 
 # The actual level
 BASHLIB_LEVEL=${BASHLIB_LEVEL:-$BASHLIB_INFO_LEVEL}
@@ -102,6 +104,22 @@ echo::success() {
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
   echo::base --type "$BASHLIB_WARNING_TYPE" --log-level "$BASHLIB_WARNING_LEVEL" "${*}"
+}
+
+# @description
+#     Function to echo tip text
+#
+#     You can choose the color by setting the `BASHLIB_TIP_COLOR` env variable.
+#
+# @arg $1 string The value to print, by default an empty line
+# @exitcode 0 Always
+# @example
+#    export BASHLIB_TIP_COLOR='\033[0;33m' # Optional in bashrc
+#    echo::tip "My tip"
+#
+# @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
+echo::tip() {
+  echo::base --type "$BASHLIB_TIP_TYPE" --log-level "$BASHLIB_WARNING_LEVEL" "${*}"
 }
 
 # @description
@@ -194,6 +212,9 @@ function echo::base(){
     "$BASHLIB_DEBUG_TYPE")
       MESSAGE="Debug: $MESSAGE"
       ;;
+    "$BASHLIB_TIP_TYPE")
+      MESSAGE="Tip: $MESSAGE"
+      ;;
   esac
 
   # Color
@@ -206,7 +227,10 @@ function echo::base(){
       ;;
     "$BASHLIB_WARNING_TYPE")
       MESSAGE="${BASHLIB_WARNING_COLOR}${MESSAGE}${NC}"
-    ;;
+      ;;
+    "$BASHLIB_TIP_TYPE")
+      MESSAGE="${BASHLIB_TIP_COLOR}${MESSAGE}${NC}"
+      ;;
   esac
 
   # Location Information
