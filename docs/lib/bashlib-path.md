@@ -1,8 +1,9 @@
+% bashlib-path(1) Version Latest | bashlib-path
 # bashlib-path documentation
 
 Library on file system path functions
 
-## Overview
+## DESCRIPTION
 
 Library of file system path functions
 
@@ -12,7 +13,7 @@ Library of file system path functions
 * [path::list_recursively](#pathlist_recursively)
 * [path::is_absolute](#pathis_absolute)
 * [path::get_file_name](#pathget_file_name)
-* [path::get_file_name](#pathget_file_name)
+* [path::get_directory_path](#pathget_directory_path)
 * [path::get_absolute_path](#pathget_absolute_path)
 * [path::get_current_directory_name](#pathget_current_directory_name)
 * [path::create_temp_directory](#pathcreate_temp_directory)
@@ -64,7 +65,7 @@ Return the file name (known as the base name)
 
 * **$1** (the): path
 
-### path::get_file_name
+### path::get_directory_path
 
 Return the directory path (known as the dirname)
 

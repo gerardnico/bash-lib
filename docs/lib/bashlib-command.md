@@ -1,8 +1,9 @@
+% bashlib-command(1) Version Latest | bashlib-command
 # bashlib-command
 
 A library over command utilities
 
-## Overview
+## DESCRIPTION
 
 A list of command utilities
 
@@ -10,6 +11,7 @@ A list of command utilities
 
 * [command::echo_eval](#commandecho_eval)
 * [command::fzf](#commandfzf)
+* [command::escape](#commandescape)
 
 ### command::echo_eval
 
@@ -42,5 +44,15 @@ command::fzf
 
 #### Output on stderr
 
-* The command`
+* The command
+
+### command::escape
+
+Escape an argument
+To avoid `syntax error near unexpected token `('`
+when building command line syntax for eval
+
+#### Output on stderr
+
+* The arg escaped
 

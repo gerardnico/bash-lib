@@ -1,11 +1,22 @@
+% bashlib-ssh(1) Version Latest | bashlib-ssh
 # bashlib-ssh documentation
 
 A library of ssh function
 
-## Overview
+## DESCRIPTION
 
 The library entry is [ssh::agent_init](#sshagent_init) that start an ssh agent
 and add keys
+
+It creates only one ssh-agent process per system, 
+rather than the norm of one ssh-agent per login session.
+
+You only need to enter a passphrase once every time your machine is rebooted.
+
+Note: ssh-agent enhances security by allowing you to use passphrase-protected SSH keys without
+entering the passphrase every time. 
+However, anyone with access to the agent’s socket and your user permissions can use the keys 
+managed by the agent.
 
 ## Index
 
@@ -89,6 +100,8 @@ This is used in your `.bashrc` or env loading script
 * The location of the agent socket file
 
 For the key usage, see the [add_keys function](#sshadd_keys)
+
+See also [keychain](https://github.com/funtoo/keychain)
 
 #### Example
 

@@ -1,15 +1,21 @@
+% bashlib-string(1) Version Latest | bashlib-string
 # bashlib-string documentation
 
 Library on string manipulation functions
 
-## Overview
+## DESCRIPTION
 
 Library of string manipulation functions
+Note that the syntax $'...' syntax enables interpretation of escape sequences
 
 ## Index
 
 * [string::split](#stringsplit)
 * [string::trim](#stringtrim)
+* [string::is_blank](#stringis_blank)
+* [string::set_bold](#stringset_bold)
+* [string::set_underline](#stringset_underline)
+* [string::set_color](#stringset_color)
 
 ### string::split
 
@@ -49,4 +55,52 @@ trim the first argument
 #### Arguments
 
 * **$1** (the): string to trim
+
+### string::is_blank
+
+test if the string is blank (ie empty or only with space)
+
+#### Arguments
+
+* **$1** (the): string to test (true if not passed)
+
+### string::set_bold
+
+Set the string bold
+To see the boldness you need to use the `echo` package or use `echo -e` on the output
+
+#### Arguments
+
+* **$1** (the): string
+
+#### Output on stdout
+
+* the text wrapped with ansi color code
+
+### string::set_underline
+
+Set the string underline
+To see the underline you need to use the `echo` package or use `echo -e` on the output
+
+#### Arguments
+
+* **$1** (the): string
+
+#### Output on stdout
+
+* the text wrapped with ansi color code
+
+### string::set_color
+
+Set a color (an ascii code or red, green, yellow)
+To see the color you need to use the `echo` package or use `echo -e` on the output
+
+#### Arguments
+
+* **$1** (the): color
+* **$2** (the): string
+
+#### Output on stdout
+
+* the text wrapped with ansi color code
 

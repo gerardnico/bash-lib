@@ -1,8 +1,9 @@
+% bashlib-shell(1) Version Latest | bashlib-shell
 # bashlib-shell documentation
 
 Library of functions over the shell
 
-## Overview
+## DESCRIPTION
 
 Library of functions over the shell
 

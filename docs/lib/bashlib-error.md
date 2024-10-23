@@ -1,8 +1,9 @@
+% bashlib-error(1) Version Latest | bashlib-error
 # bashlib-error documentation
 
 Library to handle error in bash
 
-## Overview
+## DESCRIPTION
 
 With this library, you will be able to add an error handler
 See the function [set_trap](#errorset_trap) for a usage example

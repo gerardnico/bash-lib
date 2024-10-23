@@ -1,8 +1,9 @@
+% bashlib-function(1) Version Latest | bashlib-function
 # bashlib-function documentation
 
 Library for function over function
 
-## Overview
+## DESCRIPTION
 
 Print the function definition
 

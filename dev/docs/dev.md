@@ -8,7 +8,7 @@
 
 ## Docs
 
-The doc is generated with our own utility [bashlib-docgen](../../docs/bashlib-docgen.md) 
+The doc is generated with our own utility [bashlib-docgen](../../docs/bin/bashlib-docgen.md) 
 
 It's a wrapper around [shdoc](https://github.com/reconquest/shdoc)
 * Install:

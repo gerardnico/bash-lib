@@ -18,62 +18,19 @@ source bashlib-path.sh
 
 
 function print_usage(){
-  CLI_NAME=$(basename "$0") # Name of the cli
-  echo ""
-  echo "Usage of the cli ${CLI_NAME}"
-  echo ""
-  echo "Generate markdown documentation from bash script or libraries"
-  echo ""
-  echo '```bash'
-  echo "${CLI_NAME} [-o outputDir] bashDir..."
-  echo '```'
-  echo ""
-  echo "where:"
-  echo "* \`-o\`      - is the output directory (default to docs)"
-  echo "* \`-h\`      - shows this help"
-  echo "* \`bashDir\` - one or more directories with bash scripts or libraries (default to lib and bin)"
-  echo ""
-  echo "A library:"
-  echo "* has no bash shebang"
-  echo "* is not executable"
-  echo "* has the extension \`sh\`"
-  echo ""
-  echo "A script file:"
-  echo "* has a bash shebang"
-  echo "* is executable"
-  echo "* has a help option (\`-h\`) or command (\`help\`)"
-  echo ""
-  echo "The output of the help is added to the documentation in a h2 section called \`Help\`"
-  echo ""
-
+  man "$(basename $0)"
 }
 
 # @internal
 # @description Check if the file is a bash script or library and generate the documentation or skip it
 # @arg $1 the file
-function bash_to_markdown(){
+function bash_lib_to_markdown(){
 
-  EXTENSION=$(path::get_extension "$FILE")
-  case "$EXTENSION" in
-    "sh")
-      TYPE="library"
-    ;;
-    "")
-      if ! script::has_shebang "$FILE"; then
-        echo::info "No Shebang found. Skipped file $FILE"
-        return
-      fi
-      TYPE="script"
-    ;;
-    *)
-      echo::info "Skipped file $FILE"
-      return
-  esac
-  echo::info "Processing Bash $TYPE $FILE"
+  echo::info "Processing Bash Lib $TYPE $FILE"
   # Delete the extension if any
   NAME=$(basename "$FILE" | sed 's/\.sh$//')
   # Generate the doc
-  OUTPUT_FILE=$DOC_DIR/$NAME.md
+  OUTPUT_FILE="$LIB_DOC_DIR"/"$NAME".md
   shdoc < "$FILE" > "$OUTPUT_FILE"
   # Add a help section from script usage
 #  if [ $TYPE == "script" ]; then
@@ -95,7 +52,7 @@ function bash_to_markdown(){
 #    } >> "$OUTPUT_FILE"
 #  fi
   echo::success "Processed Bash $TYPE to $OUTPUT_FILE"
-  echo $OUTPUT_FILE
+  echo "$OUTPUT_FILE"
 
 }
 
@@ -112,11 +69,11 @@ DOC_DIR="docs"
 declare -a BASH_DIRS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  -o|--output)
+  "-o"|"--output")
     shift
     DOC_DIR="$1"
     ;;
-  -h|--help)
+  "-h"|"--help"|"help")
     print_usage
     exit
     ;;
@@ -158,17 +115,46 @@ if [ ! -d "$DOC_DIR" ]; then
     echo::err "Error: '$DOC_DIR' is not a valid directory."
     exit 1
 fi
+
 # Delete all docs
 # If a bin or lib was deleted, the doc should also be deleted
-rm -r "$DOC_DIR"/*.md
+LIB_DOC_DIR="$DOC_DIR/lib"
+mkdir -p "$LIB_DOC_DIR"
+rm -rf "$LIB_DOC_DIR"/*.md
+BIN_DOC_DIR="$DOC_DIR/bin"
+
+# Type of file
+LIBRARY_TYPE="library"
+SCRIPT_TYPE="script"
 
 # Processing
 for BASH_DIR in "${BASH_DIRS[@]}" ; do
   for FILE in "$BASH_DIR"/*; do
-    if [ -f "$FILE" ]; then
-        OUTPUT_FILE=$(bash_to_markdown "$FILE")
+    if [ -d "$FILE" ]; then
+      echo::info "Skipped directory $FILE"
+      continue
+    fi
+    EXTENSION=$(path::get_extension "$FILE")
+    case "$EXTENSION" in
+      "sh")
+        TYPE="$LIBRARY_TYPE"
+      ;;
+      "")
+        if ! script::has_shebang "$FILE"; then
+          echo::info "No Shebang found. Skipped file $FILE"
+          continue
+        fi
+        TYPE="$SCRIPT_TYPE"
+      ;;
+      *)
+        echo::info "Skipped file $FILE (not a bash file)"
+        continue
+    esac
+    NAME=$(path::get_file_name_without_extension "$FILE")
+    case $TYPE in
+      "$LIBRARY_TYPE")
+        OUTPUT_FILE=$(bash_lib_to_markdown "$FILE")
         # Generate a pandoc ready file
-        NAME=$(path::get_file_name_without_extension $OUTPUT_FILE)
         # Example Markdown Pandoc
         # https://eddieantonio.ca/blog/2015/12/18/authoring-manpages-in-markdown-with-pandoc/
         # https://raw.githubusercontent.com/eddieantonio/imgcat/refs/heads/master/docs/imgcat.1.md
@@ -178,23 +164,37 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
         sed -i \
           -e 's/^## Overview$/## DESCRIPTION/' \
           -e "1i\% $NAME(1) Version Latest | $TITLE" \
-          $OUTPUT_FILE
-    fi
+          "$OUTPUT_FILE"
+          ;;
+      "$SCRIPT_TYPE")
+        # Markdown file are created manually
+        # the file should exist
+        BIN_MD_FILE="$BIN_DOC_DIR/$NAME.md"
+        if [ ! -f "$BIN_MD_FILE" ]; then
+          echo::err "The file $BIN_MD_FILE was not found"
+          exit 1
+        fi
+        ;;
+    esac
   done
 done
 
+
+MAN_1_DOC_DIR="$DOC_DIR/man/man1"
+mkdir -p "$MAN_1_DOC_DIR"
 # To man page
-for DOC_FILE in "$DOC_DIR"/*.md; do
+for DOC_FILE in "$BIN_DOC_DIR"/*.md; do
 
   echo::info "Processing man page for $DOC_FILE"
-  NAME=$(path::get_file_name_without_extension $DOC_FILE)
-  MAN_FILE="man/$NAME.1"
+  NAME=$(path::get_file_name_without_extension "$DOC_FILE")
+  MAN_FILE="$MAN_1_DOC_DIR/$NAME.1"
 
-  pandoc $DOC_FILE -s -t man > "$MAN_FILE"
+  pandoc "$DOC_FILE" -s -t man > "$MAN_FILE"
   sudo install -m 0644 "$MAN_FILE" /usr/share/man/man1
   echo::success "Man page $MAN_FILE created and installed"
 
 done
+
 echo::info "Updating the man db index"
 sudo mandb > /dev/null 2>&1
 echo::success "Man db index updated"

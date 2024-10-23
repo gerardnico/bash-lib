@@ -1,8 +1,9 @@
+% bashlib-stack(1) Version Latest | bashlib-stack
 # bashlib-stack documentation
 
 Call stack function
 
-## Overview
+## DESCRIPTION
 
 Functions around the Bash-maintained `FUNCNAME`, `BASH_SOURCE` and `BASH_LINENO` arrays
 

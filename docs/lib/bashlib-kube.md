@@ -1,8 +1,9 @@
+% bashlib-kube(1) Version Latest | bashlib-kube
 # bashlib-kube
 
 A library of kubernetes functions
 
-## Overview
+## DESCRIPTION
 
 A library of kubernetes functions
 

@@ -1,8 +1,9 @@
+% bashlib-echo(1) Version Latest | bashlib-echo
 # bashlib-echo documentation
 
 A echo library to log info, error and warning messages
 
-## Overview
+## DESCRIPTION
 
 With this library, you will be able to log info, error, debug and warning messages.
 
@@ -25,6 +26,7 @@ They all accept the flag `--silent` or `-s` to no echo anything
 * [echo::err](#echoerr)
 * [echo::success](#echosuccess)
 * [echo::warn](#echowarn)
+* [echo::tip](#echotip)
 * [echo::debug](#echodebug)
 * [echo::conf](#echoconf)
 * [echo::echo](#echoecho)
@@ -113,6 +115,31 @@ You can choose the color by setting the `BASHLIB_WARNING_COLOR` env variable.
 ```bash
 export BASHLIB_WARNING_COLOR='\033[0;33m' # Optional in bashrc
 echo::warn "My Warning"
+```
+
+#### Arguments
+
+* **$1** (string): The value to print, by default an empty line
+
+#### Exit codes
+
+* **0**: Always
+
+#### Output on stderr
+
+* The output is always in stderr to avoid polluting stdout with log message (git ways)
+
+### echo::tip
+
+Function to echo tip text
+
+You can choose the color by setting the `BASHLIB_TIP_COLOR` env variable.
+
+#### Example
+
+```bash
+export BASHLIB_TIP_COLOR='\033[0;33m' # Optional in bashrc
+echo::tip "My tip"
 ```
 
 #### Arguments

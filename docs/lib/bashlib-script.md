@@ -1,8 +1,9 @@
+% bashlib-script(1) Version Latest | bashlib-script
 # bashlib-script documentation
 
 Library of Script functions
 
-## Overview
+## DESCRIPTION
 
 Library of Script functions
 

@@ -1,8 +1,9 @@
+% bashlib-cd(1) Version Latest | bashlib-cd
 # bashlib-cd
 
 A library of cd functions
 
-## Overview
+## DESCRIPTION
 
 A library of cd functions kept for historical purpose
 
