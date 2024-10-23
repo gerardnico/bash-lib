@@ -30,6 +30,7 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-function.sh](docs/lib/bashlib-function.md) - Function functions
 * [bashlib-git.sh](docs/lib/bashlib-git.md) - Git functions
 * [bashlib-kube.sh](docs/lib/bashlib-kube.md) - Kubernetes functions
+* [bashlib-linux.sh](docs/lib/bashlib-linux.md) - Linux functions 
 * [bashlib-path.sh](docs/lib/bashlib-path.md) - File System Path functions
 * [bashlib-script.sh](docs/lib/bashlib-script.md) - Script functions (ie source)
 * [bashlib-shell.sh](docs/lib/bashlib-shell.md) - Shell functions
