@@ -1,6 +1,7 @@
 # @name bashlib-string documentation
 # @brief Library on string manipulation functions
 # @description Library of string manipulation functions
+#    Note that the syntax $'...' syntax enables interpretation of escape sequences
 
 
 
@@ -66,7 +67,7 @@ NC='\033[0m' # No Color
 # @arg $1 the string
 # @stdout the text wrapped with ansi color code
 string::set_bold(){
-  BOLD = '\033[1m'
+  BOLD='\033[1m'
   echo "${BOLD}${1}${NC}"
 }
 
@@ -76,7 +77,7 @@ string::set_bold(){
 # @arg $1 the string
 # @stdout the text wrapped with ansi color code
 string::set_underline(){
-  UNDERLINE = '\033[4m'
+  UNDERLINE='\033[4m'
   echo "${UNDERLINE}${1}${NC}"
 }
 
@@ -98,7 +99,9 @@ string::set_color(){
       ;;
     "yellow")
       COLOR="$BASHLIB_YELLOW_COLOR"
-    ;;
+      ;;
+    "blue")
+      COLOR="$BASHLIB_BLUE_COLOR"
   esac
   echo "${COLOR}${2}${NC}"
 
