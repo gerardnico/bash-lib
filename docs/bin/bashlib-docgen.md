@@ -37,8 +37,8 @@ They are searched by default in the `bin` and `lib` directories.
 # SYNOPSIS
 # ....
 ```
-  * The man pages are generated into `docs/man/man1`
-  * You can add in your help function
+  * The man pages are generated into `docs/man/man1` and installed locally.
+  * You can then use your man page in your help function. Example:
 ```bash
 help_usage(){
   qman "$(basename $0)"
