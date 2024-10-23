@@ -37,15 +37,25 @@
 ssh::agent_start () {
 	local ENV="${1:-$SSH_ENV}"
 	local SOCK="${2:-$SSH_AUTH_SOCK}"
-    echo Starting the ssh-agent with env at $ENV and sock at "$SSH_AUTH_SOCK"
-    (umask 077; ssh-agent -a "$SOCK" >| "$ENV")
-    . "$ENV" >| /dev/null ; 
+  echo "Starting the ssh-agent with env at $ENV and sock at $SSH_AUTH_SOCK"
+  (umask 077; ssh-agent -a "$SOCK" >| "$ENV")
+  # shellcheck disable=SC1090
+  source "$ENV" >| /dev/null ;
 }
 
 # @description Load the env
 ssh::agent_load_env () {
-	local env="${1:-$SSH_ENV}"
-	test -f "$env" && . "$env" >| /dev/null ; 
+	local ENV_FILE="${1:-$SSH_ENV}"
+	# shellcheck disable=SC1090
+	test -f "$ENV_FILE" && source "$ENV_FILE" >| /dev/null ;
+}
+
+# @description List the available keys
+ssh::list_keys(){
+  # Fingerprint format
+  ssh-add -l
+  # Long format
+  # ssh-add -L
 }
 
 # @description
@@ -118,9 +128,29 @@ ssh::agent_state(){
   
 }
 
-# @description Kill a running agent
+# @description Kill a running agent given by the SSH_AGENT_PID environment variable
+# @exitcode 1 if the SSH_AGENT_PID is unknown or the agent could not be killed
 ssh::agent_kill(){
+
+  if [[ -z "$SSH_AGENT_PID" ]]; then
+    # Trying to get it via process name
+    SSH_AGENT_PID=$(pgrep ssh-agent)
+    if [[ -z "$SSH_AGENT_PID" ]]; then
+      echo::err "The SSH_AGENT_PID is unknown"
+      return 1
+    fi
+    # Give access to ssh-agent
+    export SSH_AGENT_PID
+  fi
+
   ssh-agent -k
+
+  # Delete env
+  unset SSH_AGENT_PID
+  unset SSH_AUTH_SOCK
+  rm -f "$SSH_ENV"
+  unset SSH_ENV
+
 }
 
 
@@ -161,11 +191,17 @@ ssh::known_hosts_update() {
 # @see idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
 ssh::agent_init(){
 
+  if [[ -z "$SSH_ENV" ]]; then
+    SSH_ENV="$HOME"/.ssh/ssh-agent.env
+    export SSH_ENV
+  fi
+
   # Load the env if available
   ssh::agent_load_env "$SSH_ENV"
 
   # Get the state
-  local SSH_AGENT_RUN_STATE=$(ssh::agent_state)
+  local SSH_AGENT_RUN_STATE
+  SSH_AGENT_RUN_STATE=$(ssh::agent_state)
   if [ ! "$SSH_AUTH_SOCK" ] || [ "$SSH_AGENT_RUN_STATE" = 2 ]; then
   	echo "Agent not started"
   	# The sock may be a symlink, so -e check that
