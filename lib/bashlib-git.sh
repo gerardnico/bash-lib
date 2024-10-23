@@ -84,18 +84,23 @@ git::get_eval_string(){
   echo "${ARGS[@]}"
 }
 
+# @return a list of dirty files
+# @arg $1 string - the separator (by default a comma)
+git::get_dirty_files(){
+
+  SEP=${1:-$', '}
+  local DIRTY_FILES=()
+  for path in $(git diff-index --name-only HEAD); do
+    DIRTY_FILES+=(" ${path##*/}")
+  done
+  IFS="$SEP" echo "${DIRTY_FILES[*]}"
+
+}
+
 # @description create a commit message automatically based on the changed files
 git::get_auto_commit_message(){
 
-  local FILES=()
-  for path in $(git diff-index --name-only HEAD); do
-    FILES+=(" ${path##*/}")
-  done
-  FILE_LIST=$(
-    IFS=$', '
-    echo "${FILES[*]}"
-  )
-  message="Update$FILE_LIST"
+  message="Commit $(git::get_dirty_files $', ')"
   echo "$message"
 
 }
