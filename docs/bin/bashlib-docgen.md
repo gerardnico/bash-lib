@@ -30,7 +30,7 @@ They are searched by default in the `bin` and `lib` directories.
   * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc)
   * no manpage is generated
 * For a script:
-  * you need to create a pandoc markdown file manually in `docs/bin`
+  * you need to create a pandoc markdown file manually in `docs/bin`. Example of pandoc file with [pandoc metadata](https://pandoc.org/MANUAL.html#metadata-blocks)
 ```markdown
 % your-script-name(1) Version 1.0.0 | The title
 # NAME
