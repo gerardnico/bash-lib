@@ -155,3 +155,52 @@ crypto::certs_expiration(){
       printf '%s: %s\n'    "$(date --date="$(openssl x509 -enddate -noout -in "$crt"|cut -d= -f 2)" --iso-8601)" "$crt";
     done | sort
 }
+
+
+# @description
+#     Return the type of file
+# @arg $1 string - the path
+# @stdout kdbx or pem
+crypto::get_file_type() {
+
+    local file="$1"
+
+    # Check if file exists
+    if [ ! -f "$file" ]; then
+        echo "Error: File '$file' not found"
+        exit 1
+    fi
+
+    # Get the file type
+    FILE_TYPE=$(file "$file")
+
+    if ( shopt -s nocasematch; [[ $FILE_TYPE =~ KDBX ]] ); then
+      echo "kdbx"
+      return;
+    fi
+
+    if ( shopt -s nocasematch; [[ $FILE_TYPE =~ OpenSSH ]] ); then
+        # Example of value:
+        # OpenSSH RSA public key
+        # OpenSSH private key
+        echo "pem"
+        return;
+    fi
+
+    echo::err "We are unable to determine the type of file"
+    return 1
+
+}
+
+# @description
+#     Return if this is RSA material
+# @arg $1 string - the path
+# @exitcode 0 if true
+# @exitcode 1 if false
+crypto::is_rsa(){
+  (
+    shopt -s nocasematch;
+    [[ $(file "$1") =~ RSA ]]
+  )
+}
+

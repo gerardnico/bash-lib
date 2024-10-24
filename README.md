@@ -5,9 +5,12 @@
 
 A collection of:
 * [bash libraries](#where-is-the-library-documentation) 
-* and [utility scripts](#where-is-the-script-documentation)
+* and [documentation generation script](#where-is-the-script-documentation)
+to create bash script.
 
 ## Example
+
+### Colorized message
 
 After [installation](#how-to-install), you would use the [bashlib-echo.sh library](docs/lib/bashlib-echo.md) and output an error:
 ```bash
@@ -15,6 +18,15 @@ source bashlib-echo.sh
 echo::err "Oups"
 ```
 
+### Error traps
+
+After [installation](#how-to-install), you would use the [bashlib-error.sh library](docs/lib/bashlib-error.md) 
+and shows a stack trace if any error with:
+```bash
+set -Eeuo pipefail
+source bashlib-error.sh
+error::set_trap
+```
 
 ## Where is the library documentation?
 

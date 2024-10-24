@@ -106,3 +106,30 @@ string::set_color(){
   echo "${COLOR}${2}${NC}"
 
 }
+
+# @description
+#     Check if a string starts with a prefix
+# @arg $1 the string
+# @arg $2 the prefix
+# @exitcode 0 - if the string starts with
+# @exitcode 1 - if the string does not starts with
+string::start_with(){
+  # A pattern is never quoted, that's whey the ^ is not quoted
+  [[ "${1}" =~ ^"${2}" ]]
+}
+
+# @description
+#     Check if a string matches without casing
+# @arg $1 the string
+# @arg $2 the pattern
+# @exitcode 0 - if the string match without casing
+# @exitcode 1 - if the string does not match without casing
+string::no_case_match(){
+  # The parenthesis make the `shopt` local as it starts a subshell
+  (
+      shopt -s nocasematch;
+      # shellcheck disable=SC2076
+      [[ "$1" =~ "$2" ]]
+  )
+}
+
