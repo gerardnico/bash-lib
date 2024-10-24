@@ -14,6 +14,9 @@ Library over cryptographic function (key, certificate, ...)
 * [crypto::cert_print](#cryptocert_print)
 * [crypto::print_bundled_certificate_old](#cryptoprint_bundled_certificate_old)
 * [crypto::certs_expiration](#cryptocerts_expiration)
+* [crypto::get_file_type](#cryptoget_file_type)
+* [crypto::is_rsa](#cryptois_rsa)
+* [crypto::is_openssh_private_key](#cryptois_openssh_private_key)
 
 ### crypto::pem_to_base64
 
@@ -83,4 +86,43 @@ Print the expiration from certs in a directory in ascendant order
 #### Arguments
 
 * **$1** (string): - the directory (current if not specified)
+
+### crypto::get_file_type
+
+Return the type of file
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Output on stdout
+
+* kdbx or pem
+
+### crypto::is_rsa
+
+Return if this is RSA Public Key material
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false or unknown
+
+### crypto::is_openssh_private_key
+
+Return if this is OpenSSH Private Key
+We don't known the algorithm
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false
 

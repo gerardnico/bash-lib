@@ -17,6 +17,7 @@ Library of file system path functions
 * [path::get_absolute_path](#pathget_absolute_path)
 * [path::get_current_directory_name](#pathget_current_directory_name)
 * [path::create_temp_directory](#pathcreate_temp_directory)
+* [path::get_file_name_without_extension](#pathget_file_name_without_extension)
 
 ### path::get_extension
 
@@ -93,4 +94,19 @@ with [mktemp](http://www.mktemp.org/)
 #### Arguments
 
 * **$1** (string): - a prefix (temp by default)
+
+### path::get_file_name_without_extension
+
+Get the file name up until the first point
+
+#### Example
+
+```bash
+# The below would return foo-bar
+path::get_file_name_without_extension foo/bar/foo-bar.md
+```
+
+#### Arguments
+
+* **$1** (string): - a path
 

@@ -37,6 +37,7 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-cd.sh](docs/lib/bashlib-echo.md) - Cd functions
 * [bashlib-command.sh](docs/lib/bashlib-command.md) - Command functions (eval, ...)
 * [bashlib-crypto.sh](docs/lib/bashlib-crypto.md) - Cryptographic functions (Key, Cert, ...)
+* [bashlib-doc.sh](docs/lib/bashlib-doc.md) - Documentation functions
 * [bashlib-echo.sh](docs/lib/bashlib-echo.md) - Echo functions (info, warning, error, tip, ...)
 * [bashlib-error.sh](docs/lib/bashlib-error.md) - Error handler functions
 * [bashlib-function.sh](docs/lib/bashlib-function.md) - Function functions

@@ -22,6 +22,7 @@ managed by the agent.
 
 * [ssh::agent_start](#sshagent_start)
 * [ssh::agent_load_env](#sshagent_load_env)
+* [ssh::list_keys](#sshlist_keys)
 * [ssh::add_keys](#sshadd_keys)
 * [ssh::agent_state](#sshagent_state)
 * [ssh::agent_kill](#sshagent_kill)
@@ -33,7 +34,7 @@ managed by the agent.
 Start an agent and store the env in a file passed as argument
 When starting an agent, this function will create an ENV file
 The env file contains:
-* the SSH_AUTH_SOCK
+* the [SSH_AUTH_SOCK](https://man.archlinux.org/man/ssh.1.en#SSH_AUTH_SOCK)
 * and SSH_AGENT_PID env values
 It's a wrapper around `eval "$(ssh-agent -s)"`
 
@@ -55,6 +56,10 @@ echo Agent pid 17883;
 ### ssh::agent_load_env
 
 Load the env
+
+### ssh::list_keys
+
+List the available keys
 
 ### ssh::add_keys
 
@@ -83,7 +88,11 @@ returns the Agent_run_state
 
 ### ssh::agent_kill
 
-Kill a running agent
+Kill a running agent given by the SSH_AGENT_PID environment variable
+
+#### Exit codes
+
+* **1**: if the SSH_AGENT_PID is unknown or the agent could not be killed
 
 ### ssh::known_hosts_update
 

@@ -193,14 +193,23 @@ crypto::get_file_type() {
 }
 
 # @description
-#     Return if this is RSA Public Key material
+#     Return if this is RSA Key material
 # @arg $1 string - the path
 # @exitcode 0 if true
 # @exitcode 1 if false or unknown
 crypto::is_rsa(){
   # When the file is a public key
   # When the file is a private key, `file` does not return the algorithm. It returns `OpenSSH private key`
-  [[ $(file -b "$1") == "OpenSSH RSA public key" ]]
+  if [[ $(file -b "$1") == "OpenSSH RSA public key" ]]; then
+    return;
+  fi
+  if ! crypto::is_openssh_private_key "$1"; then
+    return 1
+  fi
+  (
+    shopt -s nocasematch;
+    [[ $(crypto::get_private_key_algo "$1") =~ rsa ]]
+  )
 }
 
 # @description
@@ -213,4 +222,13 @@ crypto::is_openssh_private_key(){
 
   [[ $(file -b "$1") == "OpenSSH private key" ]]
 
+}
+
+# @description
+#     Return the private key algo
+# @arg $1 string - the path
+# @exitcode 0 if true
+# @exitcode 1 if false or unknown
+crypto::get_private_key_algo(){
+  ssh-keygen -l -f "$1" | sed -n 's/.*(\(.*\)).*/\1/p'
 }

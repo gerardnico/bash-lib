@@ -16,6 +16,8 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 * [string::set_bold](#stringset_bold)
 * [string::set_underline](#stringset_underline)
 * [string::set_color](#stringset_color)
+* [string::start_with](#stringstart_with)
+* [string::no_case_match](#stringno_case_match)
 
 ### string::split
 
@@ -103,4 +105,32 @@ To see the color you need to use the `echo` package or use `echo -e` on the outp
 #### Output on stdout
 
 * the text wrapped with ansi color code
+
+### string::start_with
+
+Check if a string starts with a prefix
+
+#### Arguments
+
+* **$1** (the): string
+* **$2** (the): prefix
+
+#### Exit codes
+
+* **0**: - if the string starts with
+* **1**: - if the string does not starts with
+
+### string::no_case_match
+
+Check if a string matches without casing
+
+#### Arguments
+
+* **$1** (the): string
+* **$2** (the): pattern
+
+#### Exit codes
+
+* **0**: - if the string match without casing
+* **1**: - if the string does not match without casing
 
