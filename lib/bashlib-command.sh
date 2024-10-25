@@ -24,6 +24,9 @@ command::echo_eval(){
 
 # @description
 #     Pipe the command history to fuzzy search
+#
+#     Note that his function is already available natively with `Ctrl+R`
+#
 #     A Ctrl-A with fzf but returning the command
 #
 # @example
@@ -41,5 +44,14 @@ command::fzf(){
 #
 # @stderr The arg escaped
 command::escape(){
-  echo "$(printf '%q' "${1}")"
+  printf '%q' "${1}"
+}
+
+# @description
+#     Check if a command exists
+#
+# @exitcode 0 if it exists
+# @exitcode 1 if it does not exist
+command::exist(){
+  [ -x "$(command -v "$1")" ]
 }

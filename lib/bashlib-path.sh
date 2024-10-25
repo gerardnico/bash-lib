@@ -118,3 +118,40 @@ path::get_file_name_without_extension(){
   echo "${FILE_NAME%%.*}"
 }
 
+# @description
+#    Get the file name up until the first point
+#
+#    Demo:
+#    ```bash
+#    path::relative_to /a/b /a
+#    ```
+#    would exit with the code `0` and the stdout `a`
+#
+# @arg $1 string - the path
+# @arg $2 string - the base path (a parent path if relative)
+# @exitcode 0 number - if the path is relative to the base path
+# @exitcode 1 number - if the path is not relative to the base path
+# @stdout the relative path
+path::relative_to() {
+
+    local TARGET_PATH
+    TARGET_PATH=$(realpath "$1")
+    local BASE_PATH
+    BASE_PATH=$(realpath "$2")
+
+    # Check if TARGET_PATH does not start with BASE_PATH
+    if [[ "$TARGET_PATH" != "$BASE_PATH"* ]]; then
+      return 1
+    fi
+
+    # Remove BASE_PATH from TARGET_PATH and leading slash
+    local relative_path="${TARGET_PATH#"$BASE_PATH"}"
+    relative_path="${relative_path#/}"
+    # If paths were identical, return "."
+    if [ -z "$relative_path" ]; then
+        echo "."
+    else
+        echo "$relative_path"
+    fi
+
+}

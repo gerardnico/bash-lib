@@ -34,7 +34,7 @@ See each library documentation page for usage.
 
 The `bash-lib` package contains the following libraries:
 
-* [bashlib-bash.sh](docs/lib/bashlib-bash.md) - Bash functions
+* [bashlib-bash.sh](docs/lib/bashlib-bash.md) - Bash functions (is interactive, trap, ...)
 * [bashlib-cd.sh](docs/lib/bashlib-echo.md) - Cd functions
 * [bashlib-command.sh](docs/lib/bashlib-command.md) - Command functions (eval, ...)
 * [bashlib-crypto.sh](docs/lib/bashlib-crypto.md) - Cryptographic functions (Key, Cert, ...)
@@ -46,7 +46,6 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-linux.sh](docs/lib/bashlib-linux.md) - Linux functions 
 * [bashlib-path.sh](docs/lib/bashlib-path.md) - File System Path functions
 * [bashlib-script.sh](docs/lib/bashlib-script.md) - Script functions (ie source)
-* [bashlib-shell.sh](docs/lib/bashlib-shell.md) - Shell functions
 * [bashlib-ssh.sh](docs/lib/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](docs/lib/bashlib-stack.md) - CallStack/Frame functions
 * [bashlib-string.sh](docs/lib/bashlib-stack.md) - String functions

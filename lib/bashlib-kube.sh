@@ -6,6 +6,9 @@
 #
 
 source bashlib-echo.sh
+source bashlib-command.sh
+source bashlib-bash.sh
+source bashlib-path.sh
 
 # @description
 #     Return the app label used to locate resources
@@ -150,12 +153,7 @@ kube::get_app_dir(){
 
   KUBE_APP_NAME="$1"
 
-  if [ -z "$KUBE_APP_HOME" ]; then
-    echo:err "The KUBE_APP_HOME environment variable is mandatory and was not found"
-    echo:err "Add it in your bashrc or OS environment variables"
-    return 1
-  fi
-
+  kube::check_app_home
   KUBE_APP_DIRECTORY=$KUBE_APP_HOME/$KUBE_APP_NAME
 
   if [ ! -d "$KUBE_APP_DIRECTORY" ]; then
@@ -166,4 +164,102 @@ kube::get_app_dir(){
   echo "$KUBE_APP_DIRECTORY"
 
 
+}
+
+# @description
+#    Check if KUBE_APP_HOME is set
+kube::check_app_home(){
+  if [ -z "$KUBE_APP_HOME" ]; then
+      echo:err "The KUBE_APP_HOME environment variable is mandatory and was not found"
+      echo:err "Add it in your bashrc or OS environment variables"
+      return 1
+  fi
+}
+
+# @description test the connection to the cluster
+kube::test_connection(){
+
+  if OUTPUT=$(kubectl cluster-info); then
+    return 0;
+  fi
+  echo::err "No connection could be made with the cluster"
+
+  if [ -z "$KUBECONFIG" ]; then
+      echo::err "Note: No KUBECONFIG env found"
+  else
+    if [ ! -f "$KUBECONFIG" ]; then
+      echo::err "The KUBECONFIG env file ($KUBECONFIG) does not exist"
+    else
+      echo::info "The file ($KUBECONFIG) may have bad cluster info"
+      echo::err "Note: The config is:"
+      kubectl config view
+      echo::err "We got the following output"
+      echo::err "$OUTPUT"
+    fi
+  fi
+  return 1
+
+}
+
+
+# @description
+#   Set the env for the app and test the connection
+kube::set_app_env_up(){
+
+  if shell::is_interactive; then
+    echo::err "This function should be called only non-interactively"
+    return 1;
+  fi
+
+  APP_DIR=$(kube::get_app_dir "$APP_NAME")
+
+  # Go to the app dir and pop at err and exit
+  pushd "$APP_DIR" || return 1
+  bash::trap 'popd' EXIT # EXIT execute also on error
+
+  # Load the env
+  ENV_LOADED=1
+  if command::exist "direnv"; then
+      # Direnv should be explicitly called in non-interactive mode
+      # https://github.com/direnv/direnv/issues/262
+      eval "$(direnv export bash)"
+      ENV_LOADED=0
+  fi
+
+  if [ "$ENV_LOADED" = 1 ]; then
+    echo::warn "Direnv not found on path"
+    ENVRC_FILE="$APP_DIR/.envrc"
+    if [ -f "$ENVRC_FILE" ]; then
+      # shellcheck disable=SC1090
+      source "$ENVRC_FILE"
+    else
+      echo::warn "File $ENVRC_FILE not found"
+    fi
+  fi
+
+  # We test the connection because otherwise the user
+  # may get a message that a resource could not be found
+  # where the culprit should have been the connection
+  kube::test_connection
+
+}
+
+# @description
+#   Get the app name from the env in order
+#   * from the env `$KUBE_APP_NAME`
+#   * from the current working directory. If we are below the KUBE_APP_HOME directory
+kube::get_app_name_from_env(){
+  APP_NAME=${KUBE_APP_NAME:-}
+  if [ "$APP_NAME" != "" ]; then
+    echo::info "App name '$APP_NAME' determined by the KUBE_APP_NAME env."
+    echo "$APP_NAME";
+    return;
+  fi
+  kube::check_app_home
+  if APP_NAME=$(path::relative_to "$PWD" "$KUBE_APP_HOME"); then
+    echo::info "App name '$APP_NAME' determined because we are in the app directory."
+    echo "$APP_NAME";
+    return;
+  fi
+  return 1
 }
