@@ -63,6 +63,7 @@ function echo::info() {
 #
 #     You can choose the color by setting the `BASHLIB_ERROR_COLOR` env variable.
 #
+#
 # @arg $1 string The value to print, by default an empty line
 # @exitcode 0 Always
 # @example

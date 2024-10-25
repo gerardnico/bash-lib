@@ -5,7 +5,7 @@ Library over documentation function
 
 ## DESCRIPTION
 
-Library over documentation function
+Library over documentation functions
 
 ## Index
 
@@ -16,12 +16,12 @@ Library over documentation function
 #### Example
 
 ```bash
- {
-   cat << EOF
- ```bash
- command option
- ```
- EOF
+{
+cat << EOF
+```bash
+command option
+```
+EOF
 } | doc::md_to_terminal -
 ```
 

@@ -38,7 +38,7 @@ doc::md_to_terminal(){
 }
 
 # @definition A method that expect a synopsis function and will return a basic usage
-doc::usage(){
+doc::help(){
 
   {
   cat << EOF

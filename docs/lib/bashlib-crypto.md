@@ -17,6 +17,7 @@ Library over cryptographic function (key, certificate, ...)
 * [crypto::get_file_type](#cryptoget_file_type)
 * [crypto::is_rsa](#cryptois_rsa)
 * [crypto::is_openssh_private_key](#cryptois_openssh_private_key)
+* [crypto::get_private_key_algo](#cryptoget_private_key_algo)
 
 ### crypto::pem_to_base64
 
@@ -101,7 +102,7 @@ Return the type of file
 
 ### crypto::is_rsa
 
-Return if this is RSA Public Key material
+Return if this is RSA Key material
 
 #### Arguments
 
@@ -125,4 +126,17 @@ We don't known the algorithm
 
 * **0**: if true
 * **1**: if false
+
+### crypto::get_private_key_algo
+
+Return the private key algo
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false or unknown
 

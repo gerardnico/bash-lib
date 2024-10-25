@@ -142,3 +142,28 @@ kube::get_json_path(){
   JSON_PATH="$JSON_PATH{\"\n\"}{end}"
   echo "$JSON_PATH"
 }
+
+# @description
+#    Return the app directory
+# @arg $1 string The app name
+kube::get_app_dir(){
+
+  KUBE_APP_NAME="$1"
+
+  if [ -z "$KUBE_APP_HOME" ]; then
+    echo:err "The KUBE_APP_HOME environment variable is mandatory and was not found"
+    echo:err "Add it in your bashrc or OS environment variables"
+    return 1
+  fi
+
+  KUBE_APP_DIRECTORY=$KUBE_APP_HOME/$KUBE_APP_NAME
+
+  if [ ! -d "$KUBE_APP_DIRECTORY" ]; then
+    echo::err "The app directory $KUBE_APP_DIRECTORY does not exist"
+    return 1
+  fi
+
+  echo "$KUBE_APP_DIRECTORY"
+
+
+}

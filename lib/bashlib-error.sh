@@ -77,3 +77,6 @@ error::set_trap() {
   # Note: function may be null
   trap 'error::handler "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "${FUNCNAME[0]:-}" $LINENO' ERR
 }
+
+
+

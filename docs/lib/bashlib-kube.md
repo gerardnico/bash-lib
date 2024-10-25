@@ -13,6 +13,7 @@ A library of kubernetes functions
 * [kube::get_resources_by_app_name](#kubeget_resources_by_app_name)
 * [kube::get_resource_by_app_name](#kubeget_resource_by_app_name)
 * [kube::get_json_path](#kubeget_json_path)
+* [kube::pushd_to_app_dir](#kubepushd_to_app_dir)
 
 ### kube::get_app_label
 
@@ -93,4 +94,12 @@ Return a json path to be used in a `-o jsonpath=x` kubectl option
 #### Arguments
 
 * **$1** (string): The Json expressions (Default to: `.metadata.name .metadata.namespace`)
+
+### kube::pushd_to_app_dir
+
+Go to the app directory to set the app env via direnv or other env manager
+
+#### Arguments
+
+* **$1** (string): The app name
 
