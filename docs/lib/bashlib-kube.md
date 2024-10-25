@@ -13,7 +13,11 @@ A library of kubernetes functions
 * [kube::get_resources_by_app_name](#kubeget_resources_by_app_name)
 * [kube::get_resource_by_app_name](#kubeget_resource_by_app_name)
 * [kube::get_json_path](#kubeget_json_path)
-* [kube::pushd_to_app_dir](#kubepushd_to_app_dir)
+* [kube::get_app_dir](#kubeget_app_dir)
+* [kube::check_app_home](#kubecheck_app_home)
+* [kube::test_connection](#kubetest_connection)
+* [kube::set_app_env_up](#kubeset_app_env_up)
+* [kube::get_app_name_from_env](#kubeget_app_name_from_env)
 
 ### kube::get_app_label
 
@@ -95,11 +99,29 @@ Return a json path to be used in a `-o jsonpath=x` kubectl option
 
 * **$1** (string): The Json expressions (Default to: `.metadata.name .metadata.namespace`)
 
-### kube::pushd_to_app_dir
+### kube::get_app_dir
 
-Go to the app directory to set the app env via direnv or other env manager
+Return the app directory
 
 #### Arguments
 
 * **$1** (string): The app name
+
+### kube::check_app_home
+
+Check if KUBE_APP_HOME is set
+
+### kube::test_connection
+
+test the connection to the cluster
+
+### kube::set_app_env_up
+
+Set the env for the app and test the connection
+
+### kube::get_app_name_from_env
+
+Get the app name from the env in order
+* from the env `$KUBE_APP_NAME`
+* from the current working directory. If we are below the KUBE_APP_HOME directory
 

@@ -18,6 +18,7 @@ Library over cryptographic function (key, certificate, ...)
 * [crypto::is_rsa](#cryptois_rsa)
 * [crypto::is_openssh_private_key](#cryptois_openssh_private_key)
 * [crypto::get_private_key_algo](#cryptoget_private_key_algo)
+* [crypto::is_key](#cryptois_key)
 
 ### crypto::pem_to_base64
 
@@ -139,4 +140,18 @@ Return the private key algo
 
 * **0**: if true
 * **1**: if false or unknown
+
+### crypto::is_key
+
+Return if this is a Key
+We don't known the algorithm
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false
 

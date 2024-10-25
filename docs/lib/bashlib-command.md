@@ -12,6 +12,7 @@ A list of command utilities
 * [command::echo_eval](#commandecho_eval)
 * [command::fzf](#commandfzf)
 * [command::escape](#commandescape)
+* [command::exist](#commandexist)
 
 ### command::echo_eval
 
@@ -34,6 +35,9 @@ command::eval_echo "echo 'Hello World'"
 ### command::fzf
 
 Pipe the command history to fuzzy search
+
+Note that his function is already available natively with `Ctrl+R`
+
 A Ctrl-A with fzf but returning the command
 
 #### Example
@@ -55,4 +59,13 @@ when building command line syntax for eval
 #### Output on stderr
 
 * The arg escaped
+
+### command::exist
+
+Check if a command exists
+
+#### Exit codes
+
+* **0**: if it exists
+* **1**: if it does not exist
 

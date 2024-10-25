@@ -232,3 +232,15 @@ crypto::is_openssh_private_key(){
 crypto::get_private_key_algo(){
   ssh-keygen -l -f "$1" | sed -n 's/.*(\(.*\)).*/\1/p'
 }
+
+# @description
+#     Return if this is a Key
+#     We don't known the algorithm
+# @arg $1 string - the path
+# @exitcode 0 if true
+# @exitcode 1 if false
+crypto::is_key(){
+
+  [[ $(file -b "$1") =~ "key" ]]
+
+}

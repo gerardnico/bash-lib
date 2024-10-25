@@ -34,6 +34,7 @@ See each library documentation page for usage.
 
 The `bash-lib` package contains the following libraries:
 
+* [bashlib-array.sh](docs/lib/bashlib-array.md) - Array functions (join, ...)
 * [bashlib-bash.sh](docs/lib/bashlib-bash.md) - Bash functions (is interactive, trap, ...)
 * [bashlib-cd.sh](docs/lib/bashlib-echo.md) - Cd functions
 * [bashlib-command.sh](docs/lib/bashlib-command.md) - Command functions (eval, ...)

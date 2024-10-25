@@ -18,6 +18,7 @@ Library of file system path functions
 * [path::get_current_directory_name](#pathget_current_directory_name)
 * [path::create_temp_directory](#pathcreate_temp_directory)
 * [path::get_file_name_without_extension](#pathget_file_name_without_extension)
+* [path::relative_to](#pathrelative_to)
 
 ### path::get_extension
 
@@ -109,4 +110,28 @@ path::get_file_name_without_extension foo/bar/foo-bar.md
 #### Arguments
 
 * **$1** (string): - a path
+
+### path::relative_to
+
+Get the file name up until the first point
+
+Demo:
+```bash
+path::relative_to /a/b /a
+```
+would exit with the code `0` and the stdout `a`
+
+#### Arguments
+
+* **$1** (string): - the path
+* **$2** (string): - the base path (a parent path if relative)
+
+#### Exit codes
+
+* **0**: number - if the path is relative to the base path
+* **1**: number - if the path is not relative to the base path
+
+#### Output on stdout
+
+* the relative path
 
