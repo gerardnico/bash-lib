@@ -225,6 +225,17 @@ crypto::is_openssh_private_key(){
 }
 
 # @description
+#     Return if this is a Private Key
+# @arg $1 string - the path
+# @exitcode 0 if true
+# @exitcode 1 if false
+crypto::is_private_key(){
+
+  [[ $(file -b "$1") == "private key" ]]
+
+}
+
+# @description
 #     Return the private key algo
 # @arg $1 string - the path
 # @exitcode 0 if true
@@ -242,5 +253,30 @@ crypto::get_private_key_algo(){
 crypto::is_key(){
 
   [[ $(file -b "$1") =~ "key" ]]
+
+}
+
+# @description
+#     Return if the key is protected
+# @arg $1 string - the path
+# @exitcode 0 if true
+# @exitcode 1 if false
+# @exitcode 2 if this is not a Open SSH private key or not supported
+crypto::is_protected_key(){
+
+    if ! crypto::is_openssh_private_key "$1"; then
+        echo::err "The file $1 is not a OpenSSH private key"
+        return 2
+    fi
+
+    # Try to read the key with ssh-keygen
+    # -y flag attempts to read the private key and output the public key
+    # -P "" specifies an empty password
+    if ssh-keygen -y -P "" -f "$1" &>/dev/null; then
+        echo "Key is NOT password protected"
+        return 1
+    fi
+
+    return 1
 
 }
