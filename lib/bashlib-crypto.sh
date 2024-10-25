@@ -231,7 +231,7 @@ crypto::is_openssh_private_key(){
 # @exitcode 1 if false
 crypto::is_private_key(){
 
-  [[ $(file -b "$1") == "private key" ]]
+  [[ $(file -b "$1") =~ "private key" ]]
 
 }
 
@@ -262,10 +262,14 @@ crypto::is_key(){
 # @exitcode 0 if true
 # @exitcode 1 if false
 # @exitcode 2 if this is not a Open SSH private key or not supported
+# @example
+#   STATUS=$(crypto::is_protected_key "$FILE" && echo $? || echo $?)
+#   # note the `&& echo $? || echo $?` is to get the status in all case
+#   # and not exit bash if the bash is set to fail for any error (ie `set -e`)
 crypto::is_protected_key(){
 
     if ! crypto::is_openssh_private_key "$1"; then
-        echo::err "The file $1 is not a OpenSSH private key"
+        echo::debug "The file $1 is not a OpenSSH private key"
         return 2
     fi
 
@@ -273,10 +277,10 @@ crypto::is_protected_key(){
     # -y flag attempts to read the private key and output the public key
     # -P "" specifies an empty password
     if ssh-keygen -y -P "" -f "$1" &>/dev/null; then
-        echo "Key is NOT password protected"
+        echo::debug "Key is NOT password protected"
         return 1
     fi
 
-    return 1
+    return 0;
 
 }

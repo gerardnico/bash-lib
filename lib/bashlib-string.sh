@@ -133,3 +133,25 @@ string::no_case_match(){
   )
 }
 
+# @description
+#     Add a marge (ie space at the beginning of each line)
+# @arg $1 the size of the marge (default to 5)
+string::add_marge(){
+  MARGE=$(string::multiply ' ' "${1:-5}")
+  # Set at the start of a line a number of spaces
+  sed "s/^/$MARGE/"
+}
+
+# @description
+#     Multiply a string by a count
+# @arg $1 the string
+# @arg $2 the count
+string::multiply() {
+  # ref https://stackoverflow.com/questions/38868665/multiplying-strings-in-bash-script
+  local STRING="$1"
+  local COUNT="$2"
+  # No idea why but the * in %*s is important
+  # shellcheck disable=SC2183
+  printf -v PRINTF_COUNT '%*s' "$COUNT"
+  printf '%s\n' "${PRINTF_COUNT// /$STRING}"
+}
