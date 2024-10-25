@@ -78,5 +78,13 @@ error::set_trap() {
   trap 'error::handler "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "${FUNCNAME[0]:-}" $LINENO' ERR
 }
 
+# @description
+#    Exit properly by deleting any ERR trap
+#    even if the exit code is not 0
+# @args $1 - the exit code
+error::exit(){
 
+  trap - ERR
+  exit "$1"
 
+}
