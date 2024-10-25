@@ -18,6 +18,8 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 * [string::set_color](#stringset_color)
 * [string::start_with](#stringstart_with)
 * [string::no_case_match](#stringno_case_match)
+* [string::add_marge](#stringadd_marge)
+* [string::multiply](#stringmultiply)
 
 ### string::split
 
@@ -133,4 +135,21 @@ Check if a string matches without casing
 
 * **0**: - if the string match without casing
 * **1**: - if the string does not match without casing
+
+### string::add_marge
+
+Add a marge (ie space at the beginning of each line)
+
+#### Arguments
+
+* **$1** (the): size of the marge (default to 5)
+
+### string::multiply
+
+Multiply a string by a count
+
+#### Arguments
+
+* **$1** (the): string
+* **$2** (the): count
 

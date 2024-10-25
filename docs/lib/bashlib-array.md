@@ -14,7 +14,7 @@ The options as options
 
 ### array::join
 
-How to join an array
+Join an array with a separator
 
 #### Example
 

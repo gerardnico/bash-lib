@@ -17,8 +17,10 @@ Library over cryptographic function (key, certificate, ...)
 * [crypto::get_file_type](#cryptoget_file_type)
 * [crypto::is_rsa](#cryptois_rsa)
 * [crypto::is_openssh_private_key](#cryptois_openssh_private_key)
+* [crypto::is_private_key](#cryptois_private_key)
 * [crypto::get_private_key_algo](#cryptoget_private_key_algo)
 * [crypto::is_key](#cryptois_key)
+* [crypto::is_protected_key](#cryptois_protected_key)
 
 ### crypto::pem_to_base64
 
@@ -128,6 +130,19 @@ We don't known the algorithm
 * **0**: if true
 * **1**: if false
 
+### crypto::is_private_key
+
+Return if this is a Private Key
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false
+
 ### crypto::get_private_key_algo
 
 Return the private key algo
@@ -154,4 +169,26 @@ We don't known the algorithm
 
 * **0**: if true
 * **1**: if false
+
+### crypto::is_protected_key
+
+Return if the key is protected
+
+#### Example
+
+```bash
+STATUS=$(crypto::is_protected_key "$FILE" && echo $? || echo $?)
+# note the `&& echo $? || echo $?` is to get the status in all case
+# and not exit bash if the bash is set to fail for any error (ie `set -e`)
+```
+
+#### Arguments
+
+* **$1** (string): - the path
+
+#### Exit codes
+
+* **0**: if true
+* **1**: if false
+* **2**: if this is not a Open SSH private key or not supported
 
