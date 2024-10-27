@@ -38,18 +38,33 @@ doc::md_to_terminal(){
 }
 
 # @definition A method that expect a synopsis function and will return a basic usage
+# @args $1 the synopsis method that prints the synopsis (by default synopsis)
+# @args $2 the command (default to the prefix of the synopsis method or the script name if the method is called synopsis)
 doc::help(){
 
+  SYNOPSIS_METHOD=${1:-'synopsis'}
+  COMMAND_NAME=${2:-}
+  SEE_COMMAND_MAN=""
+  if [ "$COMMAND_NAME" == "" ]; then
+    if [ "$SYNOPSIS_METHOD" == 'synopsis' ]; then
+      COMMAND_NAME=$(basename "$0")
+      SEE_COMMAND_MAN="For more info, see $COMMAND_NAME(1)"
+    else
+      COMMAND_NAME=${SYNOPSIS_METHOD%%_*}
+    fi
+  fi
+
   {
-  cat << EOF
+    cat << EOF
 
-Usage of $(basename "$0")
+Usage of $COMMAND_NAME
 
-$(synopsis)
+$(eval "$SYNOPSIS_METHOD")
 
-For more info, see $(basename "$0")(1)
+$SEE_COMMAND_MAN
 
 EOF
   } | doc::md_to_terminal -
+
 }
 
