@@ -61,3 +61,10 @@ file::is_executable(){
   # the mime is `text/....; extra parameters'
   [[ "$(file -bi "$1")" =~ executable ]]
 }
+
+# @description
+#   Return if the file permission in octal form (i 0600)
+# @arg $1 string - a path
+file::get_permission(){
+  stat -c "%a" "$1"
+}

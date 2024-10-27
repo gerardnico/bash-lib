@@ -50,8 +50,8 @@ ssh::agent_load_env () {
 	test -f "$ENV_FILE" && source "$ENV_FILE" >| /dev/null ;
 }
 
-# @description List the available keys
-ssh::list_keys(){
+# @description List the available keys in the agent
+ssh::list_agent_keys(){
   # Fingerprint format
   ssh-add -l
   # Long format
@@ -220,4 +220,22 @@ ssh::agent_init(){
 
   unset SSH_ENV
 
+}
+
+
+# @description
+#    Get the key fingerprint of a key file
+#
+# @args $1 - a path
+#
+ssh::get_key_fingerprint(){
+  ssh-keygen -l -f "$1" | awk '{print $2}'
+}
+
+# @description
+#    Check if the key is in the agent
+#
+# @args $1 - a path
+ssh::is_key_in_agent(){
+  ssh-add -l | awk '{print $2}' | grep -q "$(ssh::get_key_fingerprint "$1")"
 }
