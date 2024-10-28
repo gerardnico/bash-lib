@@ -3,7 +3,7 @@
 # @description
 #     With this library, you will be able to log info, error, debug and warning messages.
 #
-#     All messages are printed to `stderr` to not pollute any pipe redirection.
+#     All messages are printed to `tty` (`stderr` if not available) to not pollute any pipe redirection.
 #
 #     You can also define the message printed by setting the level via the `BASHLIB_LEVEL` environment
 #     Setting it to:
@@ -29,10 +29,10 @@ BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$BASHLIB_YELLOW_COLOR}
 BASHLIB_TIP_COLOR=${BASHLIB_TIP_COLOR:-$BASHLIB_YELLOW_COLOR}
 
 # Message level
-BASHLIB_ERROR_LEVEL=1
-BASHLIB_WARNING_LEVEL=2
-BASHLIB_INFO_LEVEL=3
-BASHLIB_DEBUG_LEVEL=4
+export BASHLIB_ERROR_LEVEL=1
+export BASHLIB_WARNING_LEVEL=2
+export BASHLIB_INFO_LEVEL=3
+export BASHLIB_DEBUG_LEVEL=4
 
 # Formatting (Color, Prefix, ...)
 BASHLIB_WARNING_TYPE="warning"
@@ -259,7 +259,30 @@ function echo::base(){
       ;;
   esac
 
-  # To stderr
-  echo -e "${MESSAGE}" >&2
+  # the -c option checks if the file is a character device
+  if test -c /dev/tty; then
+    # To /dev/tty
+    # No access if you're running the script in a non-interactive environment
+    echo -e "${MESSAGE}" > /dev/tty
+    return
+  fi
+
+  # stderr may not be available
+  if test -c /dev/stderr; then
+    # To stderr
+    echo -e "${MESSAGE}" >&2
+    return
+  fi
+
+  # stdout may not be available
+  if test -c /dev/stdout; then
+    # To stdout
+    echo -e "${MESSAGE}"
+    return
+  fi
+
+  echo "Not device available for the message ${MESSAGE}"
+  return 1
+
 
 }
