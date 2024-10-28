@@ -239,3 +239,22 @@ ssh::get_key_fingerprint(){
 ssh::is_key_in_agent(){
   ssh-add -l | awk '{print $2}' | grep -q "$(ssh::get_key_fingerprint "$1")"
 }
+
+# @description
+#    Get a secret interactively
+#
+# @args $1 - the prompt
+ssh::get_secret_interactive(){
+  # Check if zenity is available for GUI prompt
+  if command -v zenity >/dev/null 2>&1; then
+      zenity --password --title="$1" 2>/dev/null
+  # Check if whiptail is available for terminal UI
+  elif command -v whiptail >/dev/null 2>&1; then
+      whiptail --passwordbox "$1:" 8 78 3>&1 1>&2 2>&3
+  # Fall back to simple terminal prompt
+  else
+      echo -n "$1: " >/dev/tty
+      read -rs password </dev/tty
+      echo "$password"
+  fi
+}

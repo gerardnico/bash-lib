@@ -71,3 +71,4 @@ function bash::conf(){
 bash::function_definition(){
   type "$1"
 }
+

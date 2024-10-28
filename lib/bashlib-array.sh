@@ -1,8 +1,12 @@
 # @name bashlib-bash documentation
 # @brief Library for array function over bash
 # @description
-#    Array function, the array is passed as argument
-#    The options as options
+#    Array function
+#    * the array is passed as arguments
+#    * the options as options
+#
+#    This library can be used as example on how to perform any array operations
+#
 
 
 # @description Join an array with a separator
@@ -35,4 +39,10 @@ array::join(){
      esac
   done
   IFS="$SEP"; echo "$*"
+}
+
+# @description Return the last element of the arguments
+# @args $0-N array - all arguments
+array::last(){
+  echo  "${@: -1}"
 }
