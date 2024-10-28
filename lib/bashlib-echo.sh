@@ -259,6 +259,7 @@ function echo::base(){
       ;;
   esac
 
+  # do we have a terminal
   # the -c option checks if the file is a character device
   if test -c /dev/tty; then
     # To /dev/tty
@@ -275,6 +276,8 @@ function echo::base(){
   fi
 
   # stdout may not be available
+  # This is the case when a command is executed from another command directly (not via shell)
+  # Example when `git` calls `ssh`, no stdout is attached
   if test -c /dev/stdout; then
     # To stdout
     echo -e "${MESSAGE}"
