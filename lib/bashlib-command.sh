@@ -55,3 +55,4 @@ command::escape(){
 command::exist(){
   [ -x "$(command -v "$1")" ]
 }
+
