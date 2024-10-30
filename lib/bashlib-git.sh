@@ -20,6 +20,9 @@ git::get_current_branch(){
 }
 
 # @description Get the current upstream branch
+# @exitcode 0 - if the branch has an upstream (ie remote)
+# @exitcode 1 - if the branch has no upstream (ie remote)
+# @stdout - the name of the upstream
 git::get_current_upstream_branch(){
   git rev-parse --abbrev-ref "@{u}"
 }
@@ -103,4 +106,10 @@ git::get_auto_commit_message(){
   message="Commit $(git::get_dirty_files $', ')"
   echo "$message"
 
+}
+
+# @description Check if the branch has an upstream
+# @args $1 string a branch
+git::has_upstream(){
+  git show-branch remotes/origin/$1 &>/dev/null;
 }

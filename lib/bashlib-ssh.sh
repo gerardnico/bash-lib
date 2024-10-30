@@ -16,7 +16,6 @@
 #
 
 
-
 # @description
 #    Start an agent and store the env in a file passed as argument
 #    When starting an agent, this function will create an ENV file
@@ -257,4 +256,61 @@ ssh::get_secret_interactive(){
       read -rs password </dev/tty
       echo "$password"
   fi
+}
+
+# @description
+#    Get the identity conf, applies templating eventually to get
+#    a real path to a key file
+#
+# @args $1 - the user
+# @args $2 - the host
+# @stdout - the identity
+ssh::get_identity(){
+
+  local USER=$1
+  local HOST=$2
+  local DESTINATION="$1@$2"
+  local KEY
+
+  KEY=$(ssh::get_conf "identity" "$USER" "$HOST")
+
+  echo::debug "Key for destination before templating ($DESTINATION): $KEY" > /dev/tty
+
+  if [ "$USER" == "git" ]; then
+    # A ssh performed by git
+    echo::debug "GIT_PROTOCOL=$GIT_PROTOCOL" > /dev/tty
+    # Example of SSH Git:
+    # * SSH Git Fetch or Pull
+    # ssh -o SendEnv=GIT_PROTOCOL git@github.com git-upload-pack 'gerardnico/ssh-x.git'
+    # * SSH Git Push
+    # ssh git@github.com git-receive-pack 'gerardnico/ssh-x.git'
+  fi
+
+  # Templating
+  # Replace %r by user
+  KEY=${KEY//%r/$USER}
+  # Replace %n by Host
+  KEY=${KEY//%h/$HOST}
+  # Replace the tilde with the home
+  KEY=${KEY/#\~/$HOME}
+
+  echo "$KEY"
+}
+
+# @description
+#    Get a conf for a destination
+#
+# @args $1 - the conf
+# @args $2 - the user
+# @args $3 - the host
+# @stdout - the value
+ssh::get_conf(){
+  # Conf must be lowercase
+  local CONF=${1,,}
+  local USER=$2
+  local HOST=$3
+  local DESTINATION="$2@$3"
+  local SSH_PATH=${BASHLIB_SSH_PATH:-'ssh'}
+
+  $SSH_PATH -T -G "$DESTINATION" | grep "$CONF" | awk '{ print $2 }'
 }
