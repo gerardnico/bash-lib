@@ -260,7 +260,7 @@ ssh::get_secret_interactive(){
       echo "$password"
       ;;
   esac
-  
+
 }
 
 # @description
