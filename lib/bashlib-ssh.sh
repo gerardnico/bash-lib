@@ -278,7 +278,7 @@ ssh::get_identity(){
 
   if [ "$USER" == "git" ]; then
     # A ssh performed by git
-    echo::debug "GIT_PROTOCOL=$GIT_PROTOCOL" > /dev/tty
+    echo::debug "GIT_PROTOCOL=${GIT_PROTOCOL:-}" > /dev/tty
     # Example of SSH Git:
     # * SSH Git Fetch or Pull
     # ssh -o SendEnv=GIT_PROTOCOL git@github.com git-upload-pack 'gerardnico/ssh-x.git'
