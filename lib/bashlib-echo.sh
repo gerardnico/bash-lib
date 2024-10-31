@@ -5,7 +5,7 @@
 #
 #     All messages are printed to `tty` (`stderr` if not available) to not pollute any pipe redirection.
 #
-#     You can also define the message printed by setting the level via the `BASHLIB_LEVEL` environment
+#     You can also define the message printed by setting the level via the `BASHLIB_ECHO_LEVEL` environment
 #     Setting it to:
 #     * `0`: disable all messages
 #     * `1`: print error messages
@@ -29,10 +29,10 @@ BASHLIB_WARNING_COLOR=${BASHLIB_WARNING_COLOR:-$BASHLIB_YELLOW_COLOR}
 BASHLIB_TIP_COLOR=${BASHLIB_TIP_COLOR:-$BASHLIB_YELLOW_COLOR}
 
 # Message level
-export BASHLIB_ERROR_LEVEL=1
-export BASHLIB_WARNING_LEVEL=2
-export BASHLIB_INFO_LEVEL=3
-export BASHLIB_DEBUG_LEVEL=4
+export BASHLIB_ECHO_ERROR_LEVEL=1
+export BASHLIB_ECHO_WARNING_LEVEL=2
+export BASHLIB_ECHO_INFO_LEVEL=3
+export BASHLIB_ECHO_DEBUG_LEVEL=4
 
 # Formatting (Color, Prefix, ...)
 BASHLIB_WARNING_TYPE="warning"
@@ -43,7 +43,7 @@ BASHLIB_ECHO_TYPE="echo"
 BASHLIB_TIP_TYPE="tip"
 
 # The actual level
-BASHLIB_LEVEL=${BASHLIB_LEVEL:-$BASHLIB_INFO_LEVEL}
+BASHLIB_ECHO_LEVEL=${BASHLIB_ECHO_LEVEL:-$BASHLIB_ECHO_INFO_LEVEL}
 
 # @description Echo an info message
 # @arg $1 string The value to print, by default an empty line
@@ -54,7 +54,7 @@ BASHLIB_LEVEL=${BASHLIB_LEVEL:-$BASHLIB_INFO_LEVEL}
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::info() {
-  echo::base --log-level "$BASHLIB_INFO_LEVEL" "${*}"
+  echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" "${*}"
 }
 
 
@@ -72,7 +72,7 @@ function echo::info() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::err() {
-  echo::base --type "$BASHLIB_ERROR_TYPE" --log-level "$BASHLIB_ERROR_LEVEL" "${*}"
+  echo::base --type "$BASHLIB_ERROR_TYPE" --log-level "$BASHLIB_ECHO_ERROR_LEVEL" "${*}"
 }
 
 # @description
@@ -88,7 +88,7 @@ echo::err() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::success() {
-  echo::base --type "$BASHLIB_SUCCESS_TYPE" --log-level $BASHLIB_INFO_LEVEL "${*}"
+  echo::base --type "$BASHLIB_SUCCESS_TYPE" --log-level $BASHLIB_ECHO_INFO_LEVEL "${*}"
 }
 
 # @description
@@ -104,7 +104,7 @@ echo::success() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
-  echo::base --type "$BASHLIB_WARNING_TYPE" --log-level "$BASHLIB_WARNING_LEVEL" "${*}"
+  echo::base --type "$BASHLIB_WARNING_TYPE" --log-level "$BASHLIB_ECHO_WARNING_LEVEL" "${*}"
 }
 
 # @description
@@ -120,7 +120,7 @@ echo::warn() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::tip() {
-  echo::base --type "$BASHLIB_TIP_TYPE" --log-level "$BASHLIB_WARNING_LEVEL" "${*}"
+  echo::base --type "$BASHLIB_TIP_TYPE" --log-level "$BASHLIB_ECHO_WARNING_LEVEL" "${*}"
 }
 
 # @description
@@ -133,13 +133,13 @@ echo::tip() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::debug() {
-  echo::base --log-level "$BASHLIB_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE"  "${*}"
+  echo::base --log-level "$BASHLIB_ECHO_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE"  "${*}"
 }
 
 # @description
 #     Function that will output the environment configuration
 echo::conf(){
-  echo::info "BASHLIB_LEVEL (Message Level): $BASHLIB_LEVEL"
+  echo::info "BASHLIB_ECHO_LEVEL (Message Level): $BASHLIB_ECHO_LEVEL"
 }
 
 # @description
@@ -152,7 +152,7 @@ echo::conf(){
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::echo(){
-  echo::base --log-level "$BASHLIB_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
+  echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
 }
 
 # @internal
@@ -165,7 +165,7 @@ function echo::base(){
 
   local MESSAGE=""
   local TYPE_MESSAGE=""
-  local LOG_LEVEL="$BASHLIB_INFO_LEVEL"
+  local LOG_LEVEL="$BASHLIB_ECHO_INFO_LEVEL"
   while [[ $# -gt 0 ]]
   do
      case "$1" in
@@ -195,7 +195,7 @@ function echo::base(){
   done
 
   # Level
-  if [ "$BASHLIB_LEVEL" -lt "$LOG_LEVEL" ]; then
+  if [ "$BASHLIB_ECHO_LEVEL" -lt "$LOG_LEVEL" ]; then
     return
   fi
 

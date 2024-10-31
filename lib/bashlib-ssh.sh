@@ -243,19 +243,24 @@ ssh::is_key_in_agent(){
 #    Get a secret interactively
 #
 # @args $1 - the prompt
+# @args $2 - the prompt cli (default to read)
 ssh::get_secret_interactive(){
-  # Check if zenity is available for GUI prompt
-  if command -v zenity >/dev/null 2>&1; then
+
+  PROMPT_CLI=${2:-read}
+  case "$PROMPT_CLI" in
+    "zenity")
       zenity --password --title="$1" 2>/dev/null
-  # Check if whiptail is available for terminal UI
-  elif command -v whiptail >/dev/null 2>&1; then
+      ;;
+    "whiptail")
       whiptail --passwordbox "$1:" 8 78 3>&1 1>&2 2>&3
-  # Fall back to simple terminal prompt
-  else
+      ;;
+    *)
       echo -n "$1: " >/dev/tty
       read -rs password </dev/tty
       echo "$password"
-  fi
+      ;;
+  esac
+  
 }
 
 # @description
