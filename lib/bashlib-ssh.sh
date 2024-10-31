@@ -168,58 +168,6 @@ ssh::known_hosts_update() {
 
 }
 
-# @description
-#    Start an agent and add keys if available
-#
-#    This is used in your `.bashrc` or env loading script
-#
-#    2 env variables are needed.
-#    * The location of the env file
-#    * The location of the agent socket file
-#
-#    For the key usage, see the [add_keys function](#sshadd_keys)
-# 
-#    See also [keychain](https://github.com/funtoo/keychain)
-#
-# @example
-#    export SSH_ENV="$HOME"/.ssh/ssh-agent.env
-#    export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
-#    SSH_KEY_PASSPHRASE_MY_KEY=secret
-#    ssh::agent_init
-#
-# @see idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
-ssh::agent_init(){
-
-  if [[ -z "$SSH_ENV" ]]; then
-    SSH_ENV="$HOME"/.ssh/ssh-agent.env
-    export SSH_ENV
-  fi
-
-  # Load the env if available
-  ssh::agent_load_env "$SSH_ENV"
-
-  # Get the state
-  local SSH_AGENT_RUN_STATE
-  SSH_AGENT_RUN_STATE=$(ssh::agent_state)
-  if [ ! "$SSH_AUTH_SOCK" ] || [ "$SSH_AGENT_RUN_STATE" = 2 ]; then
-  	echo "Agent not started"
-  	# The sock may be a symlink, so -e check that
-  	# -f check only if it's a regular file
-  	if [ -e "$SSH_AUTH_SOCK" ]; then
-  	  echo "Deleting Sock file $SSH_AUTH_SOCK"
-  	  rm "$SSH_AUTH_SOCK"
-  	fi
-  	echo "Starting Agent"
-    ssh::agent_start "$SSH_ENV" "$SSH_AUTH_SOCK"
-  	ssh::add_keys
-  elif [ "$SSH_AUTH_SOCK" ] && [ "$SSH_AGENT_RUN_STATE" = 1 ]; then
-  	echo Agent not started but empty
-    ssh::add_keys
-  fi
-
-  unset SSH_ENV
-
-}
 
 
 # @description
