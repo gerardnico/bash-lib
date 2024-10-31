@@ -26,37 +26,51 @@ They are searched by default in the `bin` and `lib` directories.
 
 ## HOW IT WORKS
 
-* For a library:
+### For a library
+
   * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc)
   * no manpage is generated
-* For a script:
+
+### For a script
   * you need to create a pandoc markdown file manually in `docs/bin`. Example of pandoc file with [pandoc metadata](https://pandoc.org/MANUAL.html#metadata-blocks)
 ```markdown
 % your-script-name(1) Version 1.0.0 | The title
 # NAME
 # SYNOPSIS
+${synopsis}
 # ....
 ```
-  * The man pages are generated into `docs/man/man1` and installed locally.
-  * You can then use your man page in your help function. Example:
+  * The man pages are generated into `build/docs/man/man1` and installed locally.
+
+## Tips for script
+
+  * You can use your man page in your help function. Example:
 ```bash
-help_usage(){
-  qman "$(basename $0)"
+help(){
+  man "$(basename $0)"
 }
 ```
+  * Or you can use the `doc::help` utility with a `synopsis` function.
+```bash
+source bashlib-doc.sh
+help(){
+  doc::help "synopsis"
+}
+```
+  * If a command called `synopsis` is found, `docgen` will substitute `${synopsis}` in your markdown
+```markdown
+# SYNOPSIS
 
+${SYNOPSIS}
+```
+  * For your subcommand, you can use the `doc::help` utility
+```bash
+source bashlib-doc.sh
+doc::help "synopsis_function_for_sub_command"
+```
 
 
 ## SYNOPSIS
 
-
-```bash
-bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
-```
-
-where:
-
-* `-o`      - is the output directory (default to `docs`)
-* `-h`      - shows this help
-* `bashDir` - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+${SYNOPSIS}
 

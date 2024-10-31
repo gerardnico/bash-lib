@@ -42,11 +42,16 @@ ssh::agent_start () {
   source "$ENV" >| /dev/null ;
 }
 
-# @description Load the env
+# @description Load the agent env
+# @args $1 string the path to a SSH Agent env file
+# @exitcode 0 - always
 ssh::agent_load_env () {
-	local ENV_FILE="${1:-$SSH_ENV}"
+	local ENV_FILE="${1}"
+	if ! test -f "$ENV_FILE"; then
+	  return
+	fi
 	# shellcheck disable=SC1090
-	test -f "$ENV_FILE" && source "$ENV_FILE" >| /dev/null ;
+	source "$ENV_FILE" >| /dev/null ;
 }
 
 # @description List the available keys in the agent

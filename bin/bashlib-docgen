@@ -9,16 +9,29 @@
 #
 
 set -Eeuo pipefail
-source bashlib-echo.sh
 source bashlib-error.sh
 error::set_trap
+source bashlib-echo.sh
 source bashlib-script.sh
 source bashlib-path.sh
+source bashlib-doc.sh
+source bashlib-command.sh
 
 
+function synopsis(){
 
-function print_usage(){
-  man "$(basename $0)"
+cat << 'EOF'
+```bash
+bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
+```
+
+where:
+
+* `-o`      - is the output directory (default to `docs`)
+* `-h`      - shows this help
+* `bashDir` - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+EOF
+
 }
 
 # @internal
@@ -30,7 +43,7 @@ function bash_lib_to_markdown(){
   # Delete the extension if any
   NAME=$(basename "$FILE" | sed 's/\.sh$//')
   # Generate the doc
-  OUTPUT_FILE="$LIB_DOC_DIR"/"$NAME".md
+  OUTPUT_FILE="$OUTPUT_LIB_DOC_DIR"/"$NAME".md
   shdoc < "$FILE" > "$OUTPUT_FILE"
   # Add a help section from script usage
 #  if [ $TYPE == "script" ]; then
@@ -65,13 +78,13 @@ if ! command -v shdoc &> /dev/null; then
 fi
 
 
-DOC_DIR="docs"
+OUTPUT_DOC_DIR="build/docs"
 declare -a BASH_DIRS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
   "-o"|"--output")
     shift
-    DOC_DIR="$1"
+    OUTPUT_DOC_DIR="$1"
     ;;
   "-h"|"--help"|"help")
     print_usage
@@ -110,18 +123,16 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
 done
 
 # Check doc dir directory
-if [ ! -d "$DOC_DIR" ]; then
-    print_usage
-    echo::err "Error: '$DOC_DIR' is not a valid directory."
-    exit 1
+if [ ! -d "$OUTPUT_DOC_DIR" ]; then
+  mkdir -p "$OUTPUT_DOC_DIR"
 fi
-
 # Delete all docs
 # If a bin or lib was deleted, the doc should also be deleted
-LIB_DOC_DIR="$DOC_DIR/lib"
-mkdir -p "$LIB_DOC_DIR"
-rm -rf "$LIB_DOC_DIR"/*.md
-BIN_DOC_DIR="$DOC_DIR/bin"
+rm -rf "$OUTPUT_DOC_DIR"
+OUTPUT_LIB_DOC_DIR="$OUTPUT_DOC_DIR/lib"
+mkdir -p "$OUTPUT_LIB_DOC_DIR"
+OUTPUT_BIN_DOC_DIR="$OUTPUT_DOC_DIR/bin"
+mkdir -p "$OUTPUT_BIN_DOC_DIR"
 
 # Type of file
 LIBRARY_TYPE="library"
@@ -167,12 +178,24 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
           "$OUTPUT_FILE"
           ;;
       "$SCRIPT_TYPE")
+        echo::info "Processing the script $NAME"
         # Markdown file are created manually
         # the file should exist
-        BIN_MD_FILE="$BIN_DOC_DIR/$NAME.md"
+        BIN_MD_FILE="docs/bin/$NAME.md"
         if [ ! -f "$BIN_MD_FILE" ]; then
           echo::err "The file $BIN_MD_FILE was not found"
           exit 1
+        fi
+        # synopsis is a template variable
+        # shellcheck disable=SC2034
+        if SYNOPSIS=$($FILE "synopsis"); then
+          (
+            export SYNOPSIS
+            envsubst < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
+          )
+        else
+          echo::warn "No synopsis function found in the script $FILE"
+          cp "$BIN_MD_FILE" "$OUTPUT_BIN_DOC_DIR/$NAME.md"
         fi
         ;;
     esac
@@ -180,10 +203,10 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
 done
 
 
-MAN_1_DOC_DIR="$DOC_DIR/man/man1"
+MAN_1_DOC_DIR="$OUTPUT_DOC_DIR/man/man1"
 mkdir -p "$MAN_1_DOC_DIR"
 # To man page
-for DOC_FILE in "$BIN_DOC_DIR"/*.md; do
+for DOC_FILE in "$OUTPUT_BIN_DOC_DIR"/*.md; do
 
   echo::info "Processing man page for $DOC_FILE"
   NAME=$(path::get_file_name_without_extension "$DOC_FILE")

@@ -8,11 +8,11 @@
 source bashlib-echo.sh
 
 # @description
-#     Print a command line and eval it
+#     Echo a command line at the info level and eval it
 #
 # @arg $1 string The command to echo and eval
 # @example
-#    command::eval_echo "echo 'Hello World'"
+#    command::echo_eval "echo 'Hello World'"
 #
 # @stderr The command`
 command::echo_eval(){
@@ -21,6 +21,19 @@ command::echo_eval(){
   eval "$COMMAND"
 }
 
+# @description
+#     Echo a command line at the debug level and eval it
+#
+# @arg $1 string The command to echo and eval
+# @example
+#    command::echo_debug_eval "echo 'Hello World'"
+#
+# @stderr The command`
+command::echo_debug_eval(){
+  COMMAND=$1
+  echo::debug "Executing command: $COMMAND"
+  eval "$COMMAND"
+}
 
 # @description
 #     Pipe the command history to fuzzy search
