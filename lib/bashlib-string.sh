@@ -155,3 +155,26 @@ string::multiply() {
   printf -v PRINTF_COUNT '%*s' "$COUNT"
   printf '%s\n' "${PRINTF_COUNT// /$STRING}"
 }
+
+# @description
+#     Get all characters before a character
+#     Used generally when there is a separator such as a point or a backslash
+#     It uses bash macro, you can also just look up and copy the code
+# @arg $1 the string
+# @arg $2 the character sep
+string::get_all_characters_before(){
+  # shellcheck disable=SC2317
+  echo "${1##*"${2}"}"
+}
+
+# @description
+#     Get all characters after a character
+#     Used generally when there is a separator such as a point or a backslash
+#     It uses bash macro, you can also just look up and copy the code
+# @arg $1 the string
+# @arg $2 the character sep
+string::get_all_characters_after(){
+
+  echo "${1%%"${2}"*}"
+
+}
