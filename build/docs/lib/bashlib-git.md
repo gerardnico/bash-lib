@@ -19,6 +19,7 @@ See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 * [git::get_eval_string](#gitget_eval_string)
 * [git::get_dirty_files](#gitget_dirty_files)
 * [git::get_auto_commit_message](#gitget_auto_commit_message)
+* [git::has_upstream](#githas_upstream)
 
 ### git::get_default_branch
 
@@ -31,6 +32,15 @@ Get the current branch
 ### git::get_current_upstream_branch
 
 Get the current upstream branch
+
+#### Exit codes
+
+* **0**: - if the branch has an upstream (ie remote)
+* **1**: - if the branch has no upstream (ie remote)
+
+#### Output on stdout
+
+* - the name of the upstream
 
 ### git::checkout_default
 
@@ -77,4 +87,8 @@ Create a full git string command
 ### git::get_auto_commit_message
 
 create a commit message automatically based on the changed files
+
+### git::has_upstream
+
+Check if the branch has an upstream
 

@@ -47,18 +47,13 @@ has a help option (\[ga]-h\[ga]) or command (\[ga]help\[ga])
 They are searched by default in the \f[V]bin\f[R] and \f[V]lib\f[R]
 directories.
 .SS HOW IT WORKS
-.IP \[bu] 2
-For a library:
-.RS 2
+.SS For a library
 .IP \[bu] 2
 the markdown file are generated via
 shdoc (https://github.com/reconquest/shdoc)
 .IP \[bu] 2
 no manpage is generated
-.RE
-.IP \[bu] 2
-For a script:
-.RS 2
+.SS For a script
 .IP \[bu] 2
 you need to create a pandoc markdown file manually in
 \f[V]docs/bin\f[R].
@@ -70,24 +65,57 @@ metadata (https://pandoc.org/MANUAL.html#metadata-blocks)
 % your-script-name(1) Version 1.0.0 | The title
 # NAME
 # SYNOPSIS
+
 # ....
 \f[R]
 .fi
 .IP \[bu] 2
-The man pages are generated into \f[V]docs/man/man1\f[R] and installed
-locally.
+The man pages are generated into \f[V]build/docs/man/man1\f[R] and
+installed locally.
+.SS Tips for script
 .IP \[bu] 2
-You can then use your man page in your help function.
+You can use your man page in your help function.
 Example:
 .IP
 .nf
 \f[C]
-help_usage(){
-qman \[dq]$(basename $0)\[dq]
+help(){
+  man \[dq]$(basename $0)\[dq]
 }
 \f[R]
 .fi
-.RE
+.IP \[bu] 2
+Or you can use the \f[V]doc::help\f[R] utility with a \f[V]synopsis\f[R]
+function.
+.IP
+.nf
+\f[C]
+source bashlib-doc.sh
+help(){
+  doc::help \[dq]synopsis\[dq]
+}
+\f[R]
+.fi
+.IP \[bu] 2
+If a command called \f[V]synopsis\f[R] is found, \f[V]docgen\f[R] will
+substitute \f[V]${SYNOPSIS}\f[R] in your markdown
+.IP
+.nf
+\f[C]
+# SYNOPSIS
+
+${SYNOPSIS}
+\f[R]
+.fi
+.IP \[bu] 2
+For your subcommand, you can use the \f[V]doc::help\f[R] utility
+.IP
+.nf
+\f[C]
+source bashlib-doc.sh
+doc::help \[dq]synopsis_function_for_sub_command\[dq]
+\f[R]
+.fi
 .SS SYNOPSIS
 .IP
 .nf

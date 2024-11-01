@@ -155,6 +155,51 @@ function echo::echo(){
   echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
 }
 
+# @description
+#     Return the file descriptor to be used for the echo messages
+#
+# @exitcode 0
+# @exitcode 1 If no fd could be found
+# @example
+#    FD=$(echo::get_file_descriptor)
+#    echo "Hallo World" > "$FD"
+#
+# @stdout A file descriptor
+function echo::get_file_descriptor(){
+
+  # do we have a terminal alias
+  # the -c option checks if the file is a character device
+  # -t FD  file descriptor FD is opened on a terminal
+  # /dev/tty is the controlling terminal for the current process
+  if tty -s; then
+    # To /dev/tty
+    # No access if you're running the script in a non-interactive environment
+    echo "/dev/tty"
+    return
+  fi
+
+  # stderr may not be available
+  if test -c /dev/stderr; then
+    # To stderr
+    echo "/dev/stderr"
+    return
+  fi
+
+  # stdout may not be available
+  # This is the case when a command is executed from another command directly (not via shell)
+  # Example when `git` calls `ssh`, no stdout is attached
+  if test -c /dev/stdout; then
+    # To stdout
+    echo "/dev/stdout"
+    return
+  fi
+
+  # No idea how to test for /dev/stdxxx
+  # If we returns by default /dev/stderr it works in Idea
+  echo  "/dev/stderr"
+
+}
+
 # @internal
 # @description
 #    The base function that do the work
@@ -259,33 +304,15 @@ function echo::base(){
       ;;
   esac
 
-  # do we have a terminal
-  # the -c option checks if the file is a character device
-  if test -c /dev/tty; then
-    # To /dev/tty
-    # No access if you're running the script in a non-interactive environment
-    echo -e "${MESSAGE}" > /dev/tty
-    return
+  if ! FD=$(echo::get_file_descriptor); then
+    echo "Not device available for the message ${MESSAGE}"
+    return 1
   fi
 
-  # stderr may not be available
-  if test -c /dev/stderr; then
-    # To stderr
-    echo -e "${MESSAGE}" >&2
-    return
-  fi
-
-  # stdout may not be available
-  # This is the case when a command is executed from another command directly (not via shell)
-  # Example when `git` calls `ssh`, no stdout is attached
-  if test -c /dev/stdout; then
-    # To stdout
-    echo -e "${MESSAGE}"
-    return
-  fi
-
-  echo "Not device available for the message ${MESSAGE}"
-  return 1
+  echo -e "${MESSAGE}" > "$FD"
 
 
 }
+
+
+

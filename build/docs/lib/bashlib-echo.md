@@ -7,9 +7,9 @@ A echo library to log info, error and warning messages
 
 With this library, you will be able to log info, error, debug and warning messages.
 
-All messages are printed to `stderr` to not pollute any pipe redirection.
+All messages are printed to `tty` (`stderr` if not available) to not pollute any pipe redirection.
 
-You can also define the message printed by setting the level via the `BASHLIB_LEVEL` environment
+You can also define the message printed by setting the level via the `BASHLIB_ECHO_LEVEL` environment
 Setting it to:
 * `0`: disable all messages
 * `1`: print error messages

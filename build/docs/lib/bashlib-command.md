@@ -10,18 +10,37 @@ A list of command utilities
 ## Index
 
 * [command::echo_eval](#commandecho_eval)
+* [command::echo_debug_eval](#commandecho_debug_eval)
 * [command::fzf](#commandfzf)
 * [command::escape](#commandescape)
-* [command::exist](#commandexist)
+* [command::exists](#commandexists)
 
 ### command::echo_eval
 
-Print a command line and eval it
+Echo a command line at the info level and eval it
 
 #### Example
 
 ```bash
-command::eval_echo "echo 'Hello World'"
+command::echo_eval "echo 'Hello World'"
+```
+
+#### Arguments
+
+* **$1** (string): The command to echo and eval
+
+#### Output on stderr
+
+* The command`
+
+### command::echo_debug_eval
+
+Echo a command line at the debug level and eval it
+
+#### Example
+
+```bash
+command::echo_debug_eval "echo 'Hello World'"
 ```
 
 #### Arguments
@@ -60,7 +79,7 @@ when building command line syntax for eval
 
 * The arg escaped
 
-### command::exist
+### command::exists
 
 Check if a command exists
 

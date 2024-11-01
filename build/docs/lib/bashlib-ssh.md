@@ -22,12 +22,16 @@ managed by the agent.
 
 * [ssh::agent_start](#sshagent_start)
 * [ssh::agent_load_env](#sshagent_load_env)
-* [ssh::list_keys](#sshlist_keys)
+* [ssh::list_agent_keys](#sshlist_agent_keys)
 * [ssh::add_keys](#sshadd_keys)
 * [ssh::agent_state](#sshagent_state)
 * [ssh::agent_kill](#sshagent_kill)
 * [ssh::known_hosts_update](#sshknown_hosts_update)
-* [ssh::agent_init](#sshagent_init)
+* [ssh::get_key_fingerprint](#sshget_key_fingerprint)
+* [ssh::is_key_in_agent](#sshis_key_in_agent)
+* [ssh::get_secret_interactive](#sshget_secret_interactive)
+* [ssh::get_identity](#sshget_identity)
+* [ssh::get_conf](#sshget_conf)
 
 ### ssh::agent_start
 
@@ -55,11 +59,15 @@ echo Agent pid 17883;
 
 ### ssh::agent_load_env
 
-Load the env
+Load the agent env
 
-### ssh::list_keys
+#### Exit codes
 
-List the available keys
+* **0**: - always
+
+### ssh::list_agent_keys
+
+List the available keys in the agent
 
 ### ssh::add_keys
 
@@ -98,30 +106,32 @@ Kill a running agent given by the SSH_AGENT_PID environment variable
 
 Creates the known hosts file with the github fingerprint.
 
-### ssh::agent_init
+### ssh::get_key_fingerprint
 
-Start an agent and add keys if available
+Get the key fingerprint of a key file
 
-This is used in your `.bashrc` or env loading script
+### ssh::is_key_in_agent
 
-2 env variables are needed.
-* The location of the env file
-* The location of the agent socket file
+Check if the key is in the agent
 
-For the key usage, see the [add_keys function](#sshadd_keys)
+### ssh::get_secret_interactive
 
-See also [keychain](https://github.com/funtoo/keychain)
+Get a secret interactively
 
-#### Example
+### ssh::get_identity
 
-```bash
-export SSH_ENV="$HOME"/.ssh/ssh-agent.env
-export SSH_AUTH_SOCK="$HOME"/.ssh/agent.sock
-SSH_KEY_PASSPHRASE_MY_KEY=secret
-ssh::agent_init
-```
+Get the identity conf, applies templating eventually to get
+a real path to a key file
 
-#### See also
+#### Output on stdout
 
-* idea based on [auto-launching-ssh-agent-on-git-for-windows](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases#auto-launching-ssh-agent-on-git-for-windows)
+* - the identity
+
+### ssh::get_conf
+
+Get a conf for a destination
+
+#### Output on stdout
+
+* - the value
 

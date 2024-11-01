@@ -5,12 +5,16 @@ Library for array function over bash
 
 ## DESCRIPTION
 
-Array function, the array is passed as argument
-The options as options
+Array function
+* the array is passed as arguments
+* the options as options
+
+This library can be used as example on how to perform any array operations
 
 ## Index
 
 * [array::join](#arrayjoin)
+* [array::last](#arraylast)
 
 ### array::join
 
@@ -26,4 +30,8 @@ array::join --sep , hello world
 # Join an array with tabs
 array::join --sep $'\t' "${ARRAY[@]}"
 ```
+
+### array::last
+
+Return the last element of the arguments
 

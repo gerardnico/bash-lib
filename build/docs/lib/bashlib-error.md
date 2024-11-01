@@ -16,6 +16,7 @@ Depends on stack to print the callstack
 
 * [error::handler](#errorhandler)
 * [error::set_trap](#errorset_trap)
+* [error::exit](#errorexit)
 
 ### error::handler
 
@@ -71,4 +72,9 @@ error:set_trap
 #### Variables set
 
 * **trap** (for): error
+
+### error::exit
+
+Exit properly by deleting any ERR trap
+even if the exit code is not 0
 

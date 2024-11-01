@@ -15,6 +15,7 @@ and add the ability to set multiple traps for the same signal
 * [bash::is_login](#bashis_login)
 * [bash::conf](#bashconf)
 * [bash::function_definition](#bashfunction_definition)
+* [bash::has_terminal](#bashhas_terminal)
 
 ### bash::trap
 
@@ -48,4 +49,8 @@ Print the state/conf of the shell
 ### bash::function_definition
 
 Print the function definition
+
+### bash::has_terminal
+
+Check if the script has a terminal
 

@@ -34,6 +34,8 @@ bash::trap() {
 # @exitcode 0 If the shell is interactive
 # @exitcode 1 If the shell is non-interactive
 function bash::is_interactive(){
+  # $- (the current set of options) includes i if bash is interactive
+  # Ref: https://www.man7.org/linux/man-pages/man1/bash.1.html#INVOCATION
   if [[ $- == *i* ]]; then
     echo::debug "The shell is interactive."
     return 0

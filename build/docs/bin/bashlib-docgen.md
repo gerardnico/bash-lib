@@ -37,7 +37,7 @@ They are searched by default in the `bin` and `lib` directories.
 % your-script-name(1) Version 1.0.0 | The title
 # NAME
 # SYNOPSIS
-${synopsis}
+
 # ....
 ```
   * The man pages are generated into `build/docs/man/man1` and installed locally.
@@ -72,5 +72,13 @@ doc::help "synopsis_function_for_sub_command"
 
 ## SYNOPSIS
 
-${SYNOPSIS_DOCGEN}
+```bash
+bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
+```
+
+where:
+
+* `-o`      - is the output directory (default to `docs`)
+* `-h`      - shows this help
+* `bashDir` - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
 

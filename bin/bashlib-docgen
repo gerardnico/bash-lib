@@ -87,7 +87,11 @@ while [[ $# -gt 0 ]]; do
     OUTPUT_DOC_DIR="$1"
     ;;
   "-h"|"--help"|"help")
-    print_usage
+    doc::help
+    exit
+    ;;
+  "synopsis")
+    synopsis
     exit
     ;;
   *)
@@ -107,7 +111,7 @@ if [ ${#BASH_DIRS[@]} -eq 0 ]; then
     BASH_DIRS+=("bin");
   fi
   if [ ${#BASH_DIRS[@]} -eq 0 ]; then
-    print_usage
+    doc::help
     echo::err "No lib or bin directories found, set the bash directories to process as argument or change of directory"
     exit 1
   fi
@@ -116,7 +120,7 @@ fi
 # Check bash dir directories
 for BASH_DIR in "${BASH_DIRS[@]}" ; do
   if [ ! -d "$BASH_DIR" ]; then
-      print_usage
+      doc::help
       echo::err "Error: Bash dir '$BASH_DIR' is not a valid directory."
       exit 1
   fi
@@ -190,7 +194,16 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
         # shellcheck disable=SC2034
         if SYNOPSIS=$($FILE "synopsis"); then
           (
-            export SYNOPSIS
+            if [[ $(basename "$0") =~ $NAME ]]; then
+              # The bashlib-docgen script
+              # Because we use $SYNOPSIS has example, we don't want it
+              # to be replaced. In the bashlib-docgen.md, we use `${SYNOPSIS_DOCGEN}`
+              export SYNOPSIS_DOCGEN=$SYNOPSIS
+              export SYNOPSIS="\${SYNOPSIS}"
+            else
+              # All other scripts
+              export SYNOPSIS
+            fi
             envsubst < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
           )
         else

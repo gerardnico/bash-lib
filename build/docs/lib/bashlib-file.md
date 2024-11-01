@@ -21,6 +21,7 @@ sudo apt install -y file
 * [file::get_type](#fileget_type)
 * [file::is_text](#fileis_text)
 * [file::is_executable](#fileis_executable)
+* [file::get_permission](#fileget_permission)
 
 ### file::get_mime
 
@@ -83,6 +84,14 @@ This function does not return the executable permission.
 @exitcode 0 if the file is a executable file
 @exitcode 1 if the file is not a executable file
 ```
+
+#### Arguments
+
+* **$1** (string): - a path
+
+### file::get_permission
+
+Return if the file permission in octal form (i 0600)
 
 #### Arguments
 

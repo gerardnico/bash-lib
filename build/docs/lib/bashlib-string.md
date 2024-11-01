@@ -20,6 +20,8 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 * [string::no_case_match](#stringno_case_match)
 * [string::add_marge](#stringadd_marge)
 * [string::multiply](#stringmultiply)
+* [string::get_all_characters_before](#stringget_all_characters_before)
+* [string::get_all_characters_after](#stringget_all_characters_after)
 
 ### string::split
 
@@ -152,4 +154,26 @@ Multiply a string by a count
 
 * **$1** (the): string
 * **$2** (the): count
+
+### string::get_all_characters_before
+
+Get all characters before a character
+Used generally when there is a separator such as a point or a backslash
+It uses bash macro, you can also just look up and copy the code
+
+#### Arguments
+
+* **$1** (the): string
+* **$2** (the): character sep
+
+### string::get_all_characters_after
+
+Get all characters after a character
+Used generally when there is a separator such as a point or a backslash
+It uses bash macro, you can also just look up and copy the code
+
+#### Arguments
+
+* **$1** (the): string
+* **$2** (the): character sep
 
