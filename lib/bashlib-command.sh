@@ -65,7 +65,7 @@ command::escape(){
 #
 # @exitcode 0 if it exists
 # @exitcode 1 if it does not exist
-command::exist(){
+command::exists(){
   [ -x "$(command -v "$1")" ]
 }
 

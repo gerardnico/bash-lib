@@ -72,3 +72,7 @@ bash::function_definition(){
   type "$1"
 }
 
+# @description Check if the script has a terminal
+bash::has_terminal(){
+  tty -s
+}
