@@ -1,0 +1,56 @@
+#!/bin/bash
+# @name print env information
+
+
+set -Eeuo pipefail
+source bashlib-error.sh
+error::set_trap
+source bashlib-echo.sh
+source bashlib-string.sh
+source bashlib-bash.sh
+source bashlib-doc.sh
+
+
+function synopsis(){
+
+cat << 'EOF'
+```bash
+bashlib-env
+```
+EOF
+
+}
+
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  "-h"|"--help"|"help")
+    doc::help
+    exit
+    ;;
+  "synopsis")
+    synopsis
+    exit
+    ;;
+  *)
+    echo::err "No Argument is expected"
+    exit 1
+    ;;
+  esac
+done
+
+
+
+
+
+echo "Interactive : $(if bash::is_interactive; then echo "Yes"; else echo "No"; fi)"
+echo "Login       : $(if bash::is_login; then echo "Yes"; else echo "No"; fi)"
+echo "BASH_ENV    : $BASH_ENV"
+echo "PATH    : "
+echo "$PATH" | tr ':' $'\n' | sort | string::add_marge
+
+
+
+
+
+

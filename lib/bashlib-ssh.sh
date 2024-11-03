@@ -17,31 +17,6 @@
 
 source bashlib-echo.sh
 
-# @description
-#    Start an agent and store the env in a file passed as argument
-#    When starting an agent, this function will create an ENV file
-#    The env file contains:
-#    * the [SSH_AUTH_SOCK](https://man.archlinux.org/man/ssh.1.en#SSH_AUTH_SOCK)
-#    * and SSH_AGENT_PID env values
-#    It's a wrapper around `eval "$(ssh-agent -s)"`
-#
-# @arg $1 - The env file path (default to `$SSH_ENV`)
-# @arg $2 - The socket file path (default to `$SSH_AUTH_SOCK`)
-# @example
-#   ssh::agent_start
-#   # after the agent start, you would get
-#   SSH_AUTH_SOCK=/tmp/ssh-XXXXXXVv4IgB/agent.17882; export SSH_AUTH_SOCK;
-#   SSH_AGENT_PID=17883; export SSH_AGENT_PID;
-#   echo Agent pid 17883;
-#
-ssh::agent_start () {
-	local ENV="${1:-$SSH_ENV}"
-	local SOCK="${2:-$SSH_AUTH_SOCK}"
-  echo "Starting the ssh-agent with env at $ENV and sock at $SSH_AUTH_SOCK"
-  (umask 077; ssh-agent -a "$SOCK" >| "$ENV")
-  # shellcheck disable=SC1090
-  source "$ENV" >| /dev/null ;
-}
 
 # @description Load the agent env
 # @args $1 string the path to a SSH Agent env file

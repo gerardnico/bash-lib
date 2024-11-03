@@ -36,6 +36,7 @@ bash::trap() {
 function bash::is_interactive(){
   # $- (the current set of options) includes i if bash is interactive
   # Ref: https://www.man7.org/linux/man-pages/man1/bash.1.html#INVOCATION
+  # We could also use the `tty` command to check if this is a terminal (ie interactive)
   if [[ $- == *i* ]]; then
     echo::debug "The shell is interactive."
     return 0
@@ -56,25 +57,15 @@ function bash::is_login(){
   return 1
 }
 
-# @description
-#    Print the state/conf of the shell
-#    * Is it an interactive shell or not
-#    * Is it a login shell or not
-#
-function bash::conf(){
-
-  echo "Interactive : $(if shell::is_interactive; then echo "Yes"; else echo "No"; fi)"
-  echo "Login       : $(if shell::is_login; then echo "Yes"; else echo "No"; fi)"
-  echo "BASH_ENV    : $BASH_ENV"
-
-}
 
 # @description Print the function definition
 bash::function_definition(){
   type "$1"
 }
 
-# @description Check if the script has a terminal
+# @description
+#    Check if the standard stream file descriptors (stdout, stdin, ...)
+#    are of the terminal type (ie color is supported)
 bash::has_terminal(){
   tty -s
 }

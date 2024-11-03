@@ -136,6 +136,8 @@ string::no_case_match(){
 # @description
 #     Add a marge (ie space at the beginning of each line)
 # @arg $1 the size of the marge (default to 5)
+# @example
+#    echo "My String" | string::add_marge 4
 string::add_marge(){
   MARGE=$(string::multiply ' ' "${1:-5}")
   # Set at the start of a line a number of spaces
