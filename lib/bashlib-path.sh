@@ -2,8 +2,8 @@
 # @brief Library on file system path functions
 # @description Library of file system path functions
 
-source bashlib-echo.sh
-
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 
 # @description returns the file extension (ie the string after the first dot)

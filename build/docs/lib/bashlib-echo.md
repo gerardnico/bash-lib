@@ -30,6 +30,7 @@ They all accept the flag `--silent` or `-s` to no echo anything
 * [echo::debug](#echodebug)
 * [echo::conf](#echoconf)
 * [echo::echo](#echoecho)
+* [echo::get_file_descriptor](#echoget_file_descriptor)
 
 ### echo::info
 
@@ -201,4 +202,24 @@ echo::echo "My Debug statement"
 #### Output on stderr
 
 * The output is always in stderr to avoid polluting stdout with log message (git ways)
+
+### echo::get_file_descriptor
+
+Return the file descriptor to be used for the echo messages
+
+#### Example
+
+```bash
+FD=$(echo::get_file_descriptor)
+echo "Hallo World" > "$FD"
+```
+
+#### Exit codes
+
+* 0
+* **1**: If no fd could be found
+
+#### Output on stdout
+
+* A file descriptor
 

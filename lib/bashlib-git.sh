@@ -4,8 +4,10 @@
 #
 #     See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 
-source bashlib-echo.sh
-source bashlib-command.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+# shellcheck source=./bashlib-command.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
 
 # @description Get the default branch
 git::get_default_branch(){

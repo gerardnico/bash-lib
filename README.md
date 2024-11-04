@@ -77,6 +77,8 @@ source bashlib-echo.sh
 brew install --HEAD gerardnico/tap/bashlib
 # Add the libraries directory into your path in your `.bashrc` file
 export PATH=$(brew --prefix bashlib)/lib:$PATH
+# or set the BASHLIB_LIBRARY_PATH
+export BASHLIB_LIBRARY_PATH=$(brew --prefix bashlib)/lib:$PATH
 ```
 
 ### With Git
@@ -98,3 +100,7 @@ This package get also the following scripts:
 See [dev](dev/docs/dev.md)
 
 
+## Env
+
+`BASHLIB_LIBRARY_PATH` is the directory of the libraries. It's optional if the library are in a directory
+that is in the path.

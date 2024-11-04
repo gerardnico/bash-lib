@@ -15,7 +15,8 @@
 #     managed by the agent.
 #
 
-source bashlib-echo.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 
 # @description Load the agent env

@@ -20,7 +20,6 @@ managed by the agent.
 
 ## Index
 
-* [ssh::agent_start](#sshagent_start)
 * [ssh::agent_load_env](#sshagent_load_env)
 * [ssh::list_agent_keys](#sshlist_agent_keys)
 * [ssh::add_keys](#sshadd_keys)
@@ -29,33 +28,8 @@ managed by the agent.
 * [ssh::known_hosts_update](#sshknown_hosts_update)
 * [ssh::get_key_fingerprint](#sshget_key_fingerprint)
 * [ssh::is_key_in_agent](#sshis_key_in_agent)
-* [ssh::get_secret_interactive](#sshget_secret_interactive)
 * [ssh::get_identity](#sshget_identity)
 * [ssh::get_conf](#sshget_conf)
-
-### ssh::agent_start
-
-Start an agent and store the env in a file passed as argument
-When starting an agent, this function will create an ENV file
-The env file contains:
-* the [SSH_AUTH_SOCK](https://man.archlinux.org/man/ssh.1.en#SSH_AUTH_SOCK)
-* and SSH_AGENT_PID env values
-It's a wrapper around `eval "$(ssh-agent -s)"`
-
-#### Example
-
-```bash
-ssh::agent_start
-# after the agent start, you would get
-SSH_AUTH_SOCK=/tmp/ssh-XXXXXXVv4IgB/agent.17882; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=17883; export SSH_AGENT_PID;
-echo Agent pid 17883;
-```
-
-#### Arguments
-
-* **$1** (-): The env file path (default to `$SSH_ENV`)
-* **$2** (-): The socket file path (default to `$SSH_AUTH_SOCK`)
 
 ### ssh::agent_load_env
 
@@ -113,10 +87,6 @@ Get the key fingerprint of a key file
 ### ssh::is_key_in_agent
 
 Check if the key is in the agent
-
-### ssh::get_secret_interactive
-
-Get a secret interactively
 
 ### ssh::get_identity
 

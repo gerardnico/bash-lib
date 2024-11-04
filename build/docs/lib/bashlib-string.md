@@ -142,6 +142,12 @@ Check if a string matches without casing
 
 Add a marge (ie space at the beginning of each line)
 
+#### Example
+
+```bash
+echo "My String" | string::add_marge 4
+```
+
 #### Arguments
 
 * **$1** (the): size of the marge (default to 5)

@@ -1,8 +1,8 @@
 # @name bashlib-bash documentation
 # @brief Library for function over bash
 
-source bashlib-echo.sh
-
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 
 # @description

@@ -11,6 +11,7 @@ See the function [set_trap](#errorset_trap) for a usage example
 
 
 Depends on stack to print the callstack
+shellcheck source=./bashlib-stack.sh
 
 ## Index
 

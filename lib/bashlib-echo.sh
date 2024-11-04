@@ -19,7 +19,8 @@
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 
 # for the color
-source bashlib-string.sh
+# shellcheck source=./bashlib-string.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-string.sh"
 
 
 # Message color

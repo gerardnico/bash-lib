@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # @name print env information
 
 
@@ -45,7 +45,8 @@ done
 
 echo "Interactive : $(if bash::is_interactive; then echo "Yes"; else echo "No"; fi)"
 echo "Login       : $(if bash::is_login; then echo "Yes"; else echo "No"; fi)"
-echo "BASH_ENV    : $BASH_ENV"
+echo "BASH_ENV    : ${BASH_ENV:-}"
+echo "BASHLIB_LIBRARY_PATH    : ${BASHLIB_LIBRARY_PATH:-}"
 echo "PATH    : "
 echo "$PATH" | tr ':' $'\n' | sort | string::add_marge
 

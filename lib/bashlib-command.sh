@@ -5,7 +5,8 @@
 #
 #
 
-source bashlib-echo.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 # @description
 #     Echo a command line at the info level and eval it

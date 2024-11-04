@@ -2,7 +2,8 @@
 # @brief Library of Script functions
 # @description Library of Script functions
 
-source bashlib-echo.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 # @description check to see if this file is being run or sourced from another script
 script::is_sourced() {

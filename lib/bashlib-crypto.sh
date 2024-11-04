@@ -4,7 +4,8 @@
 #
 #
 
-source bashlib-echo.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 # @description Extract a public or private key from a pem file into a base 64 string without any line break
 # @arg $1 path - the path to a pem file
