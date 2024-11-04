@@ -39,64 +39,8 @@ ssh::list_agent_keys(){
   # ssh-add -L
 }
 
-# @description
-#   This function will load keys that are:
-#   * non-protected
-#   * protected where the passphrase is defined by env variables
-#
-#   **How it works?**
-#
-#   The function will loop through the environment variables with the `SSH_KEY_PASSPHRASE` prefix.
-#
-#   When it finds an env such as `SSH_KEY_PASSPHRASE_MY_KEY`, the function will:
-#	    * try to find a file at `~/.ssh/my_key`
-#	    * add it with the value of `ANSIBLE_SSH_KEY_PASSPHRASE_MY_KEY` as passphrase
-#
-ssh::add_keys(){
 
-  # add default non-protected keys from ~/.ssh
-  ssh-add || echo::info "No non-protected keys found and added to agent"
-	
-	# Loop through the ANSIBLE_SSH_KEY_PASSPHRASE environment variables
-	# and add the key to the agent
-	# Example:
-	# With the env `SSH_KEY_PASSPHRASE_MY_KEY` the script below will:
-	# * try to find a file at `~/.ssh/my_key`
-	# * add it with the value of `ANSIBLE_SSH_KEY_PASSPHRASE_MY_KEY` as passphrase
-	#
-	SSH_VAR_PREFIX='SSH_KEY_PASSPHRASE_'
-	for var in $(printenv | grep -oP "^$SSH_VAR_PREFIX\K[^=]+")
-	do
-	  filename=$(echo "$var" | tr '[:upper:]' '[:lower:]')
-	  fullVariableName="$SSH_VAR_PREFIX$var"
-	  filePath=~/.ssh/"$filename"
-	  echo::info "The SSH env variable $fullVariableName was found"
-	  if [ -f "$filePath" ]; then
-      echo::info "Trying to add the key $filename to the SSH agent"
-      # The instruction is in the man page. SSH_ASKPASS needs a path to an executable
-      # that emits the secret to stdout.
-      # See doc: https://man.archlinux.org/man/ssh.1.en#SSH_ASKPASS
-      SSH_ASKPASS="$HOME/.ssh/askpass.sh"
-      echo::info "  - Creating the executable $SSH_ASKPASS"
-      PASSPHRASE=$(eval "echo \$$SSH_VAR_PREFIX$var")
-      printf "#!/bin/sh\necho %s\n" "$PASSPHRASE" > "$SSH_ASKPASS"
-      chmod +x "$SSH_ASKPASS"
-      TIMEOUT=5
-      echo "  - Executing ssh-add (if the passphrase is incorrect, the execution will freeze for ${TIMEOUT} sec)"
-      # freeze due to SSH_ASKPASS_REQUIRE=force otherwise it will ask it at the terminal
-      BAD_PASSPHRASE_RESULT="Bad passphrase"
-      result=$(timeout $TIMEOUT bash -c "DISPLAY=:0 SSH_ASKPASS_REQUIRE=force SSH_ASKPASS=$SSH_ASKPASS ssh-add $filePath" 2>&1 || echo "$BAD_PASSPHRASE_RESULT")
-      echo::info "  - $result" # should be `Identity added:xxx`
-      [ "$result" == "$BAD_PASSPHRASE_RESULT" ] && exit 1;
-	  else
-      echo::info "The env variable $fullVariableName designs a key file ($filePath) that does not exist" >&2
-      exit 1;
-	  fi
-	done
-
-}
-
-# @description returns the Agent_run_state
+# @description returns the Agent state in numeric format
 # @stdout the agent state
 #    * 0 : agent running with key,
 #    * 1 : agent without key
@@ -106,6 +50,30 @@ ssh::agent_state(){
 
   ssh-add -l >| /dev/null 2>&1 && echo $? || echo $?
   
+}
+
+# @description Return the state of the agent has human description
+# @stdout   the human state description
+# @exitcode 1 if the state is unknown
+ssh::agent_state_human(){
+    SSH_X_AGENT_RUN_STATE=$(ssh::agent_state)
+    case $SSH_X_AGENT_RUN_STATE in
+      0)
+        echo "Agent running with key"
+        return
+        ;;
+      1)
+        echo "Agent running without key"
+        return
+        ;;
+      2)
+        echo  "Agent not running"
+        return
+        ;;
+      *)
+        echo "$SSH_X_AGENT_RUN_STATE is an Unknown State"
+        return 1
+    esac
 }
 
 # @description Kill a running agent given by the SSH_AGENT_PID environment variable
