@@ -80,11 +80,11 @@ ssh::agent_state_human(){
 # @exitcode 1 if the SSH_AGENT_PID is unknown or the agent could not be killed
 ssh::agent_kill(){
 
-  if [[ -z "$SSH_AGENT_PID" ]]; then
+  if [[ "${SSH_AGENT_PID:-}" == "" ]]; then
     # Trying to get it via process name
-    SSH_AGENT_PID=$(pgrep ssh-agent)
-    if [[ -z "$SSH_AGENT_PID" ]]; then
-      echo::err "The SSH_AGENT_PID is unknown"
+    if ! SSH_AGENT_PID=$(pgrep ssh-agent); then
+      echo::err "The SSH_AGENT_PID is unknown and no ssh-agent process could be found."
+      echo::err "No agent stopped"
       return 1
     fi
     # Give access to ssh-agent
@@ -96,8 +96,11 @@ ssh::agent_kill(){
   # Delete env
   unset SSH_AGENT_PID
   unset SSH_AUTH_SOCK
-  rm -f "$SSH_ENV"
-  unset SSH_ENV
+  SSH_X_AGENT_ENV=${SSH_X_AGENT_ENV:-}
+  if [ -f "$SSH_X_AGENT_ENV" ]; then
+    rm -f "$SSH_X_AGENT_ENV"
+  fi
+  unset SSH_X_ENV
 
 }
 
