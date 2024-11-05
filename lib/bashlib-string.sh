@@ -180,3 +180,12 @@ string::get_all_characters_after(){
   echo "${1%%"${2}"*}"
 
 }
+
+# @description
+#     Transform a string to lowercase, to be used in a pipe
+#
+# @stdin - the text
+# @stdout - the lowercase text
+string::to_lowercase(){
+  tr '[:upper:]' '[:lower:]'
+}
