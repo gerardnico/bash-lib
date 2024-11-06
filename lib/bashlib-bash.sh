@@ -88,6 +88,8 @@ PINENTRY_WHIPTAIL="whiptail"
 bash::get_pinentry(){
 
   # if /dev/tty is available (ie in a textual terminal)
+  # Note that GPG uses an env to determine if this is an interactive textual terminal session
+  # export GPG_TTY=$(tty)
   if sh -c ": >/dev/tty" >/dev/null 2>/dev/null; then
     # the `:` points means
     # Do nothing beyond expanding arguments and performing redirections. The return status is zero
