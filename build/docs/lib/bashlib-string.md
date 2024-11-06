@@ -22,6 +22,7 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 * [string::multiply](#stringmultiply)
 * [string::get_all_characters_before](#stringget_all_characters_before)
 * [string::get_all_characters_after](#stringget_all_characters_after)
+* [string::to_lowercase](#stringto_lowercase)
 
 ### string::split
 
@@ -182,4 +183,16 @@ It uses bash macro, you can also just look up and copy the code
 
 * **$1** (the): string
 * **$2** (the): character sep
+
+### string::to_lowercase
+
+Transform a string to lowercase, to be used in a pipe
+
+#### Input on stdin
+
+* - the text
+
+#### Output on stdout
+
+* - the lowercase text
 

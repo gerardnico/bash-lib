@@ -22,8 +22,8 @@ managed by the agent.
 
 * [ssh::agent_load_env](#sshagent_load_env)
 * [ssh::list_agent_keys](#sshlist_agent_keys)
-* [ssh::add_keys](#sshadd_keys)
 * [ssh::agent_state](#sshagent_state)
+* [ssh::agent_state_human](#sshagent_state_human)
 * [ssh::agent_kill](#sshagent_kill)
 * [ssh::known_hosts_update](#sshknown_hosts_update)
 * [ssh::get_key_fingerprint](#sshget_key_fingerprint)
@@ -43,23 +43,9 @@ Load the agent env
 
 List the available keys in the agent
 
-### ssh::add_keys
-
-This function will load keys that are:
-* non-protected
-* protected where the passphrase is defined by env variables
-
-**How it works?**
-
-The function will loop through the environment variables with the `SSH_KEY_PASSPHRASE` prefix.
-
-When it finds an env such as `SSH_KEY_PASSPHRASE_MY_KEY`, the function will:
-* try to find a file at `~/.ssh/my_key`
-* add it with the value of `ANSIBLE_SSH_KEY_PASSPHRASE_MY_KEY` as passphrase
-
 ### ssh::agent_state
 
-returns the Agent_run_state
+returns the Agent state in numeric format
 
 #### Output on stdout
 
@@ -67,6 +53,18 @@ returns the Agent_run_state
   * 0 : agent running with key,
   * 1 : agent without key
   * 2 : agent not running
+
+### ssh::agent_state_human
+
+Return the state of the agent has human description
+
+#### Exit codes
+
+* **1**: if the state is unknown
+
+#### Output on stdout
+
+* the human state description
 
 ### ssh::agent_kill
 
