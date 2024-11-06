@@ -72,6 +72,7 @@ bash::has_terminal(){
 
 # Pinentry Cli Env Constant
 PINENTRY_CURSES="pinentry-curses"
+PINENTRY_GNOME="pinentry-gnome3"
 PINENTRY_READ="read"
 PINENTRY_ZENITY="zenity"
 PINENTRY_WHIPTAIL="whiptail"
@@ -81,6 +82,7 @@ PINENTRY_WHIPTAIL="whiptail"
 #    This function supports:
 #    * read (console)
 #    * pinentry-curses (console)
+#    * pinentry-gnome3 (gui)
 #    * zenity (gui)
 #    * whiptail (gui)
 # @exitcode 1 if no pinentry program could be found for the context
@@ -115,6 +117,12 @@ bash::get_pinentry(){
   fi
 
   # In a Gui, Cli IDE
+  if [ -x "$(command -v "$PINENTRY_GNOME")" ]; then
+    # Why Pinentry Gnome, because it may fall back to curses
+    # Example: No $DBUS_SESSION_BUS_ADDRESS found, falling back to curses
+    echo "$PINENTRY_GNOME"
+    return
+  fi
   if [ -x "$(command -v "$PINENTRY_ZENITY")" ]; then
     echo "$PINENTRY_ZENITY"
     return
@@ -168,8 +176,7 @@ bash::get_pin(){
       echo "$password"
       ;;
     "$PINENTRY_CURSES")
-      echo $(pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" <<EOF | grep D | sed 's/^..//'
-SETTIMEOUT 30
+      echo $(pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30 <<EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
@@ -178,6 +185,16 @@ BYE
 EOF
 )
       ;;
+    "$PINENTRY_GNOME")
+       echo $(pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30  <<EOF | grep D | sed 's/^..//'
+SETPROMPT $PROMPT
+SETOK Ok
+SETCANCEL Cancel
+GETPIN
+BYE
+EOF
+)
+          ;;
     *)
       echo:err "The pinentry value ($1) is unknown"
       exit 2
