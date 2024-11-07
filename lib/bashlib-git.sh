@@ -56,10 +56,28 @@ git::diff(){
   git diff HEAD "$1" | $EDITOR
 }
 
-# @description Check if there is some modified or delete files not commited
+# @description
+#    Check if there is:
+#      * some modified or delete files not commited
+#      * some commit not pushed
 # @exitcode 1 if the repo is dirty
 git::is_dirty(){
-   ! git diff-index --quiet HEAD --
+  # commit not
+  COMMIT_NOT_PUSHED=$(git::get_commits_not_pushed);
+  if [ "$COMMIT_NOT_PUSHED" != "0" ]; then
+    return 0
+  fi
+  # Any files modified
+  ! git diff-index --quiet HEAD --
+}
+
+# @description
+#    Get the commits not integrated in the upstream branch
+#    The repository is considered dirty if this the case
+# @stdout the commits not pushed
+git::get_commits_not_pushed(){
+  # same as `git rev-list '@{u}'...HEAD --count`
+  git 'rev-list' '--count' '@{u}..@{0}'
 }
 
 # @description Create a full git string command
