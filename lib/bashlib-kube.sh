@@ -210,7 +210,7 @@ kube::test_connection(){
 #   Set the env for the app and test the connection
 kube::set_app_env_up(){
 
-  if shell::is_interactive; then
+  if bash::is_interactive; then
     echo::err "This function should be called only non-interactively"
     return 1;
   fi
@@ -223,7 +223,7 @@ kube::set_app_env_up(){
 
   # Load the env
   ENV_LOADED=1
-  if command::exist "direnv"; then
+  if command::exists "direnv"; then
       # Direnv should be explicitly called in non-interactive mode
       # https://github.com/direnv/direnv/issues/262
       eval "$(direnv export bash)"
