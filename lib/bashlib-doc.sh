@@ -53,12 +53,12 @@ doc::help(){
       COMMAND_NAME=${SYNOPSIS_METHOD%%_*}
     fi
   fi
-
+  # No carriage return between the title and the synopsis
+  # as generally the synopsis is a heredoc that has a carriage return
   {
     cat << EOF
 
 Usage of $COMMAND_NAME
-
 $(eval "$SYNOPSIS_METHOD")
 
 $SEE_COMMAND_MAN
