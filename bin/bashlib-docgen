@@ -211,7 +211,10 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
               # All other scripts
               export SYNOPSIS
             fi
-            envsubst < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
+            # '$SYNOPSIS' to replace only this variable
+            # to not get secret on the run
+            # shellcheck disable=SC2016
+            envsubst '$SYNOPSIS' < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
           )
         else
           echo::warn "No synopsis function found in the script $FILE"
