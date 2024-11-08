@@ -187,5 +187,6 @@ string::get_all_characters_after(){
 # @stdin - the text
 # @stdout - the lowercase text
 string::to_lowercase(){
-  tr '[:upper:]' '[:lower:]'
+  echo "${1,,}"
+  # same as tr '[:upper:]' '[:lower:]'
 }
