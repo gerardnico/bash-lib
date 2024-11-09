@@ -50,6 +50,7 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-ssh.sh](build/docs/lib/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](build/docs/lib/bashlib-stack.md) - CallStack/Frame functions
 * [bashlib-string.sh](build/docs/lib/bashlib-stack.md) - String functions
+* [bashlib-vault.sh](build/docs/lib/bashlib-vault.md) - Retrieve secret from vault (hashicorp or pass)
 
 
 

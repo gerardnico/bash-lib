@@ -16,6 +16,7 @@ See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 * [git::branch_delete](#gitbranch_delete)
 * [git::diff](#gitdiff)
 * [git::is_dirty](#gitis_dirty)
+* [git::get_commits_not_pushed](#gitget_commits_not_pushed)
 * [git::get_eval_string](#gitget_eval_string)
 * [git::get_dirty_files](#gitget_dirty_files)
 * [git::get_auto_commit_message](#gitget_auto_commit_message)
@@ -68,11 +69,22 @@ gdiff README.md
 
 ### git::is_dirty
 
-Check if there is some modified or delete files not commited
+Check if there is:
+* some modified or delete files not commited
+* some commit not pushed
 
 #### Exit codes
 
 * **1**: if the repo is dirty
+
+### git::get_commits_not_pushed
+
+Get the commits not integrated in the upstream branch
+The repository is considered dirty if this the case
+
+#### Output on stdout
+
+* the commits not pushed
 
 ### git::get_eval_string
 

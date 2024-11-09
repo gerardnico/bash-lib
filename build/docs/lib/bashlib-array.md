@@ -35,3 +35,11 @@ array::join --sep $'\t' "${ARRAY[@]}"
 
 Return the last element of the arguments
 
+#### Example
+
+```bash
+array::last "${MY_ARRAY[@]}"
+# equivalent on a array directly in bash to
+LAST=${MY_ARRAY[-1]}
+```
+

@@ -43,6 +43,10 @@ array::join(){
 
 # @description Return the last element of the arguments
 # @args $0-N array - all arguments
+# @example
+#    array::last "${MY_ARRAY[@]}"
+#    # equivalent on a array directly in bash to
+#    LAST=${MY_ARRAY[-1]}
 array::last(){
-  echo  "${@: -1}"
+  echo "${@: -1}"
 }
