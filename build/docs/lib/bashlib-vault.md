@@ -10,6 +10,7 @@ Retrieve secrets from vault or pass secret manager
 ## Index
 
 * [vault::get_secret_from_vault](#vaultget_secret_from_vault)
+* [vault::filter](#vaultfilter)
 
 ### vault::get_secret_from_vault
 
@@ -33,4 +34,15 @@ vault::get_secret_from_vault vault:secret/github/token
 #### Output on stdout
 
 * Return the secret field value
+
+### vault::filter
+
+If the value is a vault expression, get the value from the vault
+or return the raw value otherwise
+
+#### Example
+
+```bash
+VALUE=$(vault::filter "$VALUE")
+```
 
