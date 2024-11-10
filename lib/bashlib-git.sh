@@ -57,18 +57,32 @@ git::diff(){
 }
 
 # @description
+#    Check if there is some modified or delete files not commited
+# @exitcode 1 if the repo is index dirty
+git::is_dirty_index(){
+  # Any files modified
+  ! git diff-index --quiet HEAD --
+}
+
+# @description
+#    Check if there is some commit not pushed
+# @exitcode 1 if their is some commit not pushed
+git::is_dirty_commit(){
+  COMMIT_NOT_PUSHED=$(git::get_commits_not_pushed);
+  [ "$COMMIT_NOT_PUSHED" != "0" ];
+}
+
+# @description
 #    Check if there is:
 #      * some modified or delete files not commited
 #      * some commit not pushed
-# @exitcode 1 if the repo is dirty
+# @exitcode 0 if the repo is dirty
+# @exitcode 1 if the repo is not dirty
 git::is_dirty(){
-  # commit not
-  COMMIT_NOT_PUSHED=$(git::get_commits_not_pushed);
-  if [ "$COMMIT_NOT_PUSHED" != "0" ]; then
+  if git::is_dirty_commit; then
     return 0
   fi
-  # Any files modified
-  ! git diff-index --quiet HEAD --
+  git::is_dirty_index
 }
 
 # @description
