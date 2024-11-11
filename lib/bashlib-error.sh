@@ -98,7 +98,7 @@ error::exit(){
 #    ```bash
 #    set -TCEeuo pipefail
 #    ```
-error::strict_mode(){
+error::set_strict_mode(){
 
     set -T # inherit DEBUG and RETURN trap for functions
     set -C # prevent file overwrite by > &> <>
