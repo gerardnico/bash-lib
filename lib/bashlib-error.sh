@@ -63,14 +63,9 @@ error::handler() {
 #    In your script, we advise to set the error option. See example.
 #
 # @example
-#    set -Eeuo pipefail # A onliner
-#    # where the flag means:
-#    #   e - Exit if any error
-#    #   u - Treat unset variables as an error when substituting
-#    #   o pipefail - the return value of a pipeLOCATION is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status
-#    #   E - the ERR trap is inherited by shell functions
 #    source bashlib-error.sh # Import the library
-#    error:set_trap
+#    error::strict_mode
+#    error::set_trap
 #
 # @noarg
 # @set trap for error
@@ -82,10 +77,34 @@ error::set_trap() {
 # @description
 #    Exit properly by deleting any ERR trap
 #    even if the exit code is not 0
+#    It's used to delete the print of a stack trace
+# @example
+#    # We don't want an error trace on this command
+#    # because we know that it's a bash script
+#    # that also print its own stack on error
+#    # To avoid a stack print on the main script, you would do
+#    sub_bash_script_with_error || error::exit $?
 # @args $1 - the exit code
 error::exit(){
 
   trap - ERR
   exit "$1"
+
+}
+
+# @description
+#    Set a strict mode
+#    Same as
+#    ```bash
+#    set -TCEeuo pipefail
+#    ```
+error::strict_mode(){
+
+    set -T # inherit DEBUG and RETURN trap for functions
+    set -C # prevent file overwrite by > &> <>
+    set -E # inherit -e (the ERR trap is inherited by shell functions)
+    set -e # exit immediately on errors
+    set -u # Treat unset variables as an error when substituting
+    set -o pipefail # exit on pipe failure (the return value of a pipeline is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status)
 
 }

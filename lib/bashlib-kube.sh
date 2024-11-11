@@ -101,7 +101,8 @@ kube::get_resources_by_app_name() {
   # Example:
   #     COMMAND="kubectl get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o jsonpath='{range .items[*]}{.metadata.name}{\" \"}{.metadata.namespace}{\"\n\"}{end}' 2>/dev/null"
   #
-  COMMAND="kubectl get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o custom-columns='$CUSTOM_COLUMNS' $NO_HEADERS 2>/dev/null"
+  KUBE_X_KUBECTL=${KUBE_X_KUBECTL:-"kubectl"}
+  COMMAND="$KUBE_X_KUBECTL get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o custom-columns='$CUSTOM_COLUMNS' $NO_HEADERS 2>/dev/null"
   echo::info "Executing: $COMMAND"
   eval "$COMMAND"
 
@@ -125,7 +126,7 @@ kube::get_resources_by_app_name() {
 # @stdout The resource name and namespace separated by a space or an empty string
 # @exitcode 1 - if too many resource was found
 kube::get_resource_by_app_name(){
-  RESOURCES="$(kube::get_resources_by_app_name "$@")"
+  RESOURCES=$(kube::get_resources_by_app_name "$@")
   RESOURCE_COUNT=$(echo "$RESOURCES" | sed '/^\s*$/d' | wc -l )
   if [ "$RESOURCE_COUNT" -gt 1 ]; then
       echo "Error: Multiple $RESOURCE_TYPE found with the label app.kubernetes.io/name=$APP_NAME:"
@@ -150,23 +151,4 @@ kube::get_json_path(){
   echo "$JSON_PATH"
 }
 
-# @description
-#    Return the app directory
-# @arg $1 string The app name
-kube::get_app_dir(){
-
-  KUBE_APP_NAME="$1"
-
-  kube::check_app_home
-  KUBE_APP_DIRECTORY=$KUBE_X_APP_HOME/$KUBE_APP_NAME
-
-  if [ ! -d "$KUBE_APP_DIRECTORY" ]; then
-    echo::err "The app directory $KUBE_APP_DIRECTORY does not exist"
-    return 1
-  fi
-
-  echo "$KUBE_APP_DIRECTORY"
-
-
-}
 

@@ -176,24 +176,22 @@ bash::get_pin(){
       echo "$password"
       ;;
     "$PINENTRY_CURSES")
-      echo $(pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30 <<EOF | grep D | sed 's/^..//'
+      pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30 <<EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
 GETPIN
 BYE
 EOF
-)
       ;;
     "$PINENTRY_GNOME")
-       echo $(pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30  <<EOF | grep D | sed 's/^..//'
+       pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30  <<EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
 GETPIN
 BYE
 EOF
-)
           ;;
     *)
       echo:err "The pinentry value ($1) is unknown"
@@ -201,3 +199,4 @@ EOF
       ;;
   esac
 }
+
