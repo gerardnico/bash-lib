@@ -117,7 +117,7 @@ bash::get_pinentry(){
   fi
 
   # In a Gui, Cli IDE
-  if [ -x "$(command -v "$PINENTRY_GNOME")" ]; then
+  if [ "${DBUS_SESSION_BUS_ADDRESS:-}" != "" ] && [ -x "$(command -v "$PINENTRY_GNOME")" ]; then
     # Why Pinentry Gnome, because it may fall back to curses
     # Example: No $DBUS_SESSION_BUS_ADDRESS found, falling back to curses
     echo "$PINENTRY_GNOME"
@@ -158,11 +158,26 @@ bash::get_pin(){
     return 2
   fi
   PROMPT=${2:-"Enter the pin/secret/passphrase"}
+  TIMEOUT=30
 
   case "$1" in
     "$PINENTRY_ZENITY")
-      if ! PASSWORD=$(zenity --password --title="$PROMPT" 2>/dev/null); then
-        echo::err "User has canceled"
+      # on Windows, the width is not supported
+      WIDTH=${#PROMPT} # number of characters
+      if ! PASSWORD=$(zenity --password --title="$PROMPT" --width="$WIDTH" --timeout="$TIMEOUT" 2>/dev/null); then
+        # https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes
+        case "$?" in
+          1)
+          echo::err "User has canceled"
+          ;;
+          -1)
+          echo::err "An unexpected error has occurred"
+          ;;
+          5)
+          echo::err "The dialog has been closed because the timeout has been reached."
+          ;;
+        esac
+        return 1
       else
         echo "$PASSWORD"
       fi
@@ -176,7 +191,7 @@ bash::get_pin(){
       echo "$password"
       ;;
     "$PINENTRY_CURSES")
-      pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30 <<EOF | grep D | sed 's/^..//'
+      pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT" <<EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
@@ -185,7 +200,7 @@ BYE
 EOF
       ;;
     "$PINENTRY_GNOME")
-       pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout 30  <<EOF | grep D | sed 's/^..//'
+       pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT"  <<EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
