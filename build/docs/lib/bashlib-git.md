@@ -15,6 +15,8 @@ See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 * [git::checkout_default](#gitcheckout_default)
 * [git::branch_delete](#gitbranch_delete)
 * [git::diff](#gitdiff)
+* [git::is_dirty_index](#gitis_dirty_index)
+* [git::is_dirty_commit](#gitis_dirty_commit)
 * [git::is_dirty](#gitis_dirty)
 * [git::get_commits_not_pushed](#gitget_commits_not_pushed)
 * [git::get_eval_string](#gitget_eval_string)
@@ -67,6 +69,22 @@ Diff of one file with the head
 gdiff README.md
 ```
 
+### git::is_dirty_index
+
+Check if there is some modified or delete files not commited
+
+#### Exit codes
+
+* **1**: if the repo is index dirty
+
+### git::is_dirty_commit
+
+Check if there is some commit not pushed
+
+#### Exit codes
+
+* **1**: if their is some commit not pushed
+
 ### git::is_dirty
 
 Check if there is:
@@ -75,7 +93,8 @@ Check if there is:
 
 #### Exit codes
 
-* **1**: if the repo is dirty
+* **0**: if the repo is dirty
+* **1**: if the repo is not dirty
 
 ### git::get_commits_not_pushed
 

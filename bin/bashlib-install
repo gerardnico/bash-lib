@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# shellcheck source=../lib/bashlib-error.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+error::set_strict_mode
+error::set_trap
+# shellcheck source=../lib/bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+
+synopsis(){
+  cat << EOF
+Install executables of a directory by creating symlink into \`/usr/local/sbin\`
+\`\`\`bash
+$(basename "$0") DirectoryContainingExecutable
+\`\`\`
+EOF
+}
+if [ "${1:-}" == "synopsis" ]; then
+  synopsis
+  exit
+fi
+
+DIR=${1:-}
+
+if [ "$DIR" == "" ]; then
+  doc::help synopsis
+  echo::err "A directory should be given as first argument"
+  exit 1
+fi
+
+echo::info "Installing executable of $DIR"
+for FILE in "$DIR"/*; do
+  BASENAME=$(basename "$FILE")
+  if [ ! -x "$FILE" ]; then
+    echo::warn "Skipping non-executable file $BASENAME"
+    continue
+  fi
+  echo::info "Installing $BASENAME"
+  sudo ln -s "$FILE" "/usr/local/sbin/$BASENAME"
+done

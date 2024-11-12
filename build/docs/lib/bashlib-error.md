@@ -18,6 +18,7 @@ shellcheck source=./bashlib-stack.sh
 * [error::handler](#errorhandler)
 * [error::set_trap](#errorset_trap)
 * [error::exit](#errorexit)
+* [error::set_strict_mode](#errorset_strict_mode)
 
 ### error::handler
 
@@ -60,14 +61,9 @@ In your script, we advise to set the error option. See example.
 #### Example
 
 ```bash
-set -Eeuo pipefail # A onliner
-# where the flag means:
-#   e - Exit if any error
-#   u - Treat unset variables as an error when substituting
-#   o pipefail - the return value of a pipeLOCATION is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status
-#   E - the ERR trap is inherited by shell functions
 source bashlib-error.sh # Import the library
-error:set_trap
+error::strict_mode
+error::set_trap
 ```
 
 #### Variables set
@@ -78,4 +74,24 @@ error:set_trap
 
 Exit properly by deleting any ERR trap
 even if the exit code is not 0
+It's used to delete the print of a stack trace
+
+#### Example
+
+```bash
+   # We don't want an error trace on this command
+   # because we know that it's a bash script
+   # that also print its own stack on error
+   # To avoid a stack print on the main script, you would do
+   sub_bash_script_with_error || error::exit $?
+@args $1 - the exit code
+```
+
+### error::set_strict_mode
+
+Set a strict mode
+Same as
+```bash
+set -TCEeuo pipefail
+```
 

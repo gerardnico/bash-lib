@@ -1,20 +1,11 @@
 #!/usr/bin/env bash
-# @name docgen documentation
-# @brief A script that will generate documentation from a bash library or script
-# @description
-#     With this script, you can generate bash documentation for a library or for a script
-#     Check the usage:
-#     * in the [help](#help) section
-#     * or with its option `-h`
-#
 
-set -Eeuo pipefail
 # shellcheck source=./bashlib-error.sh
 source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+error::set_strict_mode
 error::set_trap
 # shellcheck source=./bashlib-echo.sh
 source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
-source bashlib-echo.sh
 # shellcheck source=./bashlib-script.sh
 source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-script.sh"
 # shellcheck source=./bashlib-path.sh

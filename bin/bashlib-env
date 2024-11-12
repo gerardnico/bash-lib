@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # @name print env information
 
-
-set -Eeuo pipefail
-source bashlib-error.sh
+# shellcheck source=./bashlib-error.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+error::set_strict_mode
 error::set_trap
-source bashlib-echo.sh
-source bashlib-string.sh
-source bashlib-bash.sh
-source bashlib-doc.sh
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+# shellcheck source=./bashlib-doc.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-doc.sh"
 
 
 function synopsis(){
