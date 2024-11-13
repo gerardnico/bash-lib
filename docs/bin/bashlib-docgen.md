@@ -28,7 +28,7 @@ They are searched by default in the `bin` and `lib` directories.
 
 ### For a library
 
-  * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc)
+  * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc) into `docs/lib`
   * no manpage is generated
 
 ### For a script
@@ -40,7 +40,8 @@ They are searched by default in the `bin` and `lib` directories.
 ${synopsis}
 # ....
 ```
-  * The man pages are generated into `build/docs/man/man1` and installed locally.
+  * The bin pages are generated into `docs/bin-generated`
+  * The man pages are generated into `docs/man/man1` and installed locally.
 
 ## Tips for script
 
@@ -69,8 +70,16 @@ source bashlib-doc.sh
 doc::help "synopsis_function_for_sub_command"
 ```
 
+# Output
 
-## SYNOPSIS
+The bin docs output directory is in the same level below `docs` to be able to create relatif link to image
+
+The link `![my image desc](../images/image.png)` will be valid in a document located in:
+* `docs\bin` 
+* `docs\bin-generated`
+
+
+# SYNOPSIS
 
 ${SYNOPSIS_DOCGEN}
 

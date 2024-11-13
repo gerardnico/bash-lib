@@ -50,7 +50,7 @@ directories.
 .SS For a library
 .IP \[bu] 2
 the markdown file are generated via
-shdoc (https://github.com/reconquest/shdoc)
+shdoc (https://github.com/reconquest/shdoc) into \f[V]docs/lib\f[R]
 .IP \[bu] 2
 no manpage is generated
 .SS For a script
@@ -70,8 +70,10 @@ ${synopsis}
 \f[R]
 .fi
 .IP \[bu] 2
-The man pages are generated into \f[V]build/docs/man/man1\f[R] and
-installed locally.
+The bin pages are generated into \f[V]docs/bin-generated\f[R]
+.IP \[bu] 2
+The man pages are generated into \f[V]docs/man/man1\f[R] and installed
+locally.
 .SS Tips for script
 .IP \[bu] 2
 You can use your man page in your help function.
@@ -116,6 +118,14 @@ source bashlib-doc.sh
 doc::help \[dq]synopsis_function_for_sub_command\[dq]
 \f[R]
 .fi
-.SS SYNOPSIS
+.SH Output
+.PP
+The bin docs output directory is in the same level below \f[V]docs\f[R]
+to be able to create relatif link to image
+.PP
+The link \f[V]![my image desc](../images/image.png)\f[R] will be valid
+in a document located in: * \f[V]docs\[rs]bin\f[R] *
+\f[V]docs\[rs]bin-generated\f[R]
+.SH SYNOPSIS
 .PP
 ${SYNOPSIS_DOCGEN}

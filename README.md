@@ -34,23 +34,23 @@ See each library documentation page for usage.
 
 The `bash-lib` package contains the following libraries:
 
-* [bashlib-array.sh](build/docs/lib/bashlib-array.md) - Array functions (join, ...)
-* [bashlib-bash.sh](build/docs/lib/bashlib-bash.md) - Bash functions (is interactive, trap, ...)
-* [bashlib-cd.sh](build/docs/lib/bashlib-echo.md) - Cd functions
-* [bashlib-command.sh](build/docs/lib/bashlib-command.md) - Command functions (eval, ...)
-* [bashlib-crypto.sh](build/docs/lib/bashlib-crypto.md) - Cryptographic functions (Key, Cert, ...)
-* [bashlib-doc.sh](build/docs/lib/bashlib-doc.md) - Documentation functions
-* [bashlib-echo.sh](build/docs/lib/bashlib-echo.md) - Echo functions (info, warning, error, tip, ...)
-* [bashlib-error.sh](build/docs/lib/bashlib-error.md) - Error handler functions
-* [bashlib-git.sh](build/docs/lib/bashlib-git.md) - Git functions
-* [bashlib-kube.sh](build/docs/lib/bashlib-kube.md) - Kubernetes functions
-* [bashlib-linux.sh](build/docs/lib/bashlib-linux.md) - Linux functions 
-* [bashlib-path.sh](build/docs/lib/bashlib-path.md) - File System Path functions
-* [bashlib-script.sh](build/docs/lib/bashlib-script.md) - Script functions (ie source)
-* [bashlib-ssh.sh](build/docs/lib/bashlib-ssh.md) - Ssh functions
-* [bashlib-stack.sh](build/docs/lib/bashlib-stack.md) - CallStack/Frame functions
-* [bashlib-string.sh](build/docs/lib/bashlib-stack.md) - String functions
-* [bashlib-vault.sh](build/docs/lib/bashlib-vault.md) - Retrieve secret from vault (hashicorp or pass)
+* [bashlib-array.sh](docs/lib/bashlib-array.md) - Array functions (join, ...)
+* [bashlib-bash.sh](docs/lib/bashlib-bash.md) - Bash functions (is interactive, trap, ...)
+* [bashlib-cd.sh](docs/lib/bashlib-echo.md) - Cd functions
+* [bashlib-command.sh](docs/lib/bashlib-command.md) - Command functions (eval, ...)
+* [bashlib-crypto.sh](docs/lib/bashlib-crypto.md) - Cryptographic functions (Key, Cert, ...)
+* [bashlib-doc.sh](docs/lib/bashlib-doc.md) - Documentation functions
+* [bashlib-echo.sh](docs/lib/bashlib-echo.md) - Echo functions (info, warning, error, tip, ...)
+* [bashlib-error.sh](docs/lib/bashlib-error.md) - Error handler functions
+* [bashlib-git.sh](docs/lib/bashlib-git.md) - Git functions
+* [bashlib-kube.sh](docs/lib/bashlib-kube.md) - Kubernetes functions
+* [bashlib-linux.sh](docs/lib/bashlib-linux.md) - Linux functions 
+* [bashlib-path.sh](docs/lib/bashlib-path.md) - File System Path functions
+* [bashlib-script.sh](docs/lib/bashlib-script.md) - Script functions (ie source)
+* [bashlib-ssh.sh](docs/lib/bashlib-ssh.md) - Ssh functions
+* [bashlib-stack.sh](docs/lib/bashlib-stack.md) - CallStack/Frame functions
+* [bashlib-string.sh](docs/lib/bashlib-stack.md) - String functions
+* [bashlib-vault.sh](docs/lib/bashlib-vault.md) - Retrieve secret from vault (hashicorp or pass)
 
 
 

@@ -15,6 +15,7 @@ This library can be used as example on how to perform any array operations
 
 * [array::join](#arrayjoin)
 * [array::last](#arraylast)
+* [array::count](#arraycount)
 
 ### array::join
 
@@ -41,5 +42,17 @@ Return the last element of the arguments
 array::last "${MY_ARRAY[@]}"
 # equivalent on a array directly in bash to
 LAST=${MY_ARRAY[-1]}
+```
+
+### array::count
+
+Return the count of arguments
+
+#### Example
+
+```bash
+array::count "${MY_ARRAY[@]}"
+# equivalent on a array directly in bash to
+COUNT=${#MY_ARRAY[@]}
 ```
 

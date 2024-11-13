@@ -5,23 +5,13 @@ A library of ssh function
 
 ## DESCRIPTION
 
-The library entry is [ssh::agent_init](#sshagent_init) that start an ssh agent
-and add keys
-
-It creates only one ssh-agent process per system, 
-rather than the norm of one ssh-agent per login session.
-
-You only need to enter a passphrase once every time your machine is rebooted.
-
-Note: ssh-agent enhances security by allowing you to use passphrase-protected SSH keys without
-entering the passphrase every time. 
-However, anyone with access to the agent’s socket and your user permissions can use the keys 
-managed by the agent.
+The library is used in [ssh-x](https://github.com/gerardnico/ssh-x)
 
 ## Index
 
 * [ssh::agent_load_env](#sshagent_load_env)
 * [ssh::list_agent_keys](#sshlist_agent_keys)
+* [ssh::add_key](#sshadd_key)
 * [ssh::agent_state](#sshagent_state)
 * [ssh::agent_state_human](#sshagent_state_human)
 * [ssh::agent_kill](#sshagent_kill)
@@ -42,6 +32,30 @@ Load the agent env
 ### ssh::list_agent_keys
 
 List the available keys in the agent
+
+### ssh::add_key
+
+Add a key to the agent
+
+`SSH_ASKPASS` and `SSH_X_TIMEOUT` env can be set before to manage how the passphrase is asked
+
+This is a `ssh-x` function, the key is located via `SSH_X_KEY_STORE` and `SSH_X_KEY_HOME`
+The `ssh-x-env` should have been sourced to set this variable to non-null value.
+
+#### Example
+
+```bash
+# Non-interactive with a secret
+SSH_X_TIMEOUT=5
+SSH_ASKPASS=ssh-x-askpass-env
+ssh::add_key id_rsa secret
+# Interactive, the user enters the secret if any
+ssh::add_key id_rsa
+```
+
+#### Exit codes
+
+* **1**: - if the file does not exist
 
 ### ssh::agent_state
 
