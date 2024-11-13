@@ -50,3 +50,13 @@ array::join(){
 array::last(){
   echo "${@: -1}"
 }
+
+# @description Return the count of arguments
+# @args $0-N array - all arguments
+# @example
+#    array::count "${MY_ARRAY[@]}"
+#    # equivalent on a array directly in bash to
+#    COUNT=${#MY_ARRAY[@]}
+array::count(){
+  echo "${#[@]}"
+}

@@ -17,8 +17,11 @@ git::get_default_branch(){
 
 # @description Get the current branch
 git::get_current_branch(){
-  # works also: git symbolic-ref HEAD --short
-  git rev-parse --abbrev-ref HEAD
+  # Command with HEAD does not work if there is no commit yet
+  # Does not work:
+  #   git symbolic-ref HEAD --short
+  #   git rev-parse --abbrev-ref HEAD
+  git branch --show-current
 }
 
 # @description Get the current upstream branch
