@@ -159,13 +159,20 @@ function echo::echo(){
 # @description
 #     Return the file descriptor to be used for the echo messages
 #
-# @exitcode 0
-# @exitcode 1 If no fd could be found
+#     Note: The echo library does not return anything on stdout
+#     Why?
+#     * stdout is the file descriptor used in processing (pipelining, ....)
+#     * command such as the below would not stop. They would just process `stdout` of the command and of the trap if any
+#     ```bash
+#     for var in $(command_with_echo_error)
+#     ```
+#
+# @exitcode 0 always
 # @example
 #    FD=$(echo::get_file_descriptor)
 #    echo "Hallo World" > "$FD"
 #
-# @stdout A file descriptor
+# @stdout A file descriptor (default to /dev/stderr)
 function echo::get_file_descriptor(){
 
   # do we have a terminal alias
@@ -179,24 +186,16 @@ function echo::get_file_descriptor(){
     return
   fi
 
-  # stderr may not be available
-  if test -c /dev/stderr; then
-    # To stderr
-    echo "/dev/stderr"
-    return
-  fi
+  # No stdout
+  # Why?
+  # Command such as the below would not stop
+  # They would just process `stdout` of the command and of the trap if any
+  # ```bash
+  # for var in $(command_with_echo_error)
+  # ```
 
-  # stdout may not be available
-  # This is the case when a command is executed from another command directly (not via shell)
-  # Example when `git` calls `ssh`, no stdout is attached
-  if test -c /dev/stdout; then
-    # To stdout
-    echo "/dev/stdout"
-    return
-  fi
-
-  # No idea how to test for /dev/stdxxx
-  # If we returns by default /dev/stderr it works in Idea
+  # Note that `test -c /dev/stderr` may failed ???
+  # but it still works
   echo  "/dev/stderr"
 
 }
