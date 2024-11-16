@@ -207,6 +207,14 @@ echo::echo "My Debug statement"
 
 Return the file descriptor to be used for the echo messages
 
+Note: The echo library does not return anything on stdout
+Why?
+* stdout is the file descriptor used in processing (pipelining, ....)
+* command such as the below would not stop. They would just process `stdout` of the command and of the trap if any
+```bash
+for var in $(command_with_echo_error)
+```
+
 #### Example
 
 ```bash
@@ -216,10 +224,9 @@ echo "Hallo World" > "$FD"
 
 #### Exit codes
 
-* 0
-* **1**: If no fd could be found
+* **0**: always
 
 #### Output on stdout
 
-* A file descriptor
+* A file descriptor (default to /dev/stderr)
 

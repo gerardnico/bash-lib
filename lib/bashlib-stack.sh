@@ -56,3 +56,52 @@ stack::print_bash_source(){
   fi
 
 }
+
+# @description
+#    Print the stack of process tree until the init process
+#
+#    This is handy to get who is calling your script
+#
+#    - The first line is the session time
+#    - the second is the pid
+#    - the third is the command line
+#
+#    ```
+#    2024-11-16 20:23:42 - 31980 - /usr/bin/ssh -o SendEnv=GIT_PROTOCOL git@github.com git-upload-pack 'gerardnico/ssh-x.git'
+#    2024-11-16 20:23:42 - 31979 - git -c color.ui=always fetch
+#    2024-11-16 20:23:42 - 31978 - /bin/bash /home/admin/code/git-x/bin/git-exec fetch
+#    2024-11-16 20:23:42 - 31656 - /bin/bash /home/admin/code/git-x/bin/git-exec fetch
+#    2024-11-16 20:23:42 - 31655 - /usr/bin/git exec fetch
+#    2024-11-16 20:23:42 - 31654 - bash /usr/local/sbin/git exec fetch
+#    2024-11-16 20:23:42 - 2633 - -bash
+#    2024-11-16 20:23:42 - 2632 - /init
+#    2024-11-16 20:23:42 - 2631 - /init
+#    2024-11-16 20:23:42 - 1 - /init
+#    ```
+# @example
+#    stack::print_process_tree >> /tmp/audit-parent.log
+stack::print_process_tree(){
+  # Audit
+  # https://askubuntu.com/questions/153976/how-do-i-get-the-parent-process-id-of-a-given-child-process
+  # echo $PPID
+  # cat /proc/$PPID/comm
+  # cat /proc/$PPID/cmdline
+  PARENT_PPID=${PPID}
+  SESSION=$(date '+%Y-%m-%d %H:%M:%S')
+  while true; do
+    CMDLINE_PATH="/proc/${PARENT_PPID}/cmdline"
+    if [ ! -f $CMDLINE_PATH ]; then
+      break;
+    fi
+    if ! CMDLINE=$(tr '\0' ' ' < $CMDLINE_PATH); then
+      break
+    fi
+    echo "$SESSION - ${PARENT_PPID} - $CMDLINE"
+    if ! PARENT_PPID=$(ps -o ppid= -p $PARENT_PPID | tr -d ' '); then
+      break;
+    fi
+    if [ "$PARENT_PPID" = "" ] || [ "$CMDLINE" = "" ]; then
+      break;
+    fi
+  done
+}
