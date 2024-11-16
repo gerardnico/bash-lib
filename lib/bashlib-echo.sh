@@ -291,11 +291,25 @@ function echo::base(){
       # * and source file corresponding
       #
       # `caller 0` returns the actual calling executing function
-      # Because this is a base function that call all echo function we want the `caller 1`
+      # Because this is a base function that call all echo function we want at minima `caller 1`
       #
       # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
-      read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$(caller 1)"
-      CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+      CALLER_ID=1
+      while true
+      do
+        if ! CALLER=$(caller $CALLER_ID); then
+          break;
+        fi
+        read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$CALLER"
+        CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+        # We don't want to see bashlib call
+        # Example: bashlib-command::eval_echo
+        if [[ ! "${CALLING_SCRIPT}" =~ ^"bashlib" ]]; then
+          break;
+        fi
+        CALLER_ID=$(( CALLER_ID + 1))
+      done
+
 
       # We send all echo to the error stream
       # so that any redirection will not get them
