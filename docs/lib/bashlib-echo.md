@@ -18,6 +18,11 @@ Setting it to:
 * `4`: print also debug messages
 By default, the library has the level `3` (info messages and up)
 
+To see debug message,
+```bash
+export BASHLIB_ECHO_LEVEL=4
+```
+
 They all accept the flag `--silent` or `-s` to no echo anything
 
 ## Index
