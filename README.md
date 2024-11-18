@@ -76,10 +76,6 @@ source bashlib-echo.sh
 
 ```bash
 brew install --HEAD gerardnico/tap/bashlib
-# Add the libraries directory into your path in your `.bashrc` file
-export PATH=$(brew --prefix bashlib)/lib:$PATH
-# or set the BASHLIB_LIBRARY_PATH
-export BASHLIB_LIBRARY_PATH=$(brew --prefix bashlib)/lib:$PATH
 ```
 
 ### With Git
