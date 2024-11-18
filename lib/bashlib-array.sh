@@ -13,6 +13,8 @@
 # @options --sep `sep` or -s `sep` - the character separator default to new line `\n`
 # @args $1-N array - all other arguments
 # @example
+#    # Bash wrapper
+#    IFS="$SEP"; echo "$*"
 #    # Join/Print each argument in a new line
 #    array::join hello world
 #    # Join/Print each argument with a comma
