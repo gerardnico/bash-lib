@@ -25,9 +25,9 @@ bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
 
 where:
 
-* `-o`      - is the output directory (default to `docs` to be able to create relatif path to image located in a subdirectory such as `docs\image`)
-* `-h`      - shows this help
-* `bashDir` - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+* `-o|--output`      - is the output directory (default to `docs` to be able to create relatif path to image located in a subdirectory such as `docs\image`)
+* `-h|--help`        - shows this help
+* `bashDir`          - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
 EOF
 
 }
@@ -194,8 +194,8 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
         # shellcheck disable=SC2034
         if SYNOPSIS=$($FILE "synopsis"); then
           (
-            if [[ $(basename "$0") =~ $NAME ]]; then
-              # The bashlib-docgen script
+            if [[ $(basename "$0") == $NAME ]]; then
+              # The bashlib-docgen script itself
               # Because we use $SYNOPSIS has example, we don't want it
               # to be replaced. In the bashlib-docgen.md, we use `${SYNOPSIS_DOCGEN}`
               export SYNOPSIS_DOCGEN=$SYNOPSIS
@@ -207,7 +207,7 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
             # '$SYNOPSIS' to replace only this variable
             # to not get secret on the run
             # shellcheck disable=SC2016
-            envsubst '$SYNOPSIS' < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
+            envsubst '$SYNOPSIS $SYNOPSIS_DOCGEN' < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
           )
         else
           echo::warn "No synopsis function found in the script $FILE"

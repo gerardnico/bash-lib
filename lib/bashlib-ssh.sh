@@ -88,7 +88,7 @@ ssh::add_key(){
         fi
 
         # Process Substitution
-        FD_PRIVATE_KEY="<(pass $PRIVATE_KEY)"
+        FD_PRIVATE_KEY="<($SSH_X_PASS_STORE $PRIVATE_KEY)"
 
     ;;
     "file")

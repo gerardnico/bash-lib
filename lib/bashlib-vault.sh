@@ -102,3 +102,22 @@ vault::filter(){
   echo "$VALUE"
 
 }
+
+# @description
+#   A wrapper to the pass store manager
+#   You can choose the cli between
+#   * [pass](https://www.passwordstore.org/) (Default)
+#   * [gopass](https://www.gopass.pw/)
+#
+#   To use `gopass`, you need to set the env `BASHLIB_VAULT_PASS_CLI` to `gopass`
+#   ```bash
+#   export BASHLIB_VAULT_PASS_CLI=gopass
+#   ```
+#
+# @example
+#    export BASHLIB_VAULT_PASS_CLI=gopass
+#    vault::pass path/to/my/secret
+#
+vault::pass(){
+  ${BASHLIB_VAULT_PASS_CLI:-pass} "$@"
+}

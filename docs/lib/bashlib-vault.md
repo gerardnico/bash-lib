@@ -11,6 +11,7 @@ Retrieve secrets from vault or pass secret manager
 
 * [vault::get_secret_from_vault](#vaultget_secret_from_vault)
 * [vault::filter](#vaultfilter)
+* [vault::pass](#vaultpass)
 
 ### vault::get_secret_from_vault
 
@@ -44,5 +45,24 @@ or return the raw value otherwise
 
 ```bash
 VALUE=$(vault::filter "$VALUE")
+```
+
+### vault::pass
+
+A wrapper to the pass store manager
+You can choose the cli between
+* [pass](https://www.passwordstore.org/) (Default)
+* [gopass](https://www.gopass.pw/)
+
+To use `gopass`, you need to set the env `BASHLIB_VAULT_PASS_CLI` to `gopass`
+```bash
+export BASHLIB_VAULT_PASS_CLI=gopass
+```
+
+#### Example
+
+```bash
+export BASHLIB_VAULT_PASS_CLI=gopass
+vault::pass path/to/my/secret
 ```
 

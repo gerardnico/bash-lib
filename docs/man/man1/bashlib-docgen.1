@@ -127,5 +127,20 @@ The link \f[V]![my image desc](../images/image.png)\f[R] will be valid
 in a document located in: * \f[V]docs\[rs]bin\f[R] *
 \f[V]docs\[rs]bin-generated\f[R]
 .SH SYNOPSIS
+.IP
+.nf
+\f[C]
+bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
+\f[R]
+.fi
 .PP
-${SYNOPSIS_DOCGEN}
+where:
+.IP \[bu] 2
+\f[V]-o\f[R] - is the output directory (default to \f[V]docs\f[R] to be
+able to create relatif path to image located in a subdirectory such as
+\f[V]docs\[rs]image\f[R])
+.IP \[bu] 2
+\f[V]-h\f[R] - shows this help
+.IP \[bu] 2
+\f[V]bashDir\f[R] - one or more directories with bash scripts or
+libraries (default to \f[V]lib\f[R] and \f[V]bin\f[R])
