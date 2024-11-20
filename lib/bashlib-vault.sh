@@ -76,6 +76,7 @@ vault::get_secret_from_vault() {
 #   or return the raw value otherwise
 # @example
 #    VALUE=$(vault::filter "$VALUE")
+# @exitcode 1 if the vault value was not found
 vault::filter(){
 
   VALUE="$1"
@@ -91,10 +92,8 @@ vault::filter(){
 
       # Get the value from the vault
       if ! VALUE=$(vault::get_secret_from_vault "$SECRET_FIELD_PATH"); then
-        echo::err "Value not found for $SECRET_FIELD_PATH"
-        if [[ $VALUE != "" ]]; then
-          echo::err "Error: $VALUE"
-        fi
+        echo::err "Vault value not found at the path  $SECRET_FIELD_PATH"
+        echo $SECRET_FIELD_PATH
         exit 1;
       fi
 
