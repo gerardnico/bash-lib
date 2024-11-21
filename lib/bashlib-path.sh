@@ -107,6 +107,15 @@ path::create_temp_directory(){
 }
 
 # @description
+#    Get the temporary directory
+#    with [mktemp](http://www.mktemp.org/)
+# @stdout the temporary directory (normally /tmp)
+path::get_temp_directory(){
+  # -u: generate a name but does not create any file or directory
+  echo $(dirname $(mktemp -u))
+}
+
+# @description
 #    Get the file name up until the first point
 # @arg $1 string - a path
 # @example
