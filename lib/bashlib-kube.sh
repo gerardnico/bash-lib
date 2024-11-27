@@ -101,8 +101,7 @@ kube::get_resources_by_app_name() {
   # Example:
   #     COMMAND="kubectl get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o jsonpath='{range .items[*]}{.metadata.name}{\" \"}{.metadata.namespace}{\"\n\"}{end}' 2>/dev/null"
   #
-  KUBE_X_KUBECTL=${KUBE_X_KUBECTL:-"kubectl"}
-  COMMAND="$KUBE_X_KUBECTL get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o custom-columns='$CUSTOM_COLUMNS' $NO_HEADERS 2>/dev/null"
+  COMMAND="kubectl get $RESOURCE_TYPE --all-namespaces -l $APP_LABEL -o custom-columns='$CUSTOM_COLUMNS' $NO_HEADERS 2>/dev/null"
   echo::info "Executing: $COMMAND"
   eval "$COMMAND"
 
