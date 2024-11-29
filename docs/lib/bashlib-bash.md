@@ -15,6 +15,7 @@ and add the ability to set multiple traps for the same signal
 * [bash::is_login](#bashis_login)
 * [bash::function_definition](#bashfunction_definition)
 * [bash::has_terminal](#bashhas_terminal)
+* [bash::eval_validate](#basheval_validate)
 * [bash::get_pinentry](#bashget_pinentry)
 * [bash::get_pin](#bashget_pin)
 
@@ -49,6 +50,32 @@ Print the function definition
 
 Check if the standard stream file descriptors (stdout, stdin, ...)
 are of the terminal type (ie color is supported)
+
+### bash::eval_validate
+
+Eval_Validate will validate the status of the last command executed
+if the first command executed has error, it will not see it
+This function executes each command line
+
+#### Example
+
+```bash
+if ! ERROR=$(bash::eval_validate "$EVAL"); then
+  echo::err "Error on env"
+  echo::echo "$ERROR"
+  exit 1
+fi
+eval "$EVAL"
+```
+
+#### Exit codes
+
+* **0**: If no command has error
+* **1**: If a command has error
+
+#### Output on stdout
+
+* The error if any
 
 ### bash::get_pinentry
 

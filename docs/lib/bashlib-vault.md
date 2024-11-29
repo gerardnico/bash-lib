@@ -44,7 +44,8 @@ or return the raw value otherwise
 #### Example
 
 ```bash
-VALUE=$(vault::filter "$VALUE")
+   VALUE=$(vault::filter "$VALUE")
+@exitcode 1 if the vault value was not found
 ```
 
 ### vault::pass

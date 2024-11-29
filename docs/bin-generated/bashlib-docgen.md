@@ -87,7 +87,7 @@ bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
 
 where:
 
-* `-o`      - is the output directory (default to `docs` to be able to create relatif path to image located in a subdirectory such as `docs\image`)
-* `-h`      - shows this help
-* `bashDir` - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+* `-o|--output`      - is the output directory (default to `docs` to be able to create relatif path to image located in a subdirectory such as `docs\image`)
+* `-h|--help`        - shows this help
+* `bashDir`          - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
 

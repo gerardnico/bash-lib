@@ -17,6 +17,7 @@ Library of file system path functions
 * [path::get_absolute_path](#pathget_absolute_path)
 * [path::get_current_directory_name](#pathget_current_directory_name)
 * [path::create_temp_directory](#pathcreate_temp_directory)
+* [path::get_temp_directory](#pathget_temp_directory)
 * [path::get_file_name_without_extension](#pathget_file_name_without_extension)
 * [path::relative_to](#pathrelative_to)
 
@@ -95,6 +96,15 @@ with [mktemp](http://www.mktemp.org/)
 #### Arguments
 
 * **$1** (string): - a prefix (temp by default)
+
+### path::get_temp_directory
+
+Get the temporary directory
+with [mktemp](http://www.mktemp.org/)
+
+#### Output on stdout
+
+* the temporary directory (normally /tmp)
 
 ### path::get_file_name_without_extension
 

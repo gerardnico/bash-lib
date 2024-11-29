@@ -24,6 +24,8 @@ Join an array with a separator
 #### Example
 
 ```bash
+# Bash wrapper
+IFS="$SEP"; echo "$*"
 # Join/Print each argument in a new line
 array::join hello world
 # Join/Print each argument with a comma

@@ -70,6 +70,36 @@ bash::has_terminal(){
   tty -s
 }
 
+# @description
+#    Eval_Validate will validate the output of an env
+#    Why ? The eval status is the status of the last command executed
+#    if the first command executed has error, it will not see it
+#    This function executes each command line and returns an error if any
+#    You could also just use the content of the function to not execute each command 2 times
+# @args $1 string - The eval statement
+# @exitcode 0 If no command has error
+# @exitcode 1 If a command has error
+# @stdout The error if any
+# @example
+#   if ! ERROR=$(bash::eval_validate "$EVAL"); then
+#     echo::err "Error on env"
+#     echo::echo "$ERROR"
+#     exit 1
+#   fi
+#   # eval will put the results of the evaluation in the scope
+#   # we therefore need to eval it again
+#   eval "$EVAL"
+bash::eval_validate(){
+  while IFS=$'\n' read -r STATEMENT; do
+      if ! STDERR=$(eval "$STATEMENT" 2>&1); then
+        echo::err "Error:"
+        echo::err "  * Statement: \`$STATEMENT\`"
+        echo::err "  * Message: \`$STDERR\`"
+        return 1
+      fi
+  done <<< "$1"
+}
+
 # Pinentry Cli Env Constant
 PINENTRY_CURSES="pinentry-curses"
 PINENTRY_GNOME="pinentry-gnome3"
