@@ -210,8 +210,9 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
             envsubst '$SYNOPSIS $SYNOPSIS_DOCGEN' < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
           )
         else
-          echo::warn "No synopsis function found in the script $FILE"
-          cp "$BIN_MD_FILE" "$OUTPUT_BIN_DOC_DIR/$NAME.md"
+          echo::err "An error occurred or no synopsis function was implemented in the script $FILE"
+          # cp "$BIN_MD_FILE" "$OUTPUT_BIN_DOC_DIR/$NAME.md"
+          exit 1
         fi
         ;;
     esac

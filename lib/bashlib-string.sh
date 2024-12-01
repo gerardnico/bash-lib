@@ -6,8 +6,10 @@
 
 
 # @description
-#    returns the elements separated by the standard IFS
-#    This is for demonstration purpose as bash functions can not return an array
+#    Returns the elements separated by the standard IFS
+#
+#    Note that bash functions can not return an array but a string separated by the standard IFS character
+#    Therefore you will be able to loop over it
 #
 #    Note if you want to split over multiple lines and for more than 1 character delimiter
 #    you can use:
@@ -17,9 +19,9 @@
 #    * a full gawk script with RS (Record separator)
 #    Why? because even if you succeed to split it, bash will always split by single character.
 #
-# @arg $1 the string
+# @arg $1 a string
 # @arg $2 the separator
-# @stdout the elements separated by the standard IFS
+# @stdout a string composed of elements separated by the global $IFS character
 # @example
 #    # string::split implementation is:
 #    local SEP=${2}
@@ -31,6 +33,12 @@ string::split(){
   IFS="$SEP" read -ra ARRAY <<< "$1"
   echo "${ARRAY[@]}"
 
+}
+
+# @description
+#    Alias for the [split function](#split)
+string::explode(){
+  string::split "$@"
 }
 
 # @description trim the first argument
