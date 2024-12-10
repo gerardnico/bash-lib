@@ -62,6 +62,10 @@ function bash::is_login(){
 bash::function_definition(){
   type "$1"
 }
+# @description Type of variable
+bash::type(){
+  type "$1"
+}
 
 # @description
 #    Check if the standard stream file descriptors (stdout, stdin, ...)
