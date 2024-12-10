@@ -43,7 +43,6 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-echo.sh](docs/lib/bashlib-echo.md) - Echo functions (info, warning, error, tip, ...)
 * [bashlib-error.sh](docs/lib/bashlib-error.md) - Error handler functions
 * [bashlib-git.sh](docs/lib/bashlib-git.md) - Git functions
-* [bashlib-kube.sh](docs/lib/bashlib-kube.md) - Kubernetes functions
 * [bashlib-linux.sh](docs/lib/bashlib-linux.md) - Linux functions 
 * [bashlib-path.sh](docs/lib/bashlib-path.md) - File System Path functions
 * [bashlib-script.sh](docs/lib/bashlib-script.md) - Script functions (ie source)
@@ -62,12 +61,13 @@ source bashlib-[name].sh
 source bashlib-echo.sh
 ```
 
-## Cli using these libraries
+## Express Cli using these libraries
 
-* [kube](https://github.com/gerardnico/kube) - A collection of Kubernetes Utilities
-* [direnv-ext](https://github.com/gerardnico/direnv-ext) - A direnv extension to get secret from vault
-* [dockenv](https://github.com/gerardnico/dockenv) - Your docker command driven by environment variables
-* [git-x](https://github.com/gerardnico/git-x) - Git command plugin/extensions (back up Github, execute a command against multiple repositories, ...)
+* [direnv-ext](https://github.com/gerardnico/direnv-x) - Direnv Express - A direnv extension to get secret from vault
+* [dock-x](https://github.com/gerardnico/dock-x) - Dock Express - Your docker command driven by environment variables
+* [git-x](https://github.com/gerardnico/git-x) - Git Express - Command plugin/extensions (back up Github, execute a command against multiple repositories, ...)
+* [kube-x](https://github.com/gerardnico/kube-x) - Kube Express - a framework to provision and manage a kubernetes cluster
+* [ssh-x](https://github.com/gerardnico/ssh-x) - SSH Express - a framework to manage SSH connection
 
 ## How to install
 
@@ -100,4 +100,4 @@ See [dev](dev/docs/dev.md)
 ## Env
 
 `BASHLIB_LIBRARY_PATH` is the directory of the libraries. It's optional if the library are in a directory
-that is in the path.
+that is in the `PATH` environment variable.
