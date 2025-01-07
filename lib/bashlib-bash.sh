@@ -11,6 +11,8 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 #
 # @args $1 string the code expression
 # @args $2-N names of signals
+# @example
+#   bash::trap 'popd >/dev/null' EXIT # EXIT execute also on error
 #
 bash::trap() {
   # You can't set multiple traps for the same signal, but you
