@@ -7,12 +7,12 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 # @description
 #   This command overrides the default trap function
-#   and add the ability to set multiple traps for the same signal
+#   and add the ability to set multiple command for the same signal
 #
-# @args $1 string the code expression
+# @args $1 string - the command (the code expression)
 # @args $2-N names of signals
 # @example
-#   bash::trap 'popd >/dev/null' EXIT # EXIT execute also on error
+#   bash::trap 'popd >/dev/null' EXIT # EXIT executes also on error
 #
 bash::trap() {
   # You can't set multiple traps for the same signal, but you
@@ -25,10 +25,18 @@ bash::trap() {
   TRAP_EXPRESSION=$1;
   shift
   for TRAP_SIGNAL in "$@"; do
-    # shellcheck disable=SC2016
-    PREVIOUS_TRAP_COMMAND=$(trap -p "${TRAP_SIGNAL}" | xargs bash -c 'echo $2')
-    COMMAND=$(printf '%s\n%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
-    trap -- "$COMMAND" "${TRAP_SIGNAL}"
+    TRAP=$(trap -p "${TRAP_SIGNAL}")
+    echo::debug "Trap:\n$TRAP"
+    if [ "$TRAP" != "" ]; then
+      # shellcheck disable=SC2016
+      PREVIOUS_TRAP_COMMAND=$(trap -p "${TRAP_SIGNAL}" | xargs -l bash -c 'echo $2')
+      echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
+      COMMAND=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
+      echo::debug "Command\n$COMMAND"
+      trap -- "$COMMAND" "${TRAP_SIGNAL}"
+    else
+      trap -- "$TRAP_EXPRESSION" "${TRAP_SIGNAL}"
+    fi
   done
 }
 
