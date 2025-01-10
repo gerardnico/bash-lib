@@ -32,17 +32,23 @@ template::check_vars() {
     TEMPLATE_STRING="$1"
   fi
 
-  local ENVS=$(envsubst -v "$TEMPLATE_STRING")
+  local ENVS
+  ENVS=$(envsubst -v "$TEMPLATE_STRING")
+
+  # No Variable
+  if [ "$ENVS" == "" ]; then
+    return 0;
+  fi
 
   local rc=0
   local VARIABLES_NOT_DEFINED=()
-  while read VARIABLE_NAME
+  while read -r VARIABLE_NAME
   do
       if [ "${!VARIABLE_NAME:-}" == "" ]; then
           VARIABLES_NOT_DEFINED+=("$VARIABLE_NAME")
           rc=1
       fi
-  done <<< $ENVS
+  done <<< "$ENVS"
   if [ "${#VARIABLES_NOT_DEFINED[@]}" -ne  0 ]; then
     echo "${VARIABLES_NOT_DEFINED[*]}"
   fi

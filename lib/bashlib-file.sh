@@ -68,3 +68,21 @@ file::is_executable(){
 file::get_permission(){
   stat -c "%a" "$1"
 }
+
+# @description
+#   Create a temporary directory
+# @arg $1 string - a prefix
+file::create_temp_directory(){
+  PREFIX=${1:-bashlib}
+  mktemp -d -t "$PREFIX"
+}
+
+# @description
+#   Copy/Sync a source directory to a directory with exclusion
+# @arg $1 string - the source folder
+# @arg $2 string - the target folder
+# @arg $3 string - the pattern to exclude
+file::copy_with_rsync(){
+  # --mkpath : create destination's missing path components
+  rsync -av --progress "$1" "$2" --mkpath --exclude "$3"
+}
