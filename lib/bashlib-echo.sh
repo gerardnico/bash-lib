@@ -179,12 +179,17 @@ function echo::get_file_descriptor(){
   # the -c option checks if the file is a character device
   # -t FD  file descriptor FD is opened on a terminal
   # /dev/tty is the controlling terminal for the current process
-  if tty -s; then
-    # To /dev/tty
-    # No access if you're running the script in a non-interactive environment
+#  if tty -s; then
+#    # To /dev/tty
+#    # No access if you're running the script in a non-interactive environment
+#    echo "/dev/tty"
+#    return
+#  fi
+  if (exec < /dev/tty) ; then
     echo "/dev/tty"
     return
   fi
+
 
   # No stdout
   # Why?
@@ -319,7 +324,7 @@ function echo::base(){
   esac
 
   if ! FD=$(echo::get_file_descriptor); then
-    echo "Not device available for the message ${MESSAGE}"
+    echo "No device available for the message ${MESSAGE}"
     return 1
   fi
 
