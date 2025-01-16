@@ -19,7 +19,8 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 command::echo_eval(){
   COMMAND=$1
   echo::info "Executing command: $COMMAND"
-  eval "$COMMAND"
+  # redirect eventually stderr to /dev/tty (stderr may be captured and we don't see any error)
+  eval "$COMMAND" 2>"$(echo::get_file_descriptor)"
 }
 
 # @description
@@ -33,7 +34,8 @@ command::echo_eval(){
 command::echo_debug_eval(){
   COMMAND=$1
   echo::debug "Executing command: $COMMAND"
-  eval "$COMMAND"
+  # redirect eventually stderr to /dev/tty (stderr may be captured and we don't see any error)
+  eval "$COMMAND" 2>"$(echo::get_file_descriptor)"
 }
 
 # @description
