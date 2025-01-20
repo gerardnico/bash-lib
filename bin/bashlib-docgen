@@ -194,7 +194,7 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
         # shellcheck disable=SC2034
         if SYNOPSIS=$($FILE "synopsis"); then
           (
-            if [[ $(basename "$0") == $NAME ]]; then
+            if [[ $(basename "$0") == "$NAME" ]]; then
               # The bashlib-docgen script itself
               # Because we use $SYNOPSIS has example, we don't want it
               # to be replaced. In the bashlib-docgen.md, we use `${SYNOPSIS_DOCGEN}`
