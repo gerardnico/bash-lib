@@ -22,15 +22,18 @@ bash::trap() {
   # 2. Add the command, separated by a semicolon or newline
   # 3. Set the trap to the result of 2
 
-  TRAP_EXPRESSION=$1;
+  local TRAP_EXPRESSION=$1;
   shift
   for TRAP_SIGNAL in "$@"; do
+    local TRAP
     TRAP=$(trap -p "${TRAP_SIGNAL}")
     echo::debug "Trap:\n$TRAP"
     if [ "$TRAP" != "" ]; then
+      local PREVIOUS_TRAP_COMMAND
       # shellcheck disable=SC2016
       PREVIOUS_TRAP_COMMAND=$(trap -p "${TRAP_SIGNAL}" | xargs -l bash -c 'echo $2')
       echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
+      local COMMAND
       COMMAND=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
       echo::debug "Command\n$COMMAND"
       trap -- "$COMMAND" "${TRAP_SIGNAL}"
