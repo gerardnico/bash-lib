@@ -35,7 +35,6 @@ bash::trap() {
       echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
       TRAP_EXPRESSION=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
     fi
-
     if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
         local fd;
         fd=$(echo::get_file_descriptor);
