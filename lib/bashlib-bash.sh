@@ -27,19 +27,23 @@ bash::trap() {
   for TRAP_SIGNAL in "$@"; do
     local TRAP
     TRAP=$(trap -p "${TRAP_SIGNAL}")
-    echo::debug "Trap:\n$TRAP"
+    echo::debug "Previous Trap:\n$TRAP"
     if [ "$TRAP" != "" ]; then
       local PREVIOUS_TRAP_COMMAND
       # shellcheck disable=SC2016
       PREVIOUS_TRAP_COMMAND=$(trap -p "${TRAP_SIGNAL}" | xargs -l bash -c 'echo $2')
       echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
-      local COMMAND
-      COMMAND=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
-      echo::debug "Command\n$COMMAND"
-      trap -- "$COMMAND" "${TRAP_SIGNAL}"
-    else
-      trap -- "$TRAP_EXPRESSION" "${TRAP_SIGNAL}"
+      TRAP_EXPRESSION=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
     fi
+
+    if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
+        local fd;
+        fd=$(echo::get_file_descriptor);
+        TRAP_EXPRESSION="echo '$TRAP_SIGNAL Trap command executed: $TRAP_EXPRESSION' > $fd; ${TRAP_EXPRESSION}"
+    fi
+    echo::debug "Trap $TRAP_SIGNAL command added: $TRAP_EXPRESSION"
+    trap -- "$TRAP_EXPRESSION" "${TRAP_SIGNAL}"
+
   done
 }
 
