@@ -105,6 +105,7 @@ error::set_strict_mode(){
     set -E # inherit -e (the ERR trap is inherited by shell functions)
     set -e # exit immediately on errors
     set -u # Treat unset variables as an error when substituting
+    set -o noclobber # Default of bash already ? to make > avoid overwriting files; you'll then have to specify >| (bash) or >! (zsh)
     set -o pipefail # exit on pipe failure (the return value of a pipeline is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status)
 
 }
