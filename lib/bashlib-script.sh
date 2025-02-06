@@ -7,10 +7,27 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
 
 # @description check to see if this file is being run or sourced from another script
 script::is_sourced() {
-	# https://unix.stackexchange.com/a/215279
-	[ "${#FUNCNAME[@]}" -ge 2 ] \
-		&& [ "${FUNCNAME[0]}" = '_is_sourced' ] \
-		&& [ "${FUNCNAME[1]}" = 'source' ]
+
+  # wrote the details here: https://unix.stackexchange.com/questions/214079/differentiating-between-running-and-being-sourced-in-a-bash-shell-script/790673#790673
+  # basically the call `source filename` is added in the FUNCNAME array
+  # so if the FUNCNAME array contains a `source` it was sourced
+  for func in "${FUNCNAME[@]}"; do
+    if [[ "$func" == "source" ]]; then
+        return 0  # Sourced
+    fi
+  done
+  return 1  # Not sourced
+
+}
+
+# @description check to see if this file is being run or sourced from another script
+script::get_actual_script() {
+  if ! script::is_sourced; then
+    echo "$0"
+    return
+  fi
+	# The last one in the array is the top script and the 0 one is the bashlib-script.sh
+	echo "${BASH_SOURCE[1]}"
 }
 
 # @description check to see if a file has a shebang (ie is it a script or a library)
