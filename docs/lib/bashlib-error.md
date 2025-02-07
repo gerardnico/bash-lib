@@ -8,11 +8,6 @@ Library to handle error in bash
 With this library, you will be able to add an error handler
 See the function [set_trap](#errorset_trap) for a usage example
 
-
-
-Depends on stack to print the callstack
-shellcheck source=./bashlib-stack.sh
-
 ## Index
 
 * [error::handler](#errorhandler)

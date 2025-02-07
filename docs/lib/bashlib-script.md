@@ -10,9 +10,14 @@ Library of Script functions
 ## Index
 
 * [script::is_sourced](#scriptis_sourced)
+* [script::get_actual_script](#scriptget_actual_script)
 * [script::has_shebang](#scripthas_shebang)
 
 ### script::is_sourced
+
+check to see if this file is being run or sourced from another script
+
+### script::get_actual_script
 
 check to see if this file is being run or sourced from another script
 

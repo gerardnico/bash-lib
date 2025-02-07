@@ -10,6 +10,7 @@ Library over documentation functions
 ## Index
 
 * [doc::md_to_terminal](#docmd_to_terminal)
+* [doc::get_cli_command_words](#docget_cli_command_words)
 
 ### doc::md_to_terminal
 
@@ -32,4 +33,16 @@ EOF
 #### Output on stdout
 
 * a man page like output
+
+### doc::get_cli_command_words
+
+#### Example
+
+```bash
+CLI_COMMANDS=$(doc::get_cli_command_words)
+```
+
+#### Output on stdout
+
+* the command words
 

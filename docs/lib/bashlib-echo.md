@@ -30,6 +30,7 @@ They all accept the flag `--silent` or `-s` to no echo anything
 * [echo::debug](#echodebug)
 * [echo::conf](#echoconf)
 * [echo::echo](#echoecho)
+* [echo::eval](#echoeval)
 * [echo::get_file_descriptor](#echoget_file_descriptor)
 
 ### echo::info
@@ -139,7 +140,7 @@ You can choose the color by setting the `BASHLIB_TIP_COLOR` env variable.
 #### Example
 
 ```bash
-export BASHLIB_TIP_COLOR='\033[0;33m' # Optional in bashrc
+export BASHLIB_TIP_COLOR='\033[0;33m'
 echo::tip "My tip"
 ```
 
@@ -202,6 +203,28 @@ echo::echo "My Debug statement"
 #### Output on stderr
 
 * The output is always in stderr to avoid polluting stdout with log message (git ways)
+
+### echo::eval
+
+Function to eval and echo a command
+
+#### Example
+
+```bash
+echo::eval "echo 'Hello World'"
+```
+
+#### Arguments
+
+* **$1** (string): The command
+
+#### Exit codes
+
+* **0**: The exit code of the eval function
+
+#### Output on stdout
+
+* The output of the command
 
 ### echo::get_file_descriptor
 

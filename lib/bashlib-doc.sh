@@ -4,6 +4,10 @@
 #
 #
 
+# Depends on script to get the name of the actual script running (ie sourced or main)
+# shellcheck source=./bashlib-script.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-script.sh"
+
 # @definition
 #   Translate a markdown string to a terminal man page like doc. ie
 #   * delete the code block and push the command to the right
@@ -35,6 +39,21 @@ doc::md_to_terminal(){
       -e 's/\*/\   */g' \
       -e 's/^/     /g'
 
+}
+
+# @definition
+#   Return the cli commands words.
+#
+#   The cli commands words returned is the name of the script file exploded by the `-` separator
+#
+#   With a script file called `cli-command1-command2`, this function would return `cli command1 command2`
+#
+# @stdout the command words
+# @example
+#   CLI_COMMANDS=$(doc::get_cli_command_words)
+#
+doc::get_cli_command_words(){
+  basename $(script::get_actual_script) | tr "-" " "
 }
 
 # @definition A method that expect a synopsis function and will return a basic usage

@@ -11,6 +11,7 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 ## Index
 
 * [string::split](#stringsplit)
+* [string::explode](#stringexplode)
 * [string::trim](#stringtrim)
 * [string::is_blank](#stringis_blank)
 * [string::set_bold](#stringset_bold)
@@ -26,8 +27,10 @@ Note that the syntax $'...' syntax enables interpretation of escape sequences
 
 ### string::split
 
-returns the elements separated by the standard IFS
-This is for demonstration purpose as bash functions can not return an array
+Returns the elements separated by the standard IFS
+
+Note that bash functions can not return an array but a string separated by the standard IFS character
+Therefore you will be able to loop over it
 
 Note if you want to split over multiple lines and for more than 1 character delimiter
 you can use:
@@ -48,12 +51,16 @@ echo "${ARRAY[@]}"
 
 #### Arguments
 
-* **$1** (the): string
+* **$1** (a): string
 * **$2** (the): separator
 
 #### Output on stdout
 
-* the elements separated by the standard IFS
+* a string composed of elements separated by the global $IFS character
+
+### string::explode
+
+Alias for the [split function](#split)
 
 ### string::trim
 

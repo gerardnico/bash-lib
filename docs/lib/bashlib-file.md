@@ -22,6 +22,8 @@ sudo apt install -y file
 * [file::is_text](#fileis_text)
 * [file::is_executable](#fileis_executable)
 * [file::get_permission](#fileget_permission)
+* [file::create_temp_directory](#filecreate_temp_directory)
+* [file::copy_with_rsync](#filecopy_with_rsync)
 
 ### file::get_mime
 
@@ -96,4 +98,22 @@ Return if the file permission in octal form (i 0600)
 #### Arguments
 
 * **$1** (string): - a path
+
+### file::create_temp_directory
+
+Create a temporary directory
+
+#### Arguments
+
+* **$1** (string): - a prefix
+
+### file::copy_with_rsync
+
+Copy/Sync a source directory to a directory with exclusion
+
+#### Arguments
+
+* **$1** (string): - the source folder
+* **$2** (string): - the target folder
+* **$3** (string): - the pattern to exclude
 

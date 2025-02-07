@@ -6,7 +6,7 @@ Library for function over bash
 ## DESCRIPTION
 
 This command overrides the default trap function
-and add the ability to set multiple traps for the same signal
+and add the ability to set multiple command for the same signal
 
 ## Index
 
@@ -14,6 +14,7 @@ and add the ability to set multiple traps for the same signal
 * [bash::is_interactive](#bashis_interactive)
 * [bash::is_login](#bashis_login)
 * [bash::function_definition](#bashfunction_definition)
+* [bash::type](#bashtype)
 * [bash::has_terminal](#bashhas_terminal)
 * [bash::eval_validate](#basheval_validate)
 * [bash::get_pinentry](#bashget_pinentry)
@@ -22,7 +23,13 @@ and add the ability to set multiple traps for the same signal
 ### bash::trap
 
 This command overrides the default trap function
-and add the ability to set multiple traps for the same signal
+and add the ability to set multiple command for the same signal
+
+#### Example
+
+```bash
+bash::trap 'popd >/dev/null' EXIT # EXIT executes also on error
+```
 
 ### bash::is_interactive
 
@@ -46,6 +53,10 @@ Check if the shell is a login shell
 
 Print the function definition
 
+### bash::type
+
+Type of variable
+
 ### bash::has_terminal
 
 Check if the standard stream file descriptors (stdout, stdin, ...)
@@ -53,9 +64,11 @@ are of the terminal type (ie color is supported)
 
 ### bash::eval_validate
 
-Eval_Validate will validate the status of the last command executed
+Eval_Validate will validate the output of an env
+Why ? The eval status is the status of the last command executed
 if the first command executed has error, it will not see it
-This function executes each command line
+This function executes each command line and returns an error if any
+You could also just use the content of the function to not execute each command 2 times
 
 #### Example
 
@@ -65,6 +78,8 @@ if ! ERROR=$(bash::eval_validate "$EVAL"); then
   echo::echo "$ERROR"
   exit 1
 fi
+# eval will put the results of the evaluation in the scope
+# we therefore need to eval it again
 eval "$EVAL"
 ```
 

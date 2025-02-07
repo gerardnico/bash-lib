@@ -48,7 +48,8 @@ The `bash-lib` package contains the following libraries:
 * [bashlib-script.sh](docs/lib/bashlib-script.md) - Script functions (ie source)
 * [bashlib-ssh.sh](docs/lib/bashlib-ssh.md) - Ssh functions
 * [bashlib-stack.sh](docs/lib/bashlib-stack.md) - CallStack/Frame functions
-* [bashlib-string.sh](docs/lib/bashlib-stack.md) - String functions
+* [bashlib-string.sh](docs/lib/bashlib-string.md) - String functions
+* [bashlib-template.sh](docs/lib/bashlib-template.md) - Template functions
 * [bashlib-vault.sh](docs/lib/bashlib-vault.md) - Retrieve secret from vault (hashicorp or pass)
 
 

@@ -6,9 +6,9 @@
 #
 #
 #
-# Depends on stack to print the callstack
-# shellcheck source=./bashlib-stack.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-stack.sh"
+  # Depends on stack to print the callstack
+  # shellcheck source=./bashlib-stack.sh
+  source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-stack.sh"
 
 
 # @description

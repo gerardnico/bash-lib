@@ -33,10 +33,12 @@ BASHLIB_TIP_COLOR=${BASHLIB_TIP_COLOR:-$BASHLIB_YELLOW_COLOR}
 export BASHLIB_ECHO_ERROR_LEVEL=1
 export BASHLIB_ECHO_WARNING_LEVEL=2
 export BASHLIB_ECHO_INFO_LEVEL=3
-export BASHLIB_ECHO_DEBUG_LEVEL=4
+export BASHLIB_ECHO_COMMAND_LEVEL=4
+export BASHLIB_ECHO_DEBUG_LEVEL=5
 
 # Formatting (Color, Prefix, ...)
 BASHLIB_WARNING_TYPE="warning"
+BASHLIB_COMMAND_TYPE="command"
 BASHLIB_SUCCESS_TYPE="success"
 BASHLIB_ERROR_TYPE="error"
 BASHLIB_DEBUG_TYPE="debug"
@@ -116,7 +118,7 @@ echo::warn() {
 # @arg $1 string The value to print, by default an empty line
 # @exitcode 0 Always
 # @example
-#    export BASHLIB_TIP_COLOR='\033[0;33m' # Optional in bashrc
+#    export BASHLIB_TIP_COLOR='\033[0;33m'
 #    echo::tip "My tip"
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
@@ -137,6 +139,8 @@ echo::debug() {
   echo::base --log-level "$BASHLIB_ECHO_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE"  "${*}"
 }
 
+
+
 # @description
 #     Function that will output the environment configuration
 echo::conf(){
@@ -154,6 +158,22 @@ echo::conf(){
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 function echo::echo(){
   echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
+}
+
+# @description
+#     Function to eval and echo a command
+#
+# @arg $1 string The command
+# @exitcode 0 The exit code of the eval function
+# @example
+#    echo::eval "echo 'Hello World'"
+#
+# @stdout The output of the command
+function echo::eval(){
+  echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE"  "$1"
+  # redirect eventually stderr to /dev/tty
+  # Why? stderr may be captured by the called command and we don't see any error
+  eval "$1" 2>"$(echo::get_file_descriptor)"
 }
 
 # @description
@@ -266,6 +286,9 @@ function echo::base(){
     "$BASHLIB_TIP_TYPE")
       MESSAGE="Tip: $MESSAGE"
       ;;
+    "$BASHLIB_COMMAND_TYPE")
+      MESSAGE="Command: $MESSAGE"
+     ;;
   esac
 
   # Color
@@ -285,11 +308,7 @@ function echo::base(){
   esac
 
   # Location Information
-  case $TYPE_MESSAGE in
-    "$BASHLIB_ECHO_TYPE")
-      # echo does not have location information
-      ;;
-    *)
+  if [ "$BASHLIB_ECHO_LEVEL" == "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
       # The caller function displays:
       # * the line number,
       # * subroutine name,
@@ -320,8 +339,7 @@ function echo::base(){
       # so that any redirection will not get them
       # this is the standard behaviour of git
       MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
-      ;;
-  esac
+  fi
 
   if ! FD=$(echo::get_file_descriptor); then
     echo "No device available for the message ${MESSAGE}"

@@ -17,7 +17,7 @@ A list of command utilities
 
 ### command::echo_eval
 
-Echo a command line at the info level and eval it
+Echo a command line and eval it
 
 #### Example
 
@@ -35,17 +35,7 @@ command::echo_eval "echo 'Hello World'"
 
 ### command::echo_debug_eval
 
-Echo a command line at the debug level and eval it
-
-#### Example
-
-```bash
-command::echo_debug_eval "echo 'Hello World'"
-```
-
-#### Arguments
-
-* **$1** (string): The command to echo and eval
+Deprecated. The level is now controlled used command::echo_eval or echo::eval
 
 #### Output on stderr
 
