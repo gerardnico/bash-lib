@@ -24,7 +24,7 @@ template::check_vars() {
   local TEMPLATE_STRING=""
   if [ "$1" == "-f" ]; then
     shift;
-    if ! TEMPLATE_STRING="$(cat $1)"; then
+    if ! TEMPLATE_STRING="$(cat "$1")"; then
       echo::err "The file $1 does not exist"
       return 1
     fi
@@ -44,7 +44,9 @@ template::check_vars() {
   local VARIABLES_NOT_DEFINED=()
   while read -r VARIABLE_NAME
   do
-      if [ "${!VARIABLE_NAME:-}" == "" ]; then
+      # not [ "${!VARIABLE_NAME:-}" == "" ]
+      # because an env value can be empty string (example: KUBEE_CLUSTER_SERVER_ADMIN_USERNAME)
+      if [[ ! -v VARIABLE_NAME ]]; then
           VARIABLES_NOT_DEFINED+=("$VARIABLE_NAME")
           rc=1
       fi
