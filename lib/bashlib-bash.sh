@@ -35,11 +35,12 @@ bash::trap() {
       echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
       TRAP_EXPRESSION=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
     fi
-    if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
-        local fd;
-        fd=$(echo::get_file_descriptor);
-        TRAP_EXPRESSION="echo '$TRAP_SIGNAL Trap command executed: $TRAP_EXPRESSION' > $fd; ${TRAP_EXPRESSION}"
-    fi
+#    if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
+#        local fd;
+#        fd=$(echo::get_file_descriptor);
+#        # echo is after. Why? the trap expression may capture the exit code. If echo is before, the exit code is always null
+#        TRAP_EXPRESSION="${TRAP_EXPRESSION};echo '$TRAP_SIGNAL Trap command executed: $TRAP_EXPRESSION' > $fd"
+#    fi
     echo::debug "Trap $TRAP_SIGNAL command added: $TRAP_EXPRESSION"
     trap -- "$TRAP_EXPRESSION" "${TRAP_SIGNAL}"
 
