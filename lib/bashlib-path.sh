@@ -112,7 +112,8 @@ path::create_temp_directory(){
 # @stdout the temporary directory (normally /tmp)
 path::get_temp_directory(){
   # -u: generate a name but does not create any file or directory
-  echo $(dirname $(mktemp -u))
+  # Could be also: ${TMPDIR:-${TEMP:-${TMP:-/tmp}}}
+  dirname "$(mktemp -u)"
 }
 
 # @description
