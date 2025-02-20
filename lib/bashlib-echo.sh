@@ -11,7 +11,8 @@
 #     * `1`: print error messages
 #     * `2`: print also warning messages
 #     * `3`: print also info and success messages
-#     * `4`: print also debug messages
+#     * `4`: print also command messages
+#     * `5`: print also debug messages
 #     By default, the library has the level `3` (info messages and up)
 #
 #     They all accept the flag `--silent` or `-s` to no echo anything
