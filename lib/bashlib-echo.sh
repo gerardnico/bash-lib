@@ -165,16 +165,19 @@ function echo::echo(){
 #     Function to eval and echo a command
 #
 # @arg $1 string The command
+# @arg $2 string The file descriptor where to redirect stderr
 # @exitcode 0 The exit code of the eval function
 # @example
 #    echo::eval "echo 'Hello World'"
 #
 # @stdout The output of the command
 function echo::eval(){
-  echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE"  "$1"
   # redirect eventually stderr to /dev/tty
   # Why? stderr may be captured by the called command and we don't see any error
-  eval "$1" 2>"$(echo::get_file_descriptor)"
+  local STDERR_FD=${2:-$(echo::get_file_descriptor)}
+  local FINAL_COMMAND="$1 2>$STDERR_FD"
+  echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE"  "$FINAL_COMMAND"
+  eval "$FINAL_COMMAND"
 }
 
 # @description
