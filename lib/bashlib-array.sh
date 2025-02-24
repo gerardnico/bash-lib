@@ -40,8 +40,19 @@ array::join(){
           ;;
      esac
   done
-  IFS="$SEP"; echo "$*"
+  # Not with IFS because it supports only 1 character
+  # Below was deprecated
+  # IFS="$SEP"; echo "$*"
+  local result="$1"
+  shift
+  while (( $# > 0 )); do
+    result="$result$SEP$1"
+    shift
+  done
+  echo "$result"
+
 }
+
 
 # @description Return the last element of the arguments
 # @args $0-N array - all arguments
