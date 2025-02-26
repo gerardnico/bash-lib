@@ -150,3 +150,16 @@ git::get_auto_commit_message(){
 git::has_upstream(){
   git show-branch remotes/origin/$1 &>/dev/null;
 }
+
+# Example
+# https://github.com/jouve/charts/blob/main/git-subtree-pull.sh
+git::subtree_pull () {
+    src_url=$1
+    src_tag=$2
+    src_dir=$3
+    tgt_dir=$4
+    tmp=$(mktemp -d)
+    git clone "$src_url" "$tmp"
+    ref=$(git -C "$tmp" subtree split "--prefix=$src_dir" "$src_tag")
+    git subtree pull "--prefix=$tgt_dir" "$tmp" "$ref"
+}
