@@ -53,7 +53,10 @@ array::join(){
 
 }
 
-
+array::length(){
+  # ${#my_array[@]}
+  echo "${#@}"
+}
 # @description Return the last element of the arguments
 # @args $0-N array - all arguments
 # @example
