@@ -81,7 +81,7 @@ ssh::add_key(){
   PRIVATE_KEY=$SSH_X_KEY_HOME/$PRIVATE_KEY_BASENAME
   case "$SSH_X_KEY_STORE" in
     "pass")
-        PASS_FILE="${PASSWORD_STORE_DIR:-"$HOME~/.password-store"}/$PRIVATE_KEY.gpg"
+        PASS_FILE="${PASSWORD_STORE_DIR:-"$HOME/.password-store"}/$PRIVATE_KEY.gpg"
         if [ ! -f "$PASS_FILE" ]; then
           echo::err "The pass private key ($PASS_FILE) does not exist"
           return 1
