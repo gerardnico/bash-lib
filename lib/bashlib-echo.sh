@@ -209,7 +209,7 @@ function echo::get_file_descriptor(){
 #    echo "/dev/tty"
 #    return
 #  fi
-  if (exec < /dev/tty) ; then
+  if (exec < /dev/tty >/dev/null) ; then
     echo "/dev/tty"
     return
   fi
