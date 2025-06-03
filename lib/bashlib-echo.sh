@@ -210,7 +210,7 @@ function echo::get_file_descriptor(){
 #    echo "/dev/tty"
 #    return
 #  fi
-# exec solution do a stdio redirection, therefore it needs to be below parenthesis
+# exec solution do a stdio redirection, therefore it needs to be between parenthesis
 # so that it does not pollute the environment
   if (exec < /dev/tty >/dev/null 2>&1); then
     echo "/dev/tty"
