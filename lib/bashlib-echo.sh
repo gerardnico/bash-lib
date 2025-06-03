@@ -200,7 +200,8 @@ function echo::eval(){
 function echo::get_file_descriptor(){
 
   # do we have a terminal alias
-  # the -c option checks if the file is a character device
+  # the -c option [ -c /dev/tty ] checks if the file is a character device
+  # does not work, still true and we get /dev/tty: No such device or address
   # -t FD  file descriptor FD is opened on a terminal
   # /dev/tty is the controlling terminal for the current process
 #  if tty -s; then
@@ -209,10 +210,9 @@ function echo::get_file_descriptor(){
 #    echo "/dev/tty"
 #    return
 #  fi
-# exec solution below seems to do a redirection, therefore not good
-# exec < /dev/tty 2>/dev/null
-# exec < /dev/tty >/dev/null 2>&1;
-  if [ -c /dev/tty ]; then
+# exec solution do a stdio redirection, therefore it needs to be below parenthesis
+# so that it does not pollute the environment
+  if (exec < /dev/tty >/dev/null 2>&1); then
     echo "/dev/tty"
     return
   fi
