@@ -209,7 +209,10 @@ function echo::get_file_descriptor(){
 #    echo "/dev/tty"
 #    return
 #  fi
-  if exec < /dev/tty >/dev/null 2>&1; then
+# exec solution below seems to do a redirection, therefore not good
+# exec < /dev/tty 2>/dev/null
+# exec < /dev/tty >/dev/null 2>&1;
+  if [ -c /dev/tty ]; then
     echo "/dev/tty"
     return
   fi
@@ -345,12 +348,16 @@ function echo::base(){
       MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
   fi
 
+
   if ! FD=$(echo::get_file_descriptor); then
     echo "No device available for the message ${MESSAGE}"
     return 1
   fi
 
-  echo -e "${MESSAGE}" > "$FD"
+  if ! echo -e "${MESSAGE}" > "$FD"; then
+    echo "Error executing: echo -e ${MESSAGE} > $FD"
+    return 1
+  fi
 
 
 }
