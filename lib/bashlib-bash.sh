@@ -62,6 +62,12 @@ function bash::is_interactive(){
   return 1
 }
 
+# Function to check if we're in an interactive terminal session
+function bash::is_interactive_terminal() {
+   # Check if stdin, stdout, and stderr are all connected to a terminal
+   [ -t 0 ] && [ -t 1 ] && [ -t 2 ]
+}
+
 # @description Check if the shell is a login shell
 # @exitcode 0 If the shell is a login shell
 # @exitcode 1 If the shell is non-login shell
@@ -85,10 +91,14 @@ bash::type(){
 }
 
 # @description
-#    Check if the standard stream file descriptors (stdout, stdin, ...)
-#    are of the terminal type (ie color is supported)
+#    Check if stdin is a terminal
 bash::has_terminal(){
   tty -s
+}
+
+# Function to check if we can write to the controlling terminal
+bash::dev_tty_writable() {
+  (exec < /dev/tty >/dev/null 2>&1) >/dev/null 2>&1
 }
 
 # @description
@@ -121,6 +131,13 @@ bash::eval_validate(){
   done <<< "$1"
 }
 
+
+
+# Function to check if we have a display for GUI programs
+bash::has_display() {
+   [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]
+}
+
 # Pinentry Cli Env Constant
 PINENTRY_CURSES="pinentry-curses"
 PINENTRY_GNOME="pinentry-gnome3"
@@ -140,6 +157,7 @@ PINENTRY_WHIPTAIL="whiptail"
 # @stdout The pinentry program name
 bash::get_pinentry(){
 
+  # Interactive terminal session with TTY access
   # if /dev/tty is available (ie in a textual terminal)
   # Note that GPG uses an env to determine if this is an interactive textual terminal session
   # export GPG_TTY=$(tty)

@@ -199,24 +199,35 @@ function echo::eval(){
 # @stdout A file descriptor (default to /dev/stderr)
 function echo::get_file_descriptor(){
 
-  # do we have a terminal alias
-  # the -c option [ -c /dev/tty ] checks if the file is a character device
-  # does not work, still true and we get /dev/tty: No such device or address
-  # -t FD  file descriptor FD is opened on a terminal
-  # /dev/tty is the controlling terminal for the current process
+# interactive textual terminal session ?
+#
+# do we have a terminal alias
+# the -c option [ -c /dev/tty ] checks if the file is a character device
+# does not work, still true and we get /dev/tty: No such device or address
+# -t FD  file descriptor FD is opened on a terminal
+# /dev/tty is the controlling terminal for the current process
 #  if tty -s; then
 #    # To /dev/tty
 #    # No access if you're running the script in a non-interactive environment
 #    echo "/dev/tty"
 #    return
 #  fi
+#
+# or? sh -c ": >/dev/tty" >/dev/null 2>&1
+# the `:` points means do nothing beyond expanding arguments and performing redirections. The return status is zero
+# https://www.gnu.org/software/bash/manual/bash.html#index-_003a
+#
 # exec solution do a stdio redirection, therefore it needs to be between parenthesis
 # so that it does not pollute the environment
-  if (exec < /dev/tty >/dev/null 2>&1); then
+# if (exec < /dev/tty >/dev/null 2>&1); then
+#
+# check if /dev/tty is writable
+#if [ -w /dev/tty ]; then
+
+  if (exec < /dev/tty >/dev/null 2>&1) >/dev/null 2>&1; then
     echo "/dev/tty"
     return
   fi
-
 
   # No stdout
   # Why?
@@ -226,8 +237,19 @@ function echo::get_file_descriptor(){
   # for var in $(command_with_echo_error)
   # ```
 
-  # Note that `test -c /dev/stderr` may failed ???
-  # but it still works
+  if [ -t 2 ]; then
+    echo  "/dev/stderr"
+    return
+  fi
+
+  # SSH session
+  SSH_TTY=${SSH_TTY:-}
+  if [ "$SSH_TTY" != "" ]; then
+    echo "$SSH_TTY"
+    return
+  fi
+
+  # May works
   echo  "/dev/stderr"
 
 }

@@ -125,6 +125,7 @@ ssh::add_key(){
     if [ "$SSH_X_PASSPHRASE" != "" ]; then
        echo::err "Bad Passphrase maybe is mainly the cause"
     fi
+    echo::err "Command: $SSH_ADD_COMMAND"
     return 1
   fi
 }
