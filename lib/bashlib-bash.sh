@@ -221,7 +221,7 @@ bash::get_pinentry(){
 # @stdout The pin
 bash::get_pin(){
 
-  PINENTRY=${1:-}
+  local PINENTRY=${1:-}
   if [ "${PINENTRY}" == "" ]; then
     echo::err "A pinentry program is mandatory"
     return 2
@@ -229,13 +229,21 @@ bash::get_pin(){
   PROMPT=${2:-"Enter the pin/secret/passphrase"}
   TIMEOUT=30
 
+  echo::debug "Get pin called with the pin ($PINENTRY)"
+
+  if [ ! -x "$(command -v "$PINENTRY")" ]; then
+    echo::err "The pinentry program ($PINENTRY) was not found or is not installed"
+    return 2
+  fi
+
   case "$1" in
     "$PINENTRY_ZENITY")
       # on Windows, the width is not supported
       WIDTH=${#PROMPT} # number of characters
-      if ! PASSWORD=$(zenity --password --title="$PROMPT" --width="$WIDTH" --timeout="$TIMEOUT" 2>/dev/null); then
+      if ! PASSWORD=$(zenity --password --title="$PROMPT" --width="$WIDTH" --timeout="$TIMEOUT" 2>/dev/shm/zenity_error); then
         # https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes
-        case "$?" in
+        local ERROR_CODE=$?
+        case "$ERROR_CODE" in
           1)
           echo::err "User has canceled"
           ;;
@@ -245,7 +253,11 @@ bash::get_pin(){
           5)
           echo::err "The dialog has been closed because the timeout has been reached."
           ;;
+          *)
+          echo::err "Zenity exited with the error ($ERROR_CODE)."
+          echo::err "https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes"
         esac
+        echo::err "$(cat /dev/shm/zenity_error)"
         return 1
       else
         echo "$PASSWORD"
@@ -278,8 +290,8 @@ BYE
 EOF
           ;;
     *)
-      echo:err "The pinentry value ($1) is unknown"
-      exit 2
+      echo::err "The pinentry value ($1) is unknown"
+      return 2
       ;;
   esac
 }
