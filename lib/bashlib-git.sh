@@ -12,7 +12,8 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
 # @description Get the default branch
 git::get_default_branch(){
   # shellcheck disable=SC2317
-  git remote show origin | grep "HEAD branch" | sed 's/.*: //'
+  # git remote show origin | grep "HEAD branch" | sed 's/.*: //'
+  git symbolic-ref refs/remotes/origin/HEAD --short | sed 's/origin\///'
 }
 
 # @description Get the current branch
@@ -42,14 +43,6 @@ function git::checkout_default() {
   git pull
 }
 
-# @description Delete the current branch and go to the default branch
-function git::branch_delete() {
-  CURRENT_BRANCH=$(git::get_current_branch)
-  git checkout "$(git::get_default_branch)"
-  # delete
-  git branch -D "$CURRENT_BRANCH"
-  git pull
-}
 
 # @description Diff of one file with the head
 # @args $1 - the file to diff
@@ -66,6 +59,15 @@ git::is_dirty_index(){
   # Any files modified
   ! git diff-index --quiet HEAD --
 }
+
+# @description
+#    Check if a branch exists
+# @args $1 - the branch name
+# @exitcode 1 if the branch does not exists
+git::branch_exists(){
+  git show-ref --verify --quiet "refs/heads/$1"
+}
+
 
 # @description
 #    Check if there is some commit not pushed
