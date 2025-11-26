@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Generate man page from markdown files
+
+set -Eeuo pipefail
+
+# shellcheck source=./bashlib-error.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+error::set_strict_mode
+error::set_trap
+# shellcheck source=./bashlib-echo.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+# shellcheck source=./bashlib-path.sh
+source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-path.sh"
+
+DEFAULT_MARKDOWN_FILE_DIR="docs/released"
+DEFAULT_OUTPUT_DIR="build/mangen/man1"
+function synopsis() {
+
+  cat << EOF
+\`\`\`bash
+bashlib-mangen [--output-dir outputDir] [markdownDir1 markdownDir2 ...]
+\`\`\`
+
+where:
+
+* \`-o|--output-dir\`    - is the output directory (default to \`${DEFAULT_OUTPUT_DIR}\`
+* \`--no-install\`       - do not install the man page in the database (admin right needed)
+* \`-h|--help\`          - shows this help
+
+* \`markdownDir\`        - one or more directories with markdown files (default to \`$DEFAULT_MARKDOWN_FILE_DIR\`)
+
+Note: the output directory is cleaned before processing
+EOF
+
+}
+
+# The same level as docs to be able
+MAN_OUTPUT_DIR="$DEFAULT_OUTPUT_DIR"
+MAN_DB_INSTALL=true
+declare -a MD_DIRS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    "-o" | "--output-dir")
+      shift
+      MAN_OUTPUT_DIR="$1"
+      ;;
+    "-h" | "--help" | "help")
+      doc::help
+      exit
+      ;;
+    "--no-install")
+      MAN_DB_INSTALL=false
+      ;;
+    "synopsis")
+      synopsis
+      exit
+      ;;
+    *)
+      # Command or arg
+      MD_DIRS+=("$1")
+      ;;
+  esac
+  shift
+done
+
+# Clean the output
+rm -rf "${MAN_OUTPUT_DIR}"
+mkdir -p "$MAN_OUTPUT_DIR"
+
+# Default
+if [ ${#MD_DIRS[@]} -eq 0 ]; then
+  MD_DIRS+=("$DEFAULT_MARKDOWN_FILE_DIR")
+fi
+
+# To man page
+for MD_DIR in "${MD_DIRS[@]}"; do
+  for DOC_FILE in "$MD_DIR"/*.md; do
+
+    echo::info "Processing man page for $DOC_FILE"
+    NAME=$(path::get_file_name_without_extension "$DOC_FILE")
+    MAN_FILE="$MAN_OUTPUT_DIR/$NAME.1"
+
+    # processing with pandoc
+    pandoc "$DOC_FILE" -s -t man > "$MAN_FILE"
+
+    # Install locally
+    if [ $MAN_DB_INSTALL == true ]; then
+      sudo install -m 0644 "$MAN_FILE" /usr/share/man/man1
+    fi
+
+    echo::success "Man page $MAN_FILE created and installed"
+
+  done
+done
+
+if [ $MAN_DB_INSTALL == true ]; then
+  echo::info "Updating the man db index"
+  sudo mandb > /dev/null 2>&1
+  echo::success "Man db index updated"
+else
+  echo::info "Update of the man db index disabled"
+fi
+
+echo::success "Man 1 generation done"

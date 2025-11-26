@@ -15,19 +15,22 @@ source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-doc.sh"
 # shellcheck source=./bashlib-command.sh
 source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
 
+function synopsis() {
 
-function synopsis(){
-
-cat << 'EOF'
+  cat << 'EOF'
 ```bash
-bashlib-docgen [-o outputDir] [bashDir1 bashDir2 ...]
+bashlib-docgen [--output-dir outputDir] [--md-dir markdownDir] [--doc-version version] [bashDir1 bashDir2 ...]
 ```
 
 where:
 
-* `-o|--output`      - is the output directory (default to `docs` to be able to create relatif path to image located in a subdirectory such as `docs\image`)
-* `-h|--help`        - shows this help
-* `bashDir`          - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+* `-o|--output-dir`    - is the output directory (default to `docs/docgen`)
+* `-h|--help`          - shows this help
+* `-dv|--doc-version`  - version variables injected in the doc (default to latest)
+* `-md|--md-dir]       - the directory where the markdown file (default to `docs/md`
+* `bashDir`            - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
+
+Note: the output directory is cleaned.
 EOF
 
 }
@@ -35,7 +38,7 @@ EOF
 # @internal
 # @description Check if the file is a bash script or library and generate the documentation or skip it
 # @arg $1 the file
-function bash_lib_to_markdown(){
+function bash_lib_to_markdown() {
 
   echo::info "Processing Bash Lib $TYPE $FILE"
   # Delete the extension if any
@@ -44,29 +47,28 @@ function bash_lib_to_markdown(){
   OUTPUT_FILE="$OUTPUT_LIB_DOC_DIR"/"$NAME".md
   shdoc < "$FILE" > "$OUTPUT_FILE"
   # Add a help section from script usage
-#  if [ $TYPE == "script" ]; then
-#    if [[ ! -x "$FILE" ]]; then
-#      echo::err "The script file ($FILE) is not executable"
-#      exit 1
-#    fi
-#    if ! HELP=$(eval "$FILE -h"); then
-#      if ! HELP=$(eval "$FILE help"); then
-#        echo::err "The script file ($FILE) has not a help option (-h) or a command (help)"
-#        exit 1
-#      fi
-#    fi
-#    {
-#      echo ""
-#      echo "## Help"
-#      echo ""
-#      echo "$HELP"
-#    } >> "$OUTPUT_FILE"
-#  fi
+  #  if [ $TYPE == "script" ]; then
+  #    if [[ ! -x "$FILE" ]]; then
+  #      echo::err "The script file ($FILE) is not executable"
+  #      exit 1
+  #    fi
+  #    if ! HELP=$(eval "$FILE -h"); then
+  #      if ! HELP=$(eval "$FILE help"); then
+  #        echo::err "The script file ($FILE) has not a help option (-h) or a command (help)"
+  #        exit 1
+  #      fi
+  #    fi
+  #    {
+  #      echo ""
+  #      echo "## Help"
+  #      echo ""
+  #      echo "$HELP"
+  #    } >> "$OUTPUT_FILE"
+  #  fi
   echo::success "Processed Bash $TYPE to $OUTPUT_FILE"
   echo "$OUTPUT_FILE"
 
 }
-
 
 if ! command -v shdoc &> /dev/null; then
   echo:err "'shdoc' command not found. Please install it first."
@@ -75,39 +77,48 @@ if ! command -v shdoc &> /dev/null; then
   exit 1
 fi
 
-
 # The same level as docs to be able
-OUTPUT_DOC_DIR="docs"
+OUTPUT_DOC_DIR="docs/docgen"
+DOC_VERSION="latest"
+MD_DIR="docs/md"
 declare -a BASH_DIRS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  "-o"|"--output")
-    shift
-    OUTPUT_DOC_DIR="$1"
-    ;;
-  "-h"|"--help"|"help")
-    doc::help
-    exit
-    ;;
-  "synopsis")
-    synopsis
-    exit
-    ;;
-  *)
-    # Command or arg
-    BASH_DIRS+=("$1")
-    shift
-    ;;
+    "-o" | "--output-dir")
+      shift
+      OUTPUT_DOC_DIR="$1"
+      ;;
+    "-md" | "--md-dir")
+      shift
+      MD_DIR="$1"
+      ;;
+    "-dv" | "--doc-version")
+      shift
+      DOC_VERSION="$1"
+      ;;
+    "-h" | "--help" | "help")
+      doc::help
+      exit
+      ;;
+    "synopsis")
+      synopsis
+      exit
+      ;;
+    *)
+      # Command or arg
+      BASH_DIRS+=("$1")
+      ;;
   esac
+  shift
 done
 
 # Default bash dir values
 if [ ${#BASH_DIRS[@]} -eq 0 ]; then
   if [ -d "lib" ]; then
-    BASH_DIRS+=("lib");
+    BASH_DIRS+=("lib")
   fi
   if [ -d "bin" ]; then
-    BASH_DIRS+=("bin");
+    BASH_DIRS+=("bin")
   fi
   if [ ${#BASH_DIRS[@]} -eq 0 ]; then
     doc::help
@@ -117,11 +128,11 @@ if [ ${#BASH_DIRS[@]} -eq 0 ]; then
 fi
 
 # Check bash dir directories
-for BASH_DIR in "${BASH_DIRS[@]}" ; do
+for BASH_DIR in "${BASH_DIRS[@]}"; do
   if [ ! -d "$BASH_DIR" ]; then
-      doc::help
-      echo::err "Error: Bash dir '$BASH_DIR' is not a valid directory."
-      exit 1
+    doc::help
+    echo::err "Error: Bash dir '$BASH_DIR' is not a valid directory."
+    exit 1
   fi
 done
 
@@ -129,21 +140,18 @@ done
 if [ ! -d "$OUTPUT_DOC_DIR" ]; then
   mkdir -p "$OUTPUT_DOC_DIR"
 fi
+
 # Delete all docs
 # If a bin or lib was deleted, the doc should also be deleted
-OUTPUT_LIB_DOC_DIR="$OUTPUT_DOC_DIR/lib"
-rm -rf "$OUTPUT_LIB_DOC_DIR"
-mkdir -p "$OUTPUT_LIB_DOC_DIR"
-OUTPUT_BIN_DOC_DIR="$OUTPUT_DOC_DIR/bin-generated"
-rm -rf "$OUTPUT_BIN_DOC_DIR"
-mkdir -p "$OUTPUT_BIN_DOC_DIR"
+rm -rf "$OUTPUT_DOC_DIR"
+mkdir -p "$OUTPUT_DOC_DIR"
 
 # Type of file
 LIBRARY_TYPE="library"
 SCRIPT_TYPE="script"
 
 # Processing
-for BASH_DIR in "${BASH_DIRS[@]}" ; do
+for BASH_DIR in "${BASH_DIRS[@]}"; do
   for FILE in "$BASH_DIR"/*; do
     if [ -d "$FILE" ]; then
       echo::info "Skipped directory $FILE"
@@ -153,90 +161,67 @@ for BASH_DIR in "${BASH_DIRS[@]}" ; do
     case "$EXTENSION" in
       "sh")
         TYPE="$LIBRARY_TYPE"
-      ;;
+        ;;
       "")
         if ! script::has_shebang "$FILE"; then
           echo::info "No Shebang found. Skipped file $FILE"
           continue
         fi
         TYPE="$SCRIPT_TYPE"
-      ;;
+        ;;
       *)
         echo::info "Skipped file $FILE (not a bash file)"
         continue
+        ;;
     esac
     NAME=$(path::get_file_name_without_extension "$FILE")
     case $TYPE in
       "$LIBRARY_TYPE")
         OUTPUT_FILE=$(bash_lib_to_markdown "$FILE")
-        # Generate a pandoc ready file
-        # Example Markdown Pandoc
-        # https://eddieantonio.ca/blog/2015/12/18/authoring-manpages-in-markdown-with-pandoc/
-        # https://raw.githubusercontent.com/eddieantonio/imgcat/refs/heads/master/docs/imgcat.1.md
+        # Generate a pandoc man page ready file
         # Pandoc Metadata starts with %
         # https://pandoc.org/MANUAL.html#metadata-blocks
         TITLE=$NAME
         sed -i \
           -e 's/^## Overview$/## DESCRIPTION/' \
-          -e "1i\% $NAME(1) Version Latest | $TITLE" \
+          -e "1i\% $NAME(1) Version $DOC_VERSION | $TITLE" \
           "$OUTPUT_FILE"
-          ;;
+        ;;
       "$SCRIPT_TYPE")
         echo::info "Processing the script $NAME"
         # Markdown file are created manually
         # the file should exist
-        BIN_MD_FILE="docs/bin/$NAME.md"
+        BIN_MD_FILE="$MD_DIR/$NAME.md"
         if [ ! -f "$BIN_MD_FILE" ]; then
           echo::err "The file $BIN_MD_FILE was not found"
           exit 1
         fi
         # synopsis is a template variable
         # shellcheck disable=SC2034
-        if SYNOPSIS=$($FILE "synopsis"); then
-          (
-            if [[ $(basename "$0") == "$NAME" ]]; then
-              # The bashlib-docgen script itself
-              # Because we use $SYNOPSIS has example, we don't want it
-              # to be replaced. In the bashlib-docgen.md, we use `${SYNOPSIS_DOCGEN}`
-              export SYNOPSIS_DOCGEN=$SYNOPSIS
-              export SYNOPSIS="\${SYNOPSIS}"
-            else
-              # All other scripts
-              export SYNOPSIS
-            fi
-            # '$SYNOPSIS' to replace only this variable
-            # to not get secret on the run
-            # shellcheck disable=SC2016
-            envsubst '$SYNOPSIS $SYNOPSIS_DOCGEN' < "$BIN_MD_FILE" > "$OUTPUT_BIN_DOC_DIR/$NAME.md"
-          )
-        else
+        if ! SYNOPSIS=$($FILE "synopsis"); then
           echo::err "An error occurred or no synopsis function was implemented in the script $FILE"
-          # cp "$BIN_MD_FILE" "$OUTPUT_BIN_DOC_DIR/$NAME.md"
           exit 1
         fi
+        # Subshell so that the exported variables are scoped
+        (
+          if [[ $(basename "$0") == "$NAME" ]]; then
+            # The bashlib-docgen script itself
+            # Because we use $SYNOPSIS has example, we don't want it
+            # to be replaced. In the bashlib-docgen.md, we use `${SYNOPSIS_DOCGEN}`
+            export SYNOPSIS_DOCGEN=$SYNOPSIS
+            export SYNOPSIS="\${SYNOPSIS}"
+          else
+            # All other scripts
+            export SYNOPSIS
+            export SYNOPSIS_DOCGEN=""
+          fi
+          # '$SYNOPSIS' to replace only this variable
+          # to not get secret on the run
+          export VERSION="${DOC_VERSION}"
+          # shellcheck disable=SC2016
+          envsubst '$SYNOPSIS $VERSION $SYNOPSIS_DOCGEN' < "$BIN_MD_FILE" > "$OUTPUT_DOC_DIR/$NAME.md"
+        )
         ;;
     esac
   done
 done
-
-
-MAN_1_DOC_DIR="$OUTPUT_DOC_DIR/man/man1"
-rm -rf "${MAN_1_DOC_DIR}"
-mkdir -p "$MAN_1_DOC_DIR"
-# To man page
-for DOC_FILE in "$OUTPUT_BIN_DOC_DIR"/*.md; do
-
-  echo::info "Processing man page for $DOC_FILE"
-  NAME=$(path::get_file_name_without_extension "$DOC_FILE")
-  MAN_FILE="$MAN_1_DOC_DIR/$NAME.1"
-
-  pandoc "$DOC_FILE" -s -t man > "$MAN_FILE"
-  sudo install -m 0644 "$MAN_FILE" /usr/share/man/man1
-  echo::success "Man page $MAN_FILE created and installed"
-
-done
-
-echo::info "Updating the man db index"
-sudo mandb > /dev/null 2>&1
-echo::success "Man db index updated"
-

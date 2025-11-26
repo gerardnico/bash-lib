@@ -1,14 +1,18 @@
 % bashlib-docgen(1) Version Latest | Generate markdown and man page documentation
 # NAME
 
-A script that will generate markdown and man page documentation from:
+A script that will generate markdown documentation from:
 
 * a bash library 
 * or a script
 
+To generate man page from the generated markdown files, see [bashlib-mangen](bashlib-mangen.md)
+
 ## DESCRIPTION
 
-With this script, you can generate documentation for a library or for a script
+With this script, you can generate documentation for:
+* a library 
+* or a script
 
 A library:
 
@@ -28,20 +32,18 @@ They are searched by default in the `bin` and `lib` directories.
 
 ### For a library
 
-  * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc) into `docs/lib`
-  * no manpage is generated
+  * the markdown file are generated via [shdoc](https://github.com/reconquest/shdoc)
 
 ### For a script
-  * you need to create a pandoc markdown file manually in `docs/bin`. Example of pandoc file with [pandoc metadata](https://pandoc.org/MANUAL.html#metadata-blocks)
+
+  * You need to create a pandoc markdown file manually. Example of pandoc file with [pandoc metadata](https://pandoc.org/MANUAL.html#metadata-blocks)
 ```markdown
-% your-script-name(1) Version 1.0.0 | The title
+% your-script-name(1) Version ${VERSION} | The title
 # NAME
 # SYNOPSIS
-${synopsis}
+${SYNOPSIS}
 # ....
 ```
-  * The bin pages are generated into `docs/bin-generated`
-  * The man pages are generated into `docs/man/man1` and installed locally.
 
 ## Tips for script
 
@@ -72,11 +74,10 @@ doc::help "synopsis_function_for_sub_command"
 
 # Output
 
-The bin docs output directory is in the same level below `docs` to be able to create relatif link to image
+The docs output directory by default is `docs/docgen` to be able to create relative link to image
 
-The link `![my image desc](../images/image.png)` will be valid in a document located in:
-* `docs\bin` 
-* `docs\bin-generated`
+Why? If your documentation is in `docs/bin` for scripts, the link `![my image desc](../images/image.png)` will 
+also be valid in a document located in `docs/docgen`
 
 
 # SYNOPSIS
