@@ -4,10 +4,11 @@
 #
 #     See also [git-extras](https://github.com/tj/git-extras/blob/main/Commands.md)
 
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/bashlib-echo.sh"
 # shellcheck source=./bashlib-command.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
+source "${SCRIPT_DIR}/bashlib-command.sh"
 
 # @description Get the default branch
 git::get_default_branch() {

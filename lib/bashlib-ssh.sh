@@ -4,10 +4,11 @@
 #     The library is used in [ssh-x](https://github.com/gerardnico/ssh-x)
 #
 
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
-# shellcheck source=../../bash-lib/lib/bashlib-command.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
+source "${SCRIPT_DIR}/bashlib-echo.sh"
+# shellcheck source=./bashlib-command.sh
+source "${SCRIPT_DIR}/bashlib-command.sh"
 
 
 # @description Load the agent env

@@ -2,8 +2,9 @@
 # @brief Library of Script functions
 # @description Library of Script functions
 
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/bashlib-echo.sh"
 
 # @description check to see if this file is being run or sourced from another script
 script::is_sourced() {

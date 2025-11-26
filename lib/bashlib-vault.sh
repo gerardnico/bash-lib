@@ -3,9 +3,9 @@
 # @description
 #    Retrieve secrets from vault or pass secret manager
 #
-
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/bashlib-echo.sh"
 
 # Declare an associative array to store the field values
 declare -A BASHLIB_SECRETS_MAP
@@ -33,7 +33,7 @@ vault::get_secret_from_vault() {
   # Check if we have already the value
   VALUE=${BASHLIB_SECRETS_MAP["$SECRET_FIELD_PATH"]:-}
   if [ "$VALUE" != "" ]; then
-    echo "$VALUE";
+    echo "$VALUE"
     return
   fi
 
@@ -55,8 +55,8 @@ vault::get_secret_from_vault() {
 
   # Iterate through each field in the secret and store in the associative array
   while IFS="=" read -r key value; do
-      map_key="${SECRET_PATH}/${key}"
-      BASHLIB_SECRETS_MAP["$map_key"]="$value"
+    map_key="${SECRET_PATH}/${key}"
+    BASHLIB_SECRETS_MAP["$map_key"]="$value"
   done < <(echo "$SECRET_FIELDS" | jq -r 'to_entries[] | "\(.key)=\(.value)"')
 
   # Do we got the field
@@ -67,7 +67,7 @@ vault::get_secret_from_vault() {
   fi
 
   # Return the value
-  echo "$VALUE";
+  echo "$VALUE"
 
 }
 
@@ -77,7 +77,7 @@ vault::get_secret_from_vault() {
 # @example
 #    VALUE=$(vault::filter "$VALUE")
 # @exitcode 1 if the vault value was not found
-vault::filter(){
+vault::filter() {
 
   VALUE="$1"
 
@@ -86,16 +86,16 @@ vault::filter(){
   # Check if VALUE starts with VAULT_PREFIX
   if [[ $VALUE == $VAULT_PREFIX* ]]; then
 
-      # Extract the FULL QUALIFIED SECRET_PATH
-      SECRET_FIELD_PATH=${VALUE#"$VAULT_PREFIX"}
-      SECRET_FIELD_PATH=$(string::trim "$SECRET_FIELD_PATH")
+    # Extract the FULL QUALIFIED SECRET_PATH
+    SECRET_FIELD_PATH=${VALUE#"$VAULT_PREFIX"}
+    SECRET_FIELD_PATH=$(string::trim "$SECRET_FIELD_PATH")
 
-      # Get the value from the vault
-      if ! VALUE=$(vault::get_secret_from_vault "$SECRET_FIELD_PATH"); then
-        echo::err "Vault value not found at the path  $SECRET_FIELD_PATH"
-        echo $SECRET_FIELD_PATH
-        exit 1;
-      fi
+    # Get the value from the vault
+    if ! VALUE=$(vault::get_secret_from_vault "$SECRET_FIELD_PATH"); then
+      echo::err "Vault value not found at the path  $SECRET_FIELD_PATH"
+      echo $SECRET_FIELD_PATH
+      exit 1
+    fi
 
   fi
   echo "$VALUE"
@@ -117,6 +117,6 @@ vault::filter(){
 #    export BASHLIB_VAULT_PASS_CLI=gopass
 #    vault::pass path/to/my/secret
 #
-vault::pass(){
+vault::pass() {
   ${BASHLIB_VAULT_PASS_CLI:-pass} "$@"
 }

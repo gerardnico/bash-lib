@@ -6,10 +6,10 @@
 #
 #
 #
-  # Depends on stack to print the callstack
-  # shellcheck source=./bashlib-stack.sh
-  source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-stack.sh"
-
+# Depends on stack to print the callstack
+# shellcheck source=./bashlib-stack.sh
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "${SCRIPT_DIR}/bashlib-stack.sh"
 
 # @description
 #    An error handling function that will print:
@@ -34,27 +34,27 @@
 #
 error::handler() {
 
-    local ERROR_CODE=${1:-Unknown}
-    local ERROR_COMMAND=${2:-Unknown}
-    local ERROR_SOURCE=${3:-Unknown}
-    local ERROR_FUNCTION=${4:-'Not in a function'}
-    local ERROR_LINE=${5:-Unknown}
+  local ERROR_CODE=${1:-Unknown}
+  local ERROR_COMMAND=${2:-Unknown}
+  local ERROR_SOURCE=${3:-Unknown}
+  local ERROR_FUNCTION=${4:-'Not in a function'}
+  local ERROR_LINE=${5:-Unknown}
 
-    # Error in red
-    echo -e "${RED:-'\033[0;31m'}" >&2
-    echo "Command '$ERROR_COMMAND' exited with status $ERROR_CODE" >&2
-    echo "  * File: $ERROR_SOURCE" >&2
-    echo "  * Function: $ERROR_FUNCTION" >&2
-    echo "  * Line: $ERROR_LINE" >&2
+  # Error in red
+  echo -e "${RED:-'\033[0;31m'}" >&2
+  echo "Command '$ERROR_COMMAND' exited with status $ERROR_CODE" >&2
+  echo "  * File: $ERROR_SOURCE" >&2
+  echo "  * Function: $ERROR_FUNCTION" >&2
+  echo "  * Line: $ERROR_LINE" >&2
 
-    # We start at 2 and not 0 to not get:
-    #  * the actual call to our own function handler::error
-    #  * the actual call to the stack:print function
-    echo "Error Call Stack:" >&2
-    stack::print 3 >&2
+  # We start at 2 and not 0 to not get:
+  #  * the actual call to our own function handler::error
+  #  * the actual call to the stack:print function
+  echo "Error Call Stack:" >&2
+  stack::print 3 >&2
 
-    # Rest color
-    echo -e "${NC:-'\033[0m'}" >&2
+  # Rest color
+  echo -e "${NC:-'\033[0m'}" >&2
 
 }
 
@@ -85,7 +85,7 @@ error::set_trap() {
 #    # To avoid a stack print on the main script, you would do
 #    sub_bash_script_with_error || error::exit $?
 # @args $1 - the exit code
-error::exit(){
+error::exit() {
 
   trap - ERR
   exit "$1"
@@ -98,14 +98,14 @@ error::exit(){
 #    ```bash
 #    set -TCEeuo pipefail
 #    ```
-error::set_strict_mode(){
+error::set_strict_mode() {
 
-    set -T # inherit DEBUG and RETURN trap for functions
-    set -C # prevent file overwrite by > &> <>
-    set -E # inherit -e (the ERR trap is inherited by shell functions)
-    set -e # exit immediately on errors
-    set -u # Treat unset variables as an error when substituting
-    set -o noclobber # Default of bash already ? to make > avoid overwriting files; you'll then have to specify >| (bash) or >! (zsh)
-    set -o pipefail # exit on pipe failure (the return value of a pipeline is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status)
+  set -T           # inherit DEBUG and RETURN trap for functions
+  set -C           # prevent file overwrite by > &> <>
+  set -E           # inherit -e (the ERR trap is inherited by shell functions)
+  set -e           # exit immediately on errors
+  set -u           # Treat unset variables as an error when substituting
+  set -o noclobber # Default of bash already ? to make > avoid overwriting files; you'll then have to specify >| (bash) or >! (zsh)
+  set -o pipefail  # exit on pipe failure (the return value of a pipeline is the status of the last command to exit with a non-zero status or zero if no command exited with a non-zero status)
 
 }

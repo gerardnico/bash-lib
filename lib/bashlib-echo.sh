@@ -19,9 +19,10 @@
 #
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # for the color
 # shellcheck source=./bashlib-string.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-string.sh"
+source "${SCRIPT_DIR}/bashlib-string.sh"
 
 
 # Message color

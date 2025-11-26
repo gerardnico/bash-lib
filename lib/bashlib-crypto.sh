@@ -4,8 +4,9 @@
 #
 #
 
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/bashlib-echo.sh"
 
 # @description Extract a public or private key from a pem file into a base 64 string without any line break
 # @arg $1 path - the path to a pem file
