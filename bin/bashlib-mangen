@@ -2,15 +2,16 @@
 # Generate man page from markdown files
 
 set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 
 # shellcheck source=./bashlib-error.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-error.sh"
 error::set_strict_mode
 error::set_trap
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-echo.sh"
 # shellcheck source=./bashlib-path.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-path.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-path.sh"
 
 DEFAULT_MARKDOWN_FILE_DIR="docs/released"
 DEFAULT_OUTPUT_DIR="build/mangen/man1"

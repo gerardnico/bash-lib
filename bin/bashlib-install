@@ -1,11 +1,14 @@
 #!/bin/bash
 
+set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=../lib/bashlib-error.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-error.sh"
 error::set_strict_mode
 error::set_trap
 # shellcheck source=../lib/bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-echo.sh"
 
 synopsis(){
   cat << EOF

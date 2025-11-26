@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=./bashlib-error.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-error.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-error.sh"
 error::set_strict_mode
 error::set_trap
 # shellcheck source=./bashlib-echo.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-echo.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-echo.sh"
 # shellcheck source=./bashlib-script.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-script.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-script.sh"
 # shellcheck source=./bashlib-path.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-path.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-path.sh"
 # shellcheck source=./bashlib-doc.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-doc.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-doc.sh"
 # shellcheck source=./bashlib-command.sh
-source "${BASHLIB_LIBRARY_PATH:-}${BASHLIB_LIBRARY_PATH:+/}bashlib-command.sh"
+source "${SCRIPT_DIR}/../lib/bashlib-command.sh"
 
 function synopsis() {
 
