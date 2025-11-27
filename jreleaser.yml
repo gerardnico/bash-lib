@@ -78,8 +78,10 @@ signing:
 distributions:
   bash-lib:
     # Artifacts are defined in the assembly
-    # Run it with
+    # Create the formulae with:
     # JRELEASER_PROJECT_VERSION="0.1.0" jreleaser prepare --debug -p=brew
+    # Store it to the Homebrew tap with:
+    # JRELEASER_PROJECT_VERSION="0.1.0" jreleaser publish --debug -p=brew
     # https://jreleaser.org/guide/latest/reference/packagers/homebrew.html
     brew:
       active: ALWAYS
