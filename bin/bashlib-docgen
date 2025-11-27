@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
 
 set -Eeuo pipefail
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
+# Add bash lib in the path
+if [ "${BASH_LIB_PATH:-}" == "" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+  BASH_LIB_PATH="$SCRIPT_DIR/../lib"
+fi
+export PATH="$BASH_LIB_PATH:$PATH"
 
 # shellcheck source=./bashlib-error.sh
-source "${SCRIPT_DIR}/../lib/bashlib-error.sh"
+source "bashlib-error.sh"
 error::set_strict_mode
 error::set_trap
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/../lib/bashlib-echo.sh"
+source "bashlib-echo.sh"
 # shellcheck source=./bashlib-script.sh
-source "${SCRIPT_DIR}/../lib/bashlib-script.sh"
+source "bashlib-script.sh"
 # shellcheck source=./bashlib-path.sh
-source "${SCRIPT_DIR}/../lib/bashlib-path.sh"
+source "bashlib-path.sh"
 # shellcheck source=./bashlib-doc.sh
-source "${SCRIPT_DIR}/../lib/bashlib-doc.sh"
+source "bashlib-doc.sh"
 # shellcheck source=./bashlib-command.sh
-source "${SCRIPT_DIR}/../lib/bashlib-command.sh"
+source "bashlib-command.sh"
 
 function synopsis() {
 

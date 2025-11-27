@@ -5,9 +5,9 @@
 #
 #
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/bashlib-echo.sh"
+source "bashlib-echo.sh"
 
 # @description
 #     Echo a command line and eval it
@@ -62,4 +62,3 @@ command::escape(){
 command::exists(){
   [ -x "$(command -v "$1")" ]
 }
-

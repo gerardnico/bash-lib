@@ -5,9 +5,9 @@
 #
 
 # Depends on script to get the name of the actual script running (ie sourced or main)
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=./bashlib-script.sh
-source "${SCRIPT_DIR}/bashlib-script.sh"
+source "bashlib-script.sh"
 
 # @definition
 #   Translate a markdown string to a terminal man page like doc. ie
@@ -87,4 +87,3 @@ EOF
   } | doc::md_to_terminal -
 
 }
-

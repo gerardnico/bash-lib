@@ -1,10 +1,8 @@
 # @name bashlib-bash documentation
 # @brief Library for function over bash
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/bashlib-echo.sh"
-
+source "bashlib-echo.sh"
 
 # @description
 #   This command overrides the default trap function
@@ -23,7 +21,7 @@ bash::trap() {
   # 2. Add the command, separated by a semicolon or newline
   # 3. Set the trap to the result of 2
 
-  local TRAP_EXPRESSION=$1;
+  local TRAP_EXPRESSION=$1
   shift
   for TRAP_SIGNAL in "$@"; do
     local TRAP
@@ -36,12 +34,12 @@ bash::trap() {
       echo::debug "Previous Trap Command\n$PREVIOUS_TRAP_COMMAND"
       TRAP_EXPRESSION=$(printf '%s;%s' "$PREVIOUS_TRAP_COMMAND" "${TRAP_EXPRESSION}")
     fi
-#    if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
-#        local fd;
-#        fd=$(echo::get_file_descriptor);
-#        # echo is after. Why? the trap expression may capture the exit code. If echo is before, the exit code is always null
-#        TRAP_EXPRESSION="${TRAP_EXPRESSION};echo '$TRAP_SIGNAL Trap command executed: $TRAP_EXPRESSION' > $fd"
-#    fi
+    #    if [ "$BASHLIB_ECHO_LEVEL" -ge "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
+    #        local fd;
+    #        fd=$(echo::get_file_descriptor);
+    #        # echo is after. Why? the trap expression may capture the exit code. If echo is before, the exit code is always null
+    #        TRAP_EXPRESSION="${TRAP_EXPRESSION};echo '$TRAP_SIGNAL Trap command executed: $TRAP_EXPRESSION' > $fd"
+    #    fi
     echo::debug "Trap $TRAP_SIGNAL command added: $TRAP_EXPRESSION"
     trap -- "$TRAP_EXPRESSION" "${TRAP_SIGNAL}"
 
@@ -51,7 +49,7 @@ bash::trap() {
 # @description check to see if a shell is interactive
 # @exitcode 0 If the shell is interactive
 # @exitcode 1 If the shell is non-interactive
-function bash::is_interactive(){
+function bash::is_interactive() {
   # $- (the current set of options) includes i if bash is interactive
   # Ref: https://www.man7.org/linux/man-pages/man1/bash.1.html#INVOCATION
   # We could also use the `tty` command to check if this is a terminal (ie interactive)
@@ -65,41 +63,40 @@ function bash::is_interactive(){
 
 # Function to check if we're in an interactive terminal session
 function bash::is_interactive_terminal() {
-   # Check if stdin, stdout, and stderr are all connected to a terminal
-   [ -t 0 ] && [ -t 1 ] && [ -t 2 ]
+  # Check if stdin, stdout, and stderr are all connected to a terminal
+  [ -t 0 ] && [ -t 1 ] && [ -t 2 ]
 }
 
 # @description Check if the shell is a login shell
 # @exitcode 0 If the shell is a login shell
 # @exitcode 1 If the shell is non-login shell
-function bash::is_login(){
+function bash::is_login() {
   if shopt -q login_shell; then
-      echo::debug "The shell is a login shell."
-      return 0
+    echo::debug "The shell is a login shell."
+    return 0
   fi
   echo::debug "The shell is not a login shell."
   return 1
 }
 
-
 # @description Print the function definition
-bash::function_definition(){
+bash::function_definition() {
   type "$1"
 }
 # @description Type of variable
-bash::type(){
+bash::type() {
   type "$1"
 }
 
 # @description
 #    Check if stdin is a terminal
-bash::has_terminal(){
+bash::has_terminal() {
   tty -s
 }
 
 # Function to check if we can write to the controlling terminal
 bash::dev_tty_writable() {
-  (exec < /dev/tty >/dev/null 2>&1) >/dev/null 2>&1
+  (exec < /dev/tty > /dev/null 2>&1) > /dev/null 2>&1
 }
 
 # @description
@@ -121,22 +118,20 @@ bash::dev_tty_writable() {
 #   # eval will put the results of the evaluation in the scope
 #   # we therefore need to eval it again
 #   eval "$EVAL"
-bash::eval_validate(){
+bash::eval_validate() {
   while IFS=$'\n' read -r STATEMENT; do
-      if ! STDERR=$(eval "$STATEMENT" 2>&1); then
-        echo::err "Error:"
-        echo::err "  * Statement: \`$STATEMENT\`"
-        echo::err "  * Message: \`$STDERR\`"
-        return 1
-      fi
+    if ! STDERR=$(eval "$STATEMENT" 2>&1); then
+      echo::err "Error:"
+      echo::err "  * Statement: \`$STATEMENT\`"
+      echo::err "  * Message: \`$STDERR\`"
+      return 1
+    fi
   done <<< "$1"
 }
 
-
-
 # Function to check if we have a display for GUI programs
 bash::has_display() {
-   [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]
+  [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]
 }
 
 # Pinentry Cli Env Constant
@@ -156,13 +151,13 @@ PINENTRY_WHIPTAIL="whiptail"
 #    * whiptail (gui)
 # @exitcode 1 if no pinentry program could be found for the context
 # @stdout The pinentry program name
-bash::get_pinentry(){
+bash::get_pinentry() {
 
   # Interactive terminal session with TTY access
   # if /dev/tty is available (ie in a textual terminal)
   # Note that GPG uses an env to determine if this is an interactive textual terminal session
   # export GPG_TTY=$(tty)
-  if sh -c ": >/dev/tty" >/dev/null 2>/dev/null; then
+  if sh -c ": >/dev/tty" > /dev/null 2> /dev/null; then
     # the `:` points means
     # Do nothing beyond expanding arguments and performing redirections. The return status is zero
     # https://www.gnu.org/software/bash/manual/bash.html#index-_003a
@@ -198,13 +193,12 @@ bash::get_pinentry(){
     return
   fi
   if [ -x "$(command -v "$PINENTRY_WHIPTAIL")" ]; then
-     echo "$PINENTRY_WHIPTAIL"
-     return
+    echo "$PINENTRY_WHIPTAIL"
+    return
   fi
 
   echo::err "In a GUI/IDE setting, we could not found the pin client $PINENTRY_ZENITY or $PINENTRY_WHIPTAIL. Please install one of those."
   return 1
-
 
 }
 
@@ -220,7 +214,7 @@ bash::get_pinentry(){
 # @exitcode 1 if no pin or a cancel has occurred
 # @exitcode 2 for any other errors (ie no args, unknown pinentry, ...)
 # @stdout The pin
-bash::get_pin(){
+bash::get_pin() {
 
   local PINENTRY=${1:-}
   if [ "${PINENTRY}" == "" ]; then
@@ -241,22 +235,23 @@ bash::get_pin(){
     "$PINENTRY_ZENITY")
       # on Windows, the width is not supported
       WIDTH=${#PROMPT} # number of characters
-      if ! PASSWORD=$(zenity --password --title="$PROMPT" --width="$WIDTH" --timeout="$TIMEOUT" 2>/dev/shm/zenity_error); then
+      if ! PASSWORD=$(zenity --password --title="$PROMPT" --width="$WIDTH" --timeout="$TIMEOUT" 2> /dev/shm/zenity_error); then
         # https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes
         local ERROR_CODE=$?
         case "$ERROR_CODE" in
           1)
-          echo::err "User has canceled"
-          ;;
+            echo::err "User has canceled"
+            ;;
           -1)
-          echo::err "An unexpected error has occurred"
-          ;;
+            echo::err "An unexpected error has occurred"
+            ;;
           5)
-          echo::err "The dialog has been closed because the timeout has been reached."
-          ;;
+            echo::err "The dialog has been closed because the timeout has been reached."
+            ;;
           *)
-          echo::err "Zenity exited with the error ($ERROR_CODE)."
-          echo::err "https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes"
+            echo::err "Zenity exited with the error ($ERROR_CODE)."
+            echo::err "https://help.gnome.org/users/zenity/stable/usage.html.en#zenity-usage-exitcodes"
+            ;;
         esac
         echo::err "$(cat /dev/shm/zenity_error)"
         return 1
@@ -273,7 +268,7 @@ bash::get_pin(){
       echo "$password"
       ;;
     "$PINENTRY_CURSES")
-      pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT" <<EOF | grep D | sed 's/^..//'
+      pinentry-curses --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT" << EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
@@ -282,18 +277,17 @@ BYE
 EOF
       ;;
     "$PINENTRY_GNOME")
-       pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT"  <<EOF | grep D | sed 's/^..//'
+      pinentry-gnome3 --ttyname "/dev/tty" --lc-ctype "$LANG" --timeout "$TIMEOUT" << EOF | grep D | sed 's/^..//'
 SETPROMPT $PROMPT
 SETOK Ok
 SETCANCEL Cancel
 GETPIN
 BYE
 EOF
-          ;;
+      ;;
     *)
       echo::err "The pinentry value ($1) is unknown"
       return 2
       ;;
   esac
 }
-

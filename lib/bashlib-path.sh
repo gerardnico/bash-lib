@@ -2,9 +2,9 @@
 # @brief Library on file system path functions
 # @description Library of file system path functions
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/bashlib-echo.sh"
+source "bashlib-echo.sh"
 
 
 # @description returns the file extension (ie the string after the first dot)

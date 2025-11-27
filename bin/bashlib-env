@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 # @name print env information
 
-set -Eeuo pipefail
+# Add bash lib in the path
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+LIB_PATH="$SCRIPT_DIR/../lib";
+export PATH="$LIB_PATH:$PATH"
 
 # shellcheck source=./bashlib-error.sh
-source "${SCRIPT_DIR}/../lib/bashlib-error.sh"
+source "bashlib-error.sh"
 error::set_strict_mode
 error::set_trap
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/../lib/bashlib-echo.sh"
+source "bashlib-echo.sh"
 # shellcheck source=./bashlib-doc.sh
-source "${SCRIPT_DIR}/../lib/bashlib-doc.sh"
+source "bashlib-doc.sh"
 
 
 function synopsis(){
@@ -52,9 +54,3 @@ echo "BASH_ENV    : ${BASH_ENV:-}"
 echo "BASHLIB_LIBRARY_PATH    : ${BASHLIB_LIBRARY_PATH:-}"
 echo "PATH    : "
 echo "$PATH" | tr ':' $'\n' | sort | string::add_marge
-
-
-
-
-
-

@@ -8,8 +8,8 @@
 #
 # Depends on stack to print the callstack
 # shellcheck source=./bashlib-stack.sh
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
-source "${SCRIPT_DIR}/bashlib-stack.sh"
+
+source "bashlib-stack.sh"
 
 # @description
 #    An error handling function that will print:

@@ -32,5 +32,3 @@ for SOURCE_DIR in "${SOURCE_DIRS[@]}" ; do
 done
 echo "Library $1, not found in ${SOURCE_DIRS[*]}"
 exit 1
-
-

@@ -4,27 +4,25 @@
 #     The library is used in [ssh-x](https://github.com/gerardnico/ssh-x)
 #
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/bashlib-echo.sh"
+source "bashlib-echo.sh"
 # shellcheck source=./bashlib-command.sh
-source "${SCRIPT_DIR}/bashlib-command.sh"
-
+source "bashlib-command.sh"
 
 # @description Load the agent env
 # @args $1 string the path to a SSH Agent env file
 # @exitcode 0 - always
-ssh::agent_load_env () {
-	local ENV_FILE="${1}"
-	if ! test -f "$ENV_FILE"; then
-	  return
-	fi
-	# shellcheck disable=SC1090
-	source "$ENV_FILE" >| /dev/null ;
+ssh::agent_load_env() {
+  local ENV_FILE="${1}"
+  if ! test -f "$ENV_FILE"; then
+    return
+  fi
+  # shellcheck disable=SC1090
+  source "$ENV_FILE" >| /dev/null
 }
 
 # @description List the available keys in the agent
-ssh::list_agent_keys(){
+ssh::list_agent_keys() {
   # Fingerprint format
   ssh-add -l
   # Long format
@@ -50,7 +48,7 @@ ssh::list_agent_keys(){
 #    # Interactive, the user enters the secret if any
 #    ssh::add_key id_rsa
 #
-ssh::add_key(){
+ssh::add_key() {
 
   PRIVATE_KEY_BASENAME=${1}
   SSH_X_PASSPHRASE=${2:-}
@@ -82,32 +80,32 @@ ssh::add_key(){
   PRIVATE_KEY=$SSH_X_KEY_HOME/$PRIVATE_KEY_BASENAME
   case "$SSH_X_KEY_STORE" in
     "pass")
-        PASS_FILE="${PASSWORD_STORE_DIR:-"$HOME/.password-store"}/$PRIVATE_KEY.gpg"
-        if [ ! -f "$PASS_FILE" ]; then
-          echo::err "The pass private key ($PASS_FILE) does not exist"
-          return 1
-        fi
+      PASS_FILE="${PASSWORD_STORE_DIR:-"$HOME/.password-store"}/$PRIVATE_KEY.gpg"
+      if [ ! -f "$PASS_FILE" ]; then
+        echo::err "The pass private key ($PASS_FILE) does not exist"
+        return 1
+      fi
 
-        # Process Substitution
-        FD_PRIVATE_KEY="<($SSH_X_PASS_STORE $PRIVATE_KEY)"
+      # Process Substitution
+      FD_PRIVATE_KEY="<($SSH_X_PASS_STORE $PRIVATE_KEY)"
 
-    ;;
+      ;;
     "file")
-        if [ ! -f "$PRIVATE_KEY" ]; then
-          echo::err "The private key ($PRIVATE_KEY) does not exist "
-          return 1
-        fi
+      if [ ! -f "$PRIVATE_KEY" ]; then
+        echo::err "The private key ($PRIVATE_KEY) does not exist "
+        return 1
+      fi
 
-        # https://man.openbsd.org/ssh_config#AddKeysToAgent
-        SSH_X_LIFE=${SSH_X_LIFE:-15m}
-        ADD_KEY_TO_AGENT_CONF=$(ssh::get_conf "AddKeysToAgent" "$USER" "$HOSTNAME")
-        if [[ ! "$ADD_KEY_TO_AGENT_CONF" =~ "yes"|"no"|"ask" ]]; then
-          SSH_X_LIFE=$ADD_KEY_TO_AGENT_CONF
-        fi
+      # https://man.openbsd.org/ssh_config#AddKeysToAgent
+      SSH_X_LIFE=${SSH_X_LIFE:-15m}
+      ADD_KEY_TO_AGENT_CONF=$(ssh::get_conf "AddKeysToAgent" "$USER" "$HOSTNAME")
+      if [[ ! "$ADD_KEY_TO_AGENT_CONF" =~ "yes"|"no"|"ask" ]]; then
+        SSH_X_LIFE=$ADD_KEY_TO_AGENT_CONF
+      fi
 
-        FD_PRIVATE_KEY=$PRIVATE_KEY
+      FD_PRIVATE_KEY=$PRIVATE_KEY
 
-        ;;
+      ;;
     *)
       echo::err "The SSH_X_KEY_STORE value ($SSH_X_KEY_STORE) is not supported. It should be 'file' or 'pass'"
       return 2
@@ -121,16 +119,15 @@ ssh::add_key(){
   fi
   # stdout should be `Identity added:xxx`
   SSH_ADD_COMMAND="SSH_ASKPASS_REQUIRE=require SSH_ASKPASS=$SSH_ASKPASS SSH_X_PASSPHRASE=$SSH_X_PASSPHRASE ssh-add -t $SSH_X_LIFE $FD_PRIVATE_KEY  1>$ECHO_FD 2>&1"
-  if ! timeout "$SSH_X_TIMEOUT" bash -c "$SSH_ADD_COMMAND" ; then
+  if ! timeout "$SSH_X_TIMEOUT" bash -c "$SSH_ADD_COMMAND"; then
     echo::err "Trying to add the private key $PRIVATE_KEY timed out with the SSH_ASKPASS=$SSH_ASKPASS."
     if [ "$SSH_X_PASSPHRASE" != "" ]; then
-       echo::err "Bad Passphrase maybe is mainly the cause"
+      echo::err "Bad Passphrase maybe is mainly the cause"
     fi
     echo::err "Command: $SSH_ADD_COMMAND"
     return 1
   fi
 }
-
 
 # @description returns the Agent state in numeric format
 # @stdout the agent state
@@ -138,39 +135,40 @@ ssh::add_key(){
 #    * 1 : agent without key
 #    * 2 : agent not running
 #
-ssh::agent_state(){
+ssh::agent_state() {
 
   ssh-add -l >| /dev/null 2>&1 && echo $? || echo $?
-  
+
 }
 
 # @description Return the state of the agent has human description
 # @stdout   the human state description
 # @exitcode 1 if the state is unknown
-ssh::agent_state_human(){
-    SSH_X_AGENT_RUN_STATE=$(ssh::agent_state)
-    case $SSH_X_AGENT_RUN_STATE in
-      0)
-        echo "Agent running with key"
-        return
-        ;;
-      1)
-        echo "Agent running without key"
-        return
-        ;;
-      2)
-        echo  "Agent not running"
-        return
-        ;;
-      *)
-        echo "$SSH_X_AGENT_RUN_STATE is an Unknown State"
-        return 1
-    esac
+ssh::agent_state_human() {
+  SSH_X_AGENT_RUN_STATE=$(ssh::agent_state)
+  case $SSH_X_AGENT_RUN_STATE in
+    0)
+      echo "Agent running with key"
+      return
+      ;;
+    1)
+      echo "Agent running without key"
+      return
+      ;;
+    2)
+      echo "Agent not running"
+      return
+      ;;
+    *)
+      echo "$SSH_X_AGENT_RUN_STATE is an Unknown State"
+      return 1
+      ;;
+  esac
 }
 
 # @description Kill a running agent given by the SSH_AGENT_PID environment variable
 # @exitcode 1 if the SSH_AGENT_PID is unknown or the agent could not be killed
-ssh::agent_kill(){
+ssh::agent_kill() {
 
   if [[ "${SSH_AGENT_PID:-}" == "" ]]; then
     # Trying to get it via process name
@@ -196,7 +194,6 @@ ssh::agent_kill(){
 
 }
 
-
 # @description Creates the known hosts file with the github fingerprint.
 #
 #
@@ -205,21 +202,19 @@ ssh::known_hosts_update() {
   SSH_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
   mkdir -p "$(dirname "$SSH_KNOWN_HOSTS_FILE")"
   ## Known Host
-  curl --silent https://api.github.com/meta \
-    | jq --raw-output '"github.com "+.ssh_keys[]' >> "$SSH_KNOWN_HOSTS_FILE"
+  curl --silent https://api.github.com/meta |
+    jq --raw-output '"github.com "+.ssh_keys[]' >> "$SSH_KNOWN_HOSTS_FILE"
 
   echo::info "Known Hosts file created"
 
 }
-
-
 
 # @description
 #    Get the key fingerprint of a key file
 #
 # @args $1 - a path
 #
-ssh::get_key_fingerprint(){
+ssh::get_key_fingerprint() {
   ssh-keygen -l -f "$1" | awk '{print $2}'
 }
 
@@ -227,10 +222,9 @@ ssh::get_key_fingerprint(){
 #    Check if the key is in the agent
 #
 # @args $1 - a path
-ssh::is_key_in_agent(){
+ssh::is_key_in_agent() {
   ssh-add -l | awk '{print $2}' | grep -q "$(ssh::get_key_fingerprint "$1")"
 }
-
 
 # @description
 #    Get the identity conf, applies templating eventually to get
@@ -239,7 +233,7 @@ ssh::is_key_in_agent(){
 # @args $1 - the user
 # @args $2 - the host
 # @stdout - the identity
-ssh::get_identity(){
+ssh::get_identity() {
 
   local USER=$1
   local HOST=$2
@@ -278,7 +272,7 @@ ssh::get_identity(){
 # @args $2 - the user
 # @args $3 - the host
 # @stdout - the value
-ssh::get_conf(){
+ssh::get_conf() {
   # Conf must be lowercase
   local CONF=${1,,}
   local USER=$2

@@ -19,11 +19,9 @@
 #
 # @see [bashlib](https://github.com/gerardnico/bash-lib)
 
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
 # for the color
 # shellcheck source=./bashlib-string.sh
-source "${SCRIPT_DIR}/bashlib-string.sh"
-
+source "bashlib-string.sh"
 
 # Message color
 BASHLIB_ERROR_COLOR=${BASHLIB_ERROR_COLOR:-$BASHLIB_RED_COLOR}
@@ -61,7 +59,6 @@ BASHLIB_ECHO_LEVEL=${BASHLIB_ECHO_LEVEL:-$BASHLIB_ECHO_INFO_LEVEL}
 function echo::info() {
   echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" "${*}"
 }
-
 
 # @description
 #     Echo an error message in red by default.
@@ -138,14 +135,12 @@ echo::tip() {
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::debug() {
-  echo::base --log-level "$BASHLIB_ECHO_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE"  "${*}"
+  echo::base --log-level "$BASHLIB_ECHO_DEBUG_LEVEL" --type "$BASHLIB_DEBUG_TYPE" "${*}"
 }
-
-
 
 # @description
 #     Function that will output the environment configuration
-echo::conf(){
+echo::conf() {
   echo::info "BASHLIB_ECHO_LEVEL (Message Level): $BASHLIB_ECHO_LEVEL"
 }
 
@@ -158,8 +153,8 @@ echo::conf(){
 #    echo::echo "My Debug statement"
 #
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
-function echo::echo(){
-  echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE"  "${*}"
+function echo::echo() {
+  echo::base --log-level "$BASHLIB_ECHO_INFO_LEVEL" --type "$BASHLIB_ECHO_TYPE" "${*}"
 }
 
 # @description
@@ -172,12 +167,12 @@ function echo::echo(){
 #    echo::eval "echo 'Hello World'"
 #
 # @stdout The output of the command
-function echo::eval(){
+function echo::eval() {
   # redirect eventually stderr to /dev/tty
   # Why? stderr may be captured by the called command and we don't see any error
   local STDERR_FD=${2:-$(echo::get_file_descriptor)}
   local FINAL_COMMAND="$1 2>$STDERR_FD"
-  echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE"  "$FINAL_COMMAND"
+  echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE" "$FINAL_COMMAND"
   eval "$FINAL_COMMAND"
 }
 
@@ -198,34 +193,34 @@ function echo::eval(){
 #    echo "Hallo World" > "$FD"
 #
 # @stdout A file descriptor (default to /dev/stderr)
-function echo::get_file_descriptor(){
+function echo::get_file_descriptor() {
 
-# interactive textual terminal session ?
-#
-# do we have a terminal alias
-# the -c option [ -c /dev/tty ] checks if the file is a character device
-# does not work, still true and we get /dev/tty: No such device or address
-# -t FD  file descriptor FD is opened on a terminal
-# /dev/tty is the controlling terminal for the current process
-#  if tty -s; then
-#    # To /dev/tty
-#    # No access if you're running the script in a non-interactive environment
-#    echo "/dev/tty"
-#    return
-#  fi
-#
-# or? sh -c ": >/dev/tty" >/dev/null 2>&1
-# the `:` points means do nothing beyond expanding arguments and performing redirections. The return status is zero
-# https://www.gnu.org/software/bash/manual/bash.html#index-_003a
-#
-# exec solution do a stdio redirection, therefore it needs to be between parenthesis
-# so that it does not pollute the environment
-# if (exec < /dev/tty >/dev/null 2>&1); then
-#
-# check if /dev/tty is writable
-#if [ -w /dev/tty ]; then
+  # interactive textual terminal session ?
+  #
+  # do we have a terminal alias
+  # the -c option [ -c /dev/tty ] checks if the file is a character device
+  # does not work, still true and we get /dev/tty: No such device or address
+  # -t FD  file descriptor FD is opened on a terminal
+  # /dev/tty is the controlling terminal for the current process
+  #  if tty -s; then
+  #    # To /dev/tty
+  #    # No access if you're running the script in a non-interactive environment
+  #    echo "/dev/tty"
+  #    return
+  #  fi
+  #
+  # or? sh -c ": >/dev/tty" >/dev/null 2>&1
+  # the `:` points means do nothing beyond expanding arguments and performing redirections. The return status is zero
+  # https://www.gnu.org/software/bash/manual/bash.html#index-_003a
+  #
+  # exec solution do a stdio redirection, therefore it needs to be between parenthesis
+  # so that it does not pollute the environment
+  # if (exec < /dev/tty >/dev/null 2>&1); then
+  #
+  # check if /dev/tty is writable
+  #if [ -w /dev/tty ]; then
 
-  if (exec < /dev/tty >/dev/null 2>&1) >/dev/null 2>&1; then
+  if (exec < /dev/tty > /dev/null 2>&1) > /dev/null 2>&1; then
     echo "/dev/tty"
     return
   fi
@@ -239,7 +234,7 @@ function echo::get_file_descriptor(){
   # ```
 
   if [ -t 2 ]; then
-    echo  "/dev/stderr"
+    echo "/dev/stderr"
     return
   fi
 
@@ -251,7 +246,7 @@ function echo::get_file_descriptor(){
   fi
 
   # May works
-  echo  "/dev/stderr"
+  echo "/dev/stderr"
 
 }
 
@@ -261,37 +256,37 @@ function echo::get_file_descriptor(){
 #    Should be at the end for the documentation generation
 #    Accept as first argument a flag --silent or -s to no echo anything
 # @arg $1 --silent -s - no echo
-function echo::base(){
+function echo::base() {
 
   local MESSAGE=""
   local TYPE_MESSAGE=""
   local LOG_LEVEL="$BASHLIB_ECHO_INFO_LEVEL"
-  while [[ $# -gt 0 ]]
-  do
-     case "$1" in
-         "--silent"|"-s")
-            return
-           ;;
-         "--type")
-            shift
-            TYPE_MESSAGE=$1
-            shift
-           ;;
-         "--log-level")
-             shift
-             LOG_LEVEL=$1
-             shift
-            ;;
-         "")
-             # empty arg
-             # It's the case if the silent flag is passed programmatically
-             # ie echo::info $SILENT "Message"
-             shift
-            ;;
-         *)
-           MESSAGE=$1
-           shift
-     esac
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      "--silent" | "-s")
+        return
+        ;;
+      "--type")
+        shift
+        TYPE_MESSAGE=$1
+        shift
+        ;;
+      "--log-level")
+        shift
+        LOG_LEVEL=$1
+        shift
+        ;;
+      "")
+        # empty arg
+        # It's the case if the silent flag is passed programmatically
+        # ie echo::info $SILENT "Message"
+        shift
+        ;;
+      *)
+        MESSAGE=$1
+        shift
+        ;;
+    esac
   done
 
   # Level
@@ -318,7 +313,7 @@ function echo::base(){
       ;;
     "$BASHLIB_COMMAND_TYPE")
       MESSAGE="Command: $MESSAGE"
-     ;;
+      ;;
   esac
 
   # Color
@@ -339,38 +334,35 @@ function echo::base(){
 
   # Location Information
   if [ "$BASHLIB_ECHO_LEVEL" == "$BASHLIB_ECHO_DEBUG_LEVEL" ]; then
-      # The caller function displays:
-      # * the line number,
-      # * subroutine name,
-      # * and source file corresponding
-      #
-      # `caller 0` returns the actual calling executing function
-      # Because this is a base function that call all echo function we want at minima `caller 1`
-      #
-      # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
-      CALLER_ID=1
-      while true
-      do
-        if ! CALLER=$(caller $CALLER_ID); then
-          break;
-        fi
-        read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$CALLER"
-        CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
-        # We don't want to see bashlib call
-        # Example: bashlib-command::eval_echo
-        if [[ ! "${CALLING_SCRIPT}" =~ ^"bashlib" ]]; then
-          break;
-        fi
-        CALLER_ID=$(( CALLER_ID + 1))
-      done
+    # The caller function displays:
+    # * the line number,
+    # * subroutine name,
+    # * and source file corresponding
+    #
+    # `caller 0` returns the actual calling executing function
+    # Because this is a base function that call all echo function we want at minima `caller 1`
+    #
+    # See https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-caller
+    CALLER_ID=1
+    while true; do
+      if ! CALLER=$(caller $CALLER_ID); then
+        break
+      fi
+      read -r LINE CALLING_FUNCTION CALLING_SCRIPT <<< "$CALLER"
+      CALLING_SCRIPT=$(basename "$CALLING_SCRIPT")
+      # We don't want to see bashlib call
+      # Example: bashlib-command::eval_echo
+      if [[ ! "${CALLING_SCRIPT}" =~ ^"bashlib" ]]; then
+        break
+      fi
+      CALLER_ID=$((CALLER_ID + 1))
+    done
 
-
-      # We send all echo to the error stream
-      # so that any redirection will not get them
-      # this is the standard behaviour of git
-      MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
+    # We send all echo to the error stream
+    # so that any redirection will not get them
+    # this is the standard behaviour of git
+    MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
   fi
-
 
   if ! FD=$(echo::get_file_descriptor); then
     echo "No device available for the message ${MESSAGE}"
@@ -382,8 +374,4 @@ function echo::base(){
     return 1
   fi
 
-
 }
-
-
-

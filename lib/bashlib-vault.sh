@@ -3,9 +3,9 @@
 # @description
 #    Retrieve secrets from vault or pass secret manager
 #
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+
 # shellcheck source=./bashlib-echo.sh
-source "${SCRIPT_DIR}/bashlib-echo.sh"
+source "bashlib-echo.sh"
 
 # Declare an associative array to store the field values
 declare -A BASHLIB_SECRETS_MAP
