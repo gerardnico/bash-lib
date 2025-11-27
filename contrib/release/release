@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+set -TCEeuo pipefail
+
+function synopsis() {
+  cat << EOF
+
+  Release $PROJECT_NAME:
+
+      $(basename "$0") [--assemble-only|-a] [patch|minor|major]
+
+    * -a | --assemble-only : will not release (create the archive only)
+    * -p | --prepare-only  : will not release (create the archive and the packagers manifest only)
+    * patch|minor|major    : is the type of bump for the semver version (default to patch)
+
+EOF
+}
+
+BUMP_TYPE="patch"
+GOAL="release"
+ASSEMBLE_GOAL="assemble"
+PREPARE_GOAL="prepare"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -a | --assemble-only)
+      GOAL="$ASSEMBLE_GOAL"
+      ;;
+    -p | --prepare-only)
+      GOAL="$PREPARE_GOAL"
+      ;;
+    -h | --help)
+      synopsis
+      exit
+      ;;
+    *)
+      BUMP_TYPE=${1}
+      shift
+      break
+      ;;
+  esac
+  shift
+done
+
+# Get the next version
+export GIT_CLIFF__BUMP__INITIAL_TAG=v0.1.0 # by default it's 0.1.0
+next_version=$(git cliff --unreleased --bump "$BUMP_TYPE" --context --tag-pattern "v[0-9]+\\.[0-9]+\\.[0-9]+" | jq -r '.[0].version' | tr -d "v")
+
+export JRELEASER_OUTPUT_DIRECTORY="target"
+
+# Check the generated doc
+if ! git-prepare; then
+  echo "Error found while preparing the release commit"
+  exit 1
+fi
+
+# Jreleaser
+export JRELEASER_PROJECT_VERSION="$next_version"
+# Clean otherwise the archive is not good
+rm -rf "$PROJECT_ROOT/$JRELEASER_OUTPUT_DIRECTORY/jreleaser"
+
+# Create the archive
+jreleaser assemble
+
+if [ "$GOAL" == "$ASSEMBLE_GOAL" ]; then
+  echo "Assemble only version $next_version done"
+  exit
+fi
+
+if [ "$GOAL" == "$PREPARE_GOAL" ]; then
+  jreleaser prepare
+  echo "Prepare only version $next_version done"
+  exit
+fi
+
+# Release
+jreleaser full-release
+echo "Version release of $next_version done"

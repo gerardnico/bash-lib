@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Old utility that would return the path of a library if found
 # and used in source as
 # source $(bashlibpath filename)

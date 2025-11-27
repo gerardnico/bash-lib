@@ -1,11 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -Eeuo pipefail
 
 # Add bash lib in the path
-SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
-LIB_PATH="$SCRIPT_DIR/../lib";
-export PATH="$LIB_PATH:$PATH"
+if [ "${BASH_LIB_PATH:-}" == "" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
+  BASH_LIB_PATH="$SCRIPT_DIR/../lib"
+fi
+export PATH="$BASH_LIB_PATH:$PATH"
 
 # shellcheck source=../lib/bashlib-error.sh
 source "bashlib-error.sh"

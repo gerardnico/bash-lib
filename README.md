@@ -98,7 +98,7 @@ fi
 ### With Homebrew
 
 ```bash
-brew install --HEAD gerardnico/tap/bashlib
+brew install gerardnico/tap/bash-lib
 ```
 
 ### With Git

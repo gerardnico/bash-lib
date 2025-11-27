@@ -1,0 +1,90 @@
+# https://jreleaser.org/guide/latest/reference/project.html
+project:
+  name: bash-lib
+  # description should be 1 online otherwise we get a end of line at the end
+  description: A collection of bash library
+  authors:
+    - Nicolas GERARD
+  copyright: '2025 gerardnico.com'
+  license: Apache-2.0
+  inceptionYear: '2024'
+  vendor: gerardnico.com
+  tags:
+    - git
+  stereotype: NONE
+  links:
+    homepage: https://github.com/gerardnico/bash-lib
+    documentation: https://github.com/gerardnico/bash-lib
+  languages:
+    # It's not a java project but
+    # as JReleaser does not support an archive with a bunch of script
+    # we took JAVA_ARCHIVE that requires Java coordinates
+    java:
+      groupId: com.gerardnico
+      artifactId: bash-lib
+      version: "11"
+
+
+assemble:
+  # Create an archives
+  # https://jreleaser.org/guide/latest/reference/assemble/archive.html
+  archive:
+    bash-lib:
+      active: ALWAYS
+      formats:
+        - ZIP
+        - TAR_GZ
+      # JReleaser does not have the notion of an archive with a bunch of script
+      # We use JAVA_BINARY because we don't need to specify the platform
+      # Otherwise the archiveName beccome bash-lib-0.1.0-linux-x86_64.tar.gz
+      # and brew template is no more the same ....
+      # https://jreleaser.org/guide/latest/concepts/distributions/java-binary.html
+      distributionType: JAVA_BINARY
+      artifacts:
+        - path: LICENSE
+        - path: README.md
+      fileSets:
+        - input: bin # relative path
+          output: bin # path in the archive
+          failOnMissingInput: true
+#        - input: "{{baseOutputDirectory}}/man1"
+#          output: man1 # path in the archive
+#          includes:
+#            - '*.1' # glob (not regexp)
+        - input: lib
+          output: lib # path in the archive
+
+# Create a GitHub release
+# https://jreleaser.org/guide/latest/reference/release/github.html
+release:
+  github:
+    owner: gerardnico
+    releaseName: "Release {{projectEffectiveVersion}}"
+    # https://jreleaser.org/guide/latest/reference/release/changelog.html
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      preset: 'conventional-commits'
+      content: |
+        # Changelog Version {{projectEffectiveVersion}}
+
+        {{changelogChanges}}
+
+# Create signatures files for the distributions files and the checksum files
+signing:
+  active: ALWAYS
+  mode: COMMAND
+
+distributions:
+  bash-lib:
+    # Artifacts are defined in the assembly
+    # Run it with
+    # JRELEASER_PROJECT_VERSION="0.1.0" jreleaser prepare --debug -p=brew
+    # https://jreleaser.org/guide/latest/reference/packagers/homebrew.html
+    brew:
+      active: ALWAYS
+      formulaName: 'bash-lib'
+      templateDirectory: contrib/release/brew
+      repository:
+        # multi product one repo, we add the project
+        tagName: '{{projectName}}-{{tagName}}'
