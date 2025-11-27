@@ -1,0 +1,72 @@
+# EditorConfig is awesome: https://EditorConfig.org
+# See options at: https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#current-universal-properties
+# Intellij options starts with `ij`
+
+# top-most EditorConfig file
+# The editor looks up the directory tree until it finds `root = true`
+root = true
+
+# Match all files
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+end_of_line = lf
+# false insert_final_newline otherwise you get it also in a markdown code fence
+# and this is the check that fails most often
+insert_final_newline = unset
+
+# https://www.jetbrains.com/help/idea/settings-code-style-xml.html
+[*.xml]
+# Why align_attributes false?
+# On a pom.xml, if on, the indentation is 9 on the second line: ie 8 (project length) + 1 space
+# It clashes with an indent_size of 2
+# Example:
+# <project xmlns
+#          xmlns:xsi>
+ij_xml_align_attributes = false
+
+# https://github.com/mvdan/sh
+# https://github.com/mvdan/sh/blob/master/cmd/shfmt/shfmt.1.scd#examples
+# noinspection EditorConfigKeyCorrectness
+[{*.bash,*.sh,*.zsh,.envrc,.envrc.jinja2}]
+# formats code for POSIX-compliant shells rather than bash-specific features.
+shell_variant = posix # like -ln=posix
+simplify = true
+# Places binary operators (&&, ||, |) at the beginning of the next line in multi-line commands, rather than at the end of the previous line.
+binary_next_line = unset # like -bn
+ij_shell_binary_ops_start_line = unset
+# indents case statement branches an additional level inside the case block, making the structure more visually clear.
+switch_case_indent = true # like -ci
+ij_shell_switch_cases_indented = true
+# adds spaces around redirection operators (e.g., > file instead of >file), improving readability.
+space_redirects = true # like -sr
+ij_shell_redirect_followed_by_space = true
+# Preserves alignment padding in consecutive lines, useful for keeping column-like structures aligned (such as variable assignments or array elements).
+keep_padding = true # like -kp
+# places the opening brace of function definitions on the next line rather than on the same line as the function name.
+function_next_line = true # like -fn
+# Prevents shfmt from splitting long lines. Lines will remain as-is rather than being automatically wrapped, giving you manual control over line breaks.
+never_split = true # like -ns
+# Don't delete any space
+minify = false
+ij_shell_minify_program = false
+
+[*.md]
+# indent is unset because
+# due to list alignment, it is 2 with star list and 3 with number list
+# ie
+# * First
+#   Second
+# 1) First
+#    Second
+indent_size = unset
+
+[*.ts]
+# indent is unset because
+# a comment has only one space margin in intellij
+# ie
+# /**
+#  * Star is at once space
+indent_size = unset

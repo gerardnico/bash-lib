@@ -1,0 +1,5 @@
+# all files LF
+* text=auto eol=lf
+
+# Exception: cmd command uses CRLF (Windows line endings)
+*.cmd text eol=crlf
