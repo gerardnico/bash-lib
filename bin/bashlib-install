@@ -9,6 +9,10 @@ if [ "${BASH_LIB_PATH:-}" == "" ]; then
 fi
 export PATH="$BASH_LIB_PATH:$PATH"
 
+# Add version
+# The version is latter injected at install time in the script header
+PROJECT_VERSION=${PROJECT_VERSION:-latest}
+
 # shellcheck source=../lib/bashlib-error.sh
 source "bashlib-error.sh"
 error::set_strict_mode

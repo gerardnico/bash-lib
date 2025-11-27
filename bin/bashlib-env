@@ -8,6 +8,10 @@ if [ "${BASH_LIB_PATH:-}" == "" ]; then
 fi
 export PATH="$BASH_LIB_PATH:$PATH"
 
+# Add version
+# The version is latter injected at install time in the script header
+PROJECT_VERSION=${PROJECT_VERSION:-latest}
+
 # shellcheck source=./bashlib-error.sh
 source "bashlib-error.sh"
 error::set_strict_mode
@@ -17,10 +21,9 @@ source "bashlib-echo.sh"
 # shellcheck source=./bashlib-doc.sh
 source "bashlib-doc.sh"
 
+function synopsis() {
 
-function synopsis(){
-
-cat << 'EOF'
+  cat << 'EOF'
 ```bash
 bashlib-env
 ```
@@ -28,27 +31,25 @@ EOF
 
 }
 
-
 while [[ $# -gt 0 ]]; do
   case "$1" in
-  "-h"|"--help"|"help")
-    doc::help
-    exit
-    ;;
-  "synopsis")
-    synopsis
-    exit
-    ;;
-  *)
-    echo::err "No Argument is expected"
-    exit 1
-    ;;
+    "-h" | "--help" | "help")
+      doc::help
+      exit
+      ;;
+    "synopsis")
+      synopsis
+      exit
+      ;;
+    -v | --version)
+      echo "Version: $PROJECT_VERSION"
+      ;;
+    *)
+      echo::err "No Argument is expected"
+      exit 1
+      ;;
   esac
 done
-
-
-
-
 
 echo "Interactive : $(if bash::is_interactive; then echo "Yes"; else echo "No"; fi)"
 echo "Login       : $(if bash::is_login; then echo "Yes"; else echo "No"; fi)"

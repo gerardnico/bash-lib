@@ -29,7 +29,25 @@ class {{brewFormulaName}} < Formula
     # man1.install Dir["man1/*.1"]
 
     # Library installation
-    lib.install Dir["lib/*.sh"]
+    libexec.install Dir["lib/*.sh"]
+    # Not: lib.install Dir["lib/*.sh"]
+    # because it will install it as shared library
+    # and we get the following link problem
+    # libxxx is a symlink belonging to giture. You can unlink it
+
+    # Injecting the path and version in the header
+    Dir["#{bin}/*"].each do |f|
+      next unless File.file?(f)
+
+      content = File.read(f).lines
+      new_header = <<~EOS
+        #!/usr/bin/env bash
+        BASH_LIB_PATH="#{libexec}"
+        PROJECT_VERSION="{{projectVersion}}"
+      EOS
+
+      File.write(f, new_header + content.drop(1).join)
+    end
 
 end
 
@@ -56,8 +74,8 @@ end
     # The installed folder is not in the path, so use the entire path to any
     # executables being tested: `system bin/"program", "do", "something"`.
 
-    output = shell_output("#{bin}/bashlib-docgen --help")
-    # assert_match "{{projectVersion}}", output
+    output = shell_output("#{bin}/bashlib-docgen --version")
+    assert_match "{{projectVersion}}", output
 
   end
 end

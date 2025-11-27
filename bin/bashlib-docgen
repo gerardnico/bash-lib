@@ -9,6 +9,10 @@ if [ "${BASH_LIB_PATH:-}" == "" ]; then
 fi
 export PATH="$BASH_LIB_PATH:$PATH"
 
+# Add version
+# The version is latter injected at install time in the script header
+PROJECT_VERSION=${PROJECT_VERSION:-latest}
+
 # shellcheck source=./bashlib-error.sh
 source "bashlib-error.sh"
 error::set_strict_mode
@@ -37,6 +41,7 @@ where:
 * `-h|--help`          - shows this help
 * `-dv|--doc-version`  - version variables injected in the doc (default to latest)
 * `-md|--md-dir]       - the directory where the markdown file (default to `docs/md`
+* `-v|--version]       - the version
 * `bashDir`            - one or more directories with bash scripts or libraries (default to `lib` and `bin`)
 
 Note: the output directory is cleaned.
@@ -108,6 +113,9 @@ while [[ $# -gt 0 ]]; do
     "-h" | "--help" | "help")
       doc::help
       exit
+      ;;
+    -v | --version)
+      echo "Version: $PROJECT_VERSION"
       ;;
     "synopsis")
       synopsis
