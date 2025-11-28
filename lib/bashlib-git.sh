@@ -74,7 +74,7 @@ git::branch_exists() {
 #    Check if there is some commit not pushed
 # @exitcode 1 if their is some commit not pushed
 git::is_dirty_commit() {
-  COMMIT_NOT_PUSHED=$(git::get_commits_not_pushed)
+  COMMIT_NOT_PUSHED=$(git::get_commits_ahead_of_upstream)
   [ "$COMMIT_NOT_PUSHED" != "0" ]
 }
 
@@ -92,20 +92,18 @@ git::is_dirty() {
 }
 
 # @description
-#    Get the commits not integrated from remote
+#    Get the commits not pulled from the remote
 # @stdout the commits not integrated
-git::get_commits_upstream_behind() {
-  # same as `git rev-list '@{u}'...HEAD --count`
-  git 'rev-list' '--count' '@{u}..@{0}'
+git::get_commits_behind_of_upstream() {
+  git rev-list --left-only '@{u}..HEAD' --count
 }
 
 # @description
-#    Get the commits not integrated in the upstream branch
+#    Get the commits not pushed to the upstream branch
 #    The repository is considered dirty if this the case
 # @stdout the commits not pushed
-git::get_commits_not_pushed() {
-  # same as `git rev-list '@{u}'...HEAD --count`
-  git 'rev-list' '--count' '@{u}..@{0}'
+git::get_commits_ahead_of_upstream() {
+  git rev-list --right-only '@{u}..HEAD' --count
 }
 
 # @description Create a full git string command
