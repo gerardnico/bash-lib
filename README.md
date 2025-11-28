@@ -57,9 +57,10 @@ The `bash-lib` package contains the following libraries:
 
 ## How to load a library in your script
 
+Your script need to add the bash lib directory `BASH_LIB_PATH` in the `PATH`
+as first element so that bash search will be quick
+
 ```bash
-# You need to add the bash lib directory in the path
-# as first element so that bash search will be quick
 export PATH="$BASH_LIB_PATH:$PATH"
 # Then
 source bashlib-[name].sh
@@ -71,18 +72,49 @@ For instance to load the [echo library](docs/lib/bashlib-echo.md)
 source bashlib-echo.sh
 ```
 
-## How to determine the lib path ?
+## How is BASH_LIB_PATH determined?
 
-Tip: if your library is relative to your script, you can use this snippet to determine
+`BASH_LIB_PATH` is made available to your script:
+
+* [with a shebang rewrite via the package manager](#shebang-rewrite-with-your-package-manager)
+* [via your bashrc](#environment-variable-via-bashrc) as environment variable for local development
+* [by default in distribution file](#known-location-in-your-distribution-file)
+
+### Known location in your distribution file
+
+In a distribution file, if your library is relative to your script in the `../lib` directory you can use this snippet
 
 ```bash
 if [ "${BASH_LIB_PATH:-}" == "" ]; then
   SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
   BASH_LIB_PATH="$SCRIPT_DIR/../lib"
+  if [ ! -d "$BASH_LIB_PATH" ]; then
+    echo "BASH_LIB_PATH was not set and could not be found"
+    exit 1
+  fi
 fi
 ```
 
-## Express Cli using these libraries
+### Shebang rewrite with your package Manager
+
+In a package manager, you may need to inject it in the header at install time by replacing the shebang.
+
+Example for `brew`, you can check our [formulae](contrib/release/brew/formula.rb.tpl) that will create this header:
+
+```bash
+#!/usr/bin/env bash
+BASH_LIB_PATH="#{libexec}"
+```
+
+### Environment variable via bashrc
+
+When developing, you can define it in your `~/.bashrc`
+
+```bash
+export BASH_LIB_PATH="$HOME/code/bash-lib"
+```
+
+## Cli using these libraries
 
 * [direnv-ext](https://github.com/gerardnico/direnv-x) - Direnv Express - A direnv extension to get secret from vault
 * [dock-x](https://github.com/gerardnico/dock-x) - Dock Express - Your docker command driven by environment variables
@@ -106,7 +138,9 @@ brew install gerardnico/tap/bash-lib
 ```bash
 git clone https://github.com/gerardnico/bash-lib
 # Add the script in the path
-export PATH=$PWD/bash-lib/lib:$PATH
+export PATH=$PWD/bash-lib/bin:$PATH
+# Optionally
+export BASH_LIB_PATH=$PWD/bash-lib/lib
 ```
 
 ## Where is the Script documentation?

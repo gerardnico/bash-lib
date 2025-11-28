@@ -92,6 +92,14 @@ git::is_dirty() {
 }
 
 # @description
+#    Get the commits not integrated from remote
+# @stdout the commits not integrated
+git::get_commits_upstream_behind() {
+  # same as `git rev-list '@{u}'...HEAD --count`
+  git 'rev-list' '--count' '@{u}..@{0}'
+}
+
+# @description
 #    Get the commits not integrated in the upstream branch
 #    The repository is considered dirty if this the case
 # @stdout the commits not pushed
