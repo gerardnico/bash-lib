@@ -1,4 +1,4 @@
-# Bash Libs
+# BASHLIB - A collection of Bash Library for script development
 
 ## About
 
@@ -111,7 +111,7 @@ BASH_LIB_PATH="#{libexec}"
 When developing, you can define it in your `~/.bashrc`
 
 ```bash
-export BASH_LIB_PATH="$HOME/code/bash-lib"
+export BASHLIB_PATH="$HOME/code/bash-lib"
 ```
 
 ## Cli using these libraries
@@ -140,7 +140,7 @@ git clone https://github.com/gerardnico/bash-lib
 # Add the script in the path
 export PATH=$PWD/bash-lib/bin:$PATH
 # Optionally
-export BASH_LIB_PATH=$PWD/bash-lib/lib
+export BASHLIB_PATH=$PWD/bash-lib/lib
 ```
 
 ## Where is the Script documentation?
@@ -149,7 +149,7 @@ This package get also the following scripts:
 
 * [bashlib-docgen](docs/bin/bashlib-docgen.md) - Generate the documentation of bash scripts and libraries
 
-## BASH_LIB_PATH Env
+## BASHLIB_PATH Env
 
-`BASH_LIB_PATH` is the directory of the libraries for the scripts.
+`BASHLIB_PATH` is the directory of the libraries for the scripts.
 It's optional as the script would locate the library relatively.

@@ -42,7 +42,7 @@ class {{brewFormulaName}} < Formula
       content = File.read(f).lines
       new_header = <<~EOS
         #!/usr/bin/env bash
-        BASH_LIB_PATH="#{libexec}"
+        BASHLIB_PATH="#{libexec}"
         PROJECT_VERSION="{{projectVersion}}"
       EOS
 

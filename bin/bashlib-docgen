@@ -3,11 +3,11 @@
 set -Eeuo pipefail
 
 # Add bash lib in the path
-if [ "${BASH_LIB_PATH:-}" == "" ]; then
+if [ "${BASHLIB_PATH:-}" == "" ]; then
   SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
-  BASH_LIB_PATH="$SCRIPT_DIR/../lib"
+  BASHLIB_PATH="$SCRIPT_DIR/../lib"
 fi
-export PATH="$BASH_LIB_PATH:$PATH"
+export PATH="$BASHLIB_PATH:$PATH"
 
 # Add version
 # The version is latter injected at install time in the script header
