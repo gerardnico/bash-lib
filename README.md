@@ -57,11 +57,11 @@ The `bash-lib` package contains the following libraries:
 
 ## How to load a library in your script
 
-Your script need to add the bash lib directory `BASH_LIB_PATH` in the `PATH`
+Your script need to add the bash lib directory `BASHLIB_PATH` in the `PATH`
 as first element so that bash search will be quick
 
 ```bash
-export PATH="$BASH_LIB_PATH:$PATH"
+export PATH="$BASHLIB_PATH:$PATH"
 # Then
 source bashlib-[name].sh
 ```
@@ -72,9 +72,9 @@ For instance to load the [echo library](docs/lib/bashlib-echo.md)
 source bashlib-echo.sh
 ```
 
-## How is BASH_LIB_PATH determined?
+## How is BASHLIB_PATH determined?
 
-`BASH_LIB_PATH` is made available to your script:
+`BASHLIB_PATH` is made available to your script:
 
 * [with a shebang rewrite via the package manager](#shebang-rewrite-with-your-package-manager)
 * [via your bashrc](#environment-variable-via-bashrc) as environment variable for local development
@@ -85,11 +85,11 @@ source bashlib-echo.sh
 In a distribution file, if your library is relative to your script in the `../lib` directory you can use this snippet
 
 ```bash
-if [ "${BASH_LIB_PATH:-}" == "" ]; then
+if [ "${BASHLIB_PATH:-}" == "" ]; then
   SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" || echo "${BASH_SOURCE[0]}")")" && pwd)"
-  BASH_LIB_PATH="$SCRIPT_DIR/../lib"
-  if [ ! -d "$BASH_LIB_PATH" ]; then
-    echo "BASH_LIB_PATH was not set and could not be found"
+  BASHLIB_PATH="$SCRIPT_DIR/../lib"
+  if [ ! -d "$BASHLIB_PATH" ]; then
+    echo "BASHLIB_PATH was not set and could not be found"
     exit 1
   fi
 fi
@@ -103,7 +103,7 @@ Example for `brew`, you can check our [formulae](contrib/release/brew/formula.rb
 
 ```bash
 #!/usr/bin/env bash
-BASH_LIB_PATH="#{libexec}"
+BASHLIB_PATH="#{libexec}"
 ```
 
 ### Environment variable via bashrc
