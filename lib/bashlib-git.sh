@@ -23,7 +23,13 @@ git::get_current_branch() {
   # Does not work:
   #   git symbolic-ref HEAD --short
   #   git rev-parse --abbrev-ref HEAD
-  git branch --show-current
+  CURRENT_BRANCH=$(git branch --show-current)
+  # Check if we're on a branch (not detached HEAD)
+  if [ "$CURRENT_BRANCH" == "" ]; then
+      echo::error "Error: You are in detached HEAD state"
+      exit 1
+  fi
+  echo "$CURRENT_BRANCH"
 }
 
 # @description Get the current upstream branch

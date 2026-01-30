@@ -77,6 +77,11 @@ echo::err() {
   echo::base --type "$BASHLIB_ERROR_TYPE" --log-level "$BASHLIB_ECHO_ERROR_LEVEL" "${*}"
 }
 
+# Alias
+echo::error() {
+  echo::err "$@"
+}
+
 # @description
 #     Echo an success message in green
 #
@@ -107,6 +112,9 @@ echo::success() {
 # @stderr The output is always in stderr to avoid polluting stdout with log message (git ways)
 echo::warn() {
   echo::base --type "$BASHLIB_WARNING_TYPE" --log-level "$BASHLIB_ECHO_WARNING_LEVEL" "${*}"
+}
+echo::warning() {
+  echo::warn "$@"
 }
 
 # @description
