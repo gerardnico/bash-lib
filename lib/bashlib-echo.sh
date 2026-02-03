@@ -178,10 +178,30 @@ function echo::echo() {
 function echo::eval() {
   # redirect eventually stderr to /dev/tty
   # Why? stderr may be captured by the called command and we don't see any error
-  local STDERR_FD=${2:-$(echo::get_file_descriptor)}
+  local STDERR_FD=${2:-$(echo::get_terminal_descriptor)}
   local FINAL_COMMAND="$1 2>$STDERR_FD"
   echo::base --log-level "$BASHLIB_ECHO_COMMAND_LEVEL" --type "$BASHLIB_COMMAND_TYPE" "$FINAL_COMMAND"
   eval "$FINAL_COMMAND"
+}
+
+# Why? stderr may be captured by the called command and we don't see any error
+function echo::get_terminal_descriptor() {
+
+  # -t test checks if a file descriptor is associated with a terminal
+  if [ -t 2 ]; then
+    echo "/dev/stderr"
+    return
+  fi
+  # /dev/tty is a special device that always refers to the controlling terminal of the current process
+  if [ -w /dev/tty ]; then
+    echo "/dev/tty"
+    return
+  fi
+  # Fallback
+  # The >&2 syntax redirects stdout (fd 1) to stderr (fd 2),
+  # and this should work reliably even when /dev/stderr doesn't exist or isn't accessible.
+  echo "&2"
+
 }
 
 # @description
@@ -202,6 +222,12 @@ function echo::eval() {
 #
 # @stdout A file descriptor (default to /dev/stderr)
 function echo::get_file_descriptor() {
+
+  # The file descriptor 2 works everywhere
+  # The >&2 syntax redirects stdout (fd 1) to stderr (fd 2),
+  # and this works reliably even when /dev/stderr doesn't exist or isn't accessible.
+  echo "&2"
+  return
 
   # interactive textual terminal session ?
   #
@@ -228,10 +254,10 @@ function echo::get_file_descriptor() {
   # check if /dev/tty is writable
   #if [ -w /dev/tty ]; then
 
-  if (exec < /dev/tty > /dev/null 2>&1) > /dev/null 2>&1; then
-    echo "/dev/tty"
-    return
-  fi
+  #  if (exec < /dev/tty > /dev/null 2>&1) > /dev/null 2>&1; then
+  #    echo "/dev/tty"
+  #    return
+  #  fi
 
   # No stdout
   # Why?
@@ -241,20 +267,17 @@ function echo::get_file_descriptor() {
   # for var in $(command_with_echo_error)
   # ```
 
-  if [ -t 2 ]; then
-    echo "/dev/stderr"
-    return
-  fi
+  #  if [ -t 2 ]; then
+  #    echo "/dev/stderr"
+  #    return
+  #  fi
 
   # SSH session
-  SSH_TTY=${SSH_TTY:-}
-  if [ "$SSH_TTY" != "" ]; then
-    echo "$SSH_TTY"
-    return
-  fi
-
-  # May works
-  echo "/dev/stderr"
+  #  SSH_TTY=${SSH_TTY:-}
+  #  if [ "$SSH_TTY" != "" ]; then
+  #    echo "$SSH_TTY"
+  #    return
+  #  fi
 
 }
 
@@ -372,13 +395,8 @@ function echo::base() {
     MESSAGE="$CALLING_SCRIPT::$CALLING_FUNCTION#$LINE: ${MESSAGE}"
   fi
 
-  if ! FD=$(echo::get_file_descriptor); then
-    echo "No device available for the message ${MESSAGE}"
-    return 1
-  fi
-
-  if ! echo -e "${MESSAGE}" > "$FD"; then
-    echo "Error executing: echo -e ${MESSAGE} > $FD"
+  if ! echo -e "${MESSAGE}" >&2; then
+    echo "Error executing: echo -e ${MESSAGE} >&2"
     return 1
   fi
 
