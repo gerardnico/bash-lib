@@ -93,6 +93,7 @@ if [ "${BASHLIB_PATH:-}" == "" ]; then
     exit 1
   fi
 fi
+export PATH="$BASHLIB_PATH:$PATH"
 ```
 
 ### Shebang rewrite with your package Manager
